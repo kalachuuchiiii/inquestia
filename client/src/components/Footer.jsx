@@ -25,7 +25,7 @@ const Footer = () => {
            <List className = "flex text-sm flex-col" list = {route.paths} renderItem = {(path) =>         <a className = "active:underline" href={path.path} >{path.label}</a>} />
       </div>} />
             <div className = "h-full flex flex-col">
-        <button className = "truncate items-center px-6 py-2 rounded-lg bg-zinc-900 active:text-zinc-900 active:bg-neutral-50 active:outline transition-colors duration-all flex gap-2 text-neutral-200">View Source Code <FaCode size = "20" /></button>
+        <a href = "https://github.com/kalachuuchiiii/inquestia" className = "truncate items-center px-6 py-2 rounded-lg bg-zinc-900 active:text-zinc-900 active:bg-neutral-50 active:outline transition-colors duration-all flex gap-2 text-neutral-200">View Source Code <FaCode size = "20" /></a>
       </div>
     </div>
     <div className="h-[1px] bg-black/30 w-full mt-10 opacity-80" />

@@ -1,11 +1,10 @@
 import { normalize } from '../utils/formatTopicQuery.js';
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import { useSearchParams } from "react-router-dom";
 
 const useSearchQuery = ({initial, key}) => {
 
 const [searchQuery, setSearchQuery] = useSearchParams({topic: localStorage.getItem(key) || initial});
-
   
   const currentParams = useMemo(() => {
     return searchQuery.get(key);

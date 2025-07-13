@@ -1,12 +1,7 @@
 import useSearchQuery from '../hooks/useSearchQuery.js';
 import { CgFeed } from "react-icons/cg";
 
-const CurrentTopic = () => {
-
-  const { formalCurrentParams } = useSearchQuery({
-    key: "topic",
-    initial: "technology"
-  })
+const CurrentTopic = ({topic}) => {
 
 
   return (
@@ -17,8 +12,7 @@ const CurrentTopic = () => {
 
       </div>
 
-
-      <input readOnly value={formalCurrentParams} className="ml-1 row-span-2 lexend-deca row-start-2 col-start-2 col-span-9  px-2 pb-2 outline-none tracking-wide text-2xl" />
+      <input readOnly value={topic} className="ml-1 row-span-2 lexend-deca row-start-2 col-start-2 col-span-9  px-2 pb-2 outline-none tracking-wide text-2xl" />
     </div>
   )
 }

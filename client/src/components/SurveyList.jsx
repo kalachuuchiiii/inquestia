@@ -7,7 +7,12 @@ const SurveyList = ({surveyList = surveys}) => {
 
 
 return <div>
-  <List list = {surveyList} renderItem = {(survey) => <SurveyCard survey = {survey} />} />
+  <List list = {surveyList} renderItem = {(survey) => <SurveyCard survey = {survey} >
+    <SurveyCard.User />
+    <SurveyCard.Header />
+    <SurveyCard.QuestionPreview />
+    <SurveyCard.TargetRespondents />
+  </SurveyCard>} />
 </div>
 }
 

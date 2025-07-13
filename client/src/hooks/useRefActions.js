@@ -3,22 +3,35 @@ import { useRef, useCallback, useMemo } from 'react';
 const useRefActions = () => {
   
   const ref = useRef(null);
-  const currentRef = useMemo(() => {
-    return ref.current;
-  }, [ref])
+  const currentRef = ref.current;
   
-  const focusRef = useCallback(() => {
+  const focusRef = () => {
     if(!currentRef)return; 
     currentRef.focus();
-  }, [currentRef]);
+  }
   
-  const unfocusRef = useCallback(() => {
+  const heightAdapt = () => {
+    if(!currentRef)return;
+    const handleChangeHeight = () => {
+      currentRef.style.height = "auto";
+     currentRef.style.height = `${currentRef.scrollHeight}px`;
+    }
+     currentRef.addEventListener("input", handleChangeHeight);
+     return() => {
+       currentRef.removeEventListener("input", handleChangeHeight);
+     }
+  }
+  
+  const unfocusRef = () => {
     if(!currentRef) return; 
     currentRef.blur();
-  }, [currentRef])
+  }
+  
+  
   
   return {
     ref, 
+    heightAdapt,
     focusRef,
     unfocusRef
   }

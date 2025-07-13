@@ -1,8 +1,10 @@
+import TemplateList from '../../components/template/TemplateList.jsx';
+
 const CreateSurvey = () => {
 
 
 return <div>
-Create
+  <p>Xreate</p>
 </div>
 }
 

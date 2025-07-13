@@ -6,17 +6,23 @@ import CreateSurvey from '../pages/authenticated/CreateSurvey.jsx'
 import Leaderboards from '../pages/authenticated/Leaderboards.jsx';
 import WelcomePage from '../pages/not-authenticated/WelcomePage.jsx';
 import QuestsPage from '../pages/authenticated/Quests.jsx';
+import AnswerSurveyPage from '../pages/authenticated/AnswerSurvey.jsx';
+import TemplatePage from '../pages/authenticated/Templates.jsx'
 
 export const publicPages = [
       {
       path: "/", 
       element: <WelcomePage />
-    }, ]
-
+    }, ];
+    
 export const pages = [
     {
       path: "/home", 
       element: <HomePage />
+    },
+    {
+      path: "/survey/:id", 
+      element: <AnswerSurveyPage />
     },
     {
       path: "/settings",
@@ -27,8 +33,12 @@ export const pages = [
       element: <Profile />
     },
     {
-      path: "/create-survey",
+      path: "/create",
       element: <CreateSurvey />
+    },
+    {
+      path: "/templates",
+      element: <TemplatePage />
     },
     {
       path: "/surveys",

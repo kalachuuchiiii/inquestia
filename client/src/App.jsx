@@ -8,6 +8,7 @@ import NavBar from './components/NavBar.jsx';
 import List from './components/List.jsx';
 import UserIcon from './components/UserIcon.jsx'
 import usePath from './hooks/usePath.js';
+import Footer from './components/Footer.jsx';
 function App() {
   const [isSidebarOpen, setIsSideBarOpen] = useState(false);
   const { isInThisPath } = usePath();
@@ -38,7 +39,9 @@ function App() {
       }>
       {
         pages.map((page) => {
-          return <Route path = {page.path} element = {page.element} />
+          return <Route path = {page.path} element = {<div className = "container mx-auto min-h-screen overflow-y-auto ">
+            {page.element}
+          </div>} />
         })
       }
       </Route>
@@ -55,7 +58,9 @@ function App() {
         })
       }
       </Route>
+
     </Routes>
+                      <Footer />
   </div>
 }
 

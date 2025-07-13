@@ -9,7 +9,7 @@ const Inquestia = ({className = "grid place-content-center", size = "10"}) => {
     light: <InquestiaLight />
   }
 
-return <div className = {`${className} size-${size}`}>
+return <div className = {`${className} max-w-30 max-h-30 size-${size}`}>
   {
    logos[theme]
   }

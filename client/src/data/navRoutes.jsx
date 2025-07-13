@@ -5,12 +5,13 @@ import { BsCollection } from "react-icons/bs";
 import { TbSettings2 } from "react-icons/tb";
 import { GoHome } from "react-icons/go";
 import { RiFilePaper2Line } from "react-icons/ri";
+
 export const navRoutes = [
-  {
-   path: "/home", 
+    {
+    path: "/home", 
     label: "Homepage", 
     icon: <GoHome />
-  },
+    },
     {
     path: "/profile", 
     label: "Profile", 
@@ -37,7 +38,7 @@ export const navRoutes = [
       icon: <TbSettings2 />
     },
     {
-      path: "/create-survey", 
+      path: "/templates", 
     label: "Create a Survey", 
     icon: <GoPlus />
     }

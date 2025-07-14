@@ -1,6 +1,9 @@
+
+
+
 export const templates = [
   {
-    path: "/create/?t=yesnomaybe",
+    path: `/create/?template=yesnomaybe`,
     heading: "Yes, No, Maybe",
     description: "Launch a quick yes, no, or maybe poll with a single click."
   },

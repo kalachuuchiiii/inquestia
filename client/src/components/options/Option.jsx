@@ -1,16 +1,13 @@
 import { optionList } from '../../data/optionList.jsx';
 
 const Option = ({formField, handleChange, answer}) => {
-  const { choices, option } = formField
+  const { choices: {list}, option } = formField
   
   
  const options = {
     text: () => optionList["text"]({ handleChange, value: answer}), 
     custom: () => optionList["custom"]({
-      handleChange, choices, answer
-    }), 
-    yesNoMaybe: () => optionList["yesNoMaybe"]({
-      handleChange, answer
+      handleChange, choices: list, answer
     })
   }
   

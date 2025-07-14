@@ -8,20 +8,23 @@ export const surveys = [
         option: "text",
         choices: [],
         id: "survey001_q1",
-        required: Math.random() > 0.5
+        required: true
       },
       {
         question: "Which platform do you use the most?",
         id: "survey001_q2",
         option: "custom",
-        choices: [
+        choices: {
+          allowMultipleChoice: false,
+          list: [
           { label: "Facebook", value: "facebook" },
           { label: "Instagram", value: "instagram" },
           { label: "TikTok", value: "tiktok" },
           { label: "YouTube", value: "youtube" },
           { label: "Twitter", value: "twitter" }
         ],
-        required: Math.random() > 0.5
+        },
+        required: true, 
       }
     ],
     targetRespondents: 100,
@@ -41,23 +44,29 @@ export const surveys = [
       {
         question: "What genre of games do you play the most?",
         option: "custom",
-        choices: [
+        choices: {
+          allowMultipleChoice: true,
+          list: [
           { label: "Action", value: "action" },
           { label: "RPG", value: "rpg" },
           { label: "Puzzle", value: "puzzle" },
           { label: "Shooter", value: "shooter" },
           { label: "Strategy", value: "strategy" }
         ],
+        },
         id: "survey002_q1",
         required: Math.random() > 0.5
       },
       {
         question: "Do you prefer single-player or multiplayer games?",
         option: "custom",
-        choices: [
+        choices: {
+          allowMultipleChoice: false,
+          list: [
           { label: "Single-player", value: "single-player" },
           { label: "Multiplayer", value: "multiplayer" }
         ],
+        },
         id: "survey002_q2",
         required: Math.random() > 0.5
       }
@@ -89,12 +98,15 @@ export const surveys = [
       {
         question: "How often do you use flashcards or practice quizzes?",
         option: "custom",
-        choices: [
+        choices: {
+          allowMultipleChoice: false,
+          list: [
           { label: "Always", value: "always" },
           { label: "Sometimes", value: "sometimes" },
           { label: "Rarely", value: "rarely" },
           { label: "Never", value: "never" }
         ],
+        },
         id: "survey003_q2",
         required: Math.random() > 0.5
       }

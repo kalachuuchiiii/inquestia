@@ -28,5 +28,16 @@ UserIcon.Avatar = memo(({className, size = "16"}) => {
   </div>
 })
 
+UserIcon.Card = ({children, size = "10"}) => {
+  
+  return <div className = "flex gap-2 items-center w-full">
+    <UserIcon.Avatar size = {size} /> 
+    <div className = "flex flex-col ">
+          <UserIcon.Username className = "font-semibold" />
+          {children}
+    </div>
+  </div>
+}
+
 
 export default UserIcon

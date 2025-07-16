@@ -1,19 +1,23 @@
 import allVariants from '../variants/index.js';
 import { motion } from 'framer-motion';
-
-const AnimationWrapper = ({variants = "fade", className = "", children}) => {
+import { memo } from 'react';
+const AnimationWrapper = ({variants = "fade", className = "", children, layout = false, onClick}) => {
   
-  return <motion.div
+  return <>
+     <motion.div
   variants = {allVariants[variants]}
    initial = "hidden" 
    animate = "visible" 
    exit = "hidden"
+   layout = {layout}
    className = {className}
+   onClick = {onClick}
   >
     {
       children
     }
   </motion.div>
+  </>
 }
 
-export default AnimationWrapper
+export default memo(AnimationWrapper)

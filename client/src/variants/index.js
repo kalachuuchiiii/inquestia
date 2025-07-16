@@ -1,7 +1,7 @@
 
 const Variants = function(){
   
-  const smooth = (dur = 0.25) => {
+  const smooth = (dur = 0.15) => {
     return {
       duration: dur,
       type: "tween"
@@ -59,6 +59,17 @@ this.emerge = {
     height: "auto" ,
     opacity: 1,
     transition: smooth()
+  }
+  
+}
+
+this.adapt = {
+  hidden: {
+    transition: smooth(0.20), 
+  }, 
+  visible: {
+    transition: smooth(0.20), 
+    height: "auto"
   }
 }
 

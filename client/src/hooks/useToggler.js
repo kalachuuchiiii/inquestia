@@ -3,11 +3,18 @@ import { useState, useCallback } from 'react';
 const useToggler = (initial = false) => {
   const [isOpen, setIsOpen] = useState(initial);
   
-  const handleToggler = useCallback(() => {
-    setIsOpen(prev => !prev);
-  }, [])
+  const handleToggler = () => setIsOpen(prev => !prev);
   
-  return [isOpen, handleToggler];
+  const handleClose = () => setIsOpen(false);
+  const handleOpen = () => setIsOpen(true);
+  const modify = (val = false) => setIsOpen(val || false);
+  return {
+    isOpen, 
+    toggler: handleToggler, 
+    open: handleOpen, 
+    close: handleClose,
+    modify
+  };
 }
 
 export default useToggler

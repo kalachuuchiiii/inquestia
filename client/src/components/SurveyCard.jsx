@@ -6,8 +6,8 @@ import { NavLink } from "react-router-dom";
 import { createContext, useContext } from 'react';
 
 const SurveyCardContext = createContext();
-const SurveyCard = ({ survey = {}, children }) => {
-  return <SurveyCardContext.Provider value = {{survey}}>
+const SurveyCard = ({ survey = {}, question, children }) => {
+  return <SurveyCardContext.Provider value = {{survey, question}}>
 
     <div className="p-3 rounded-xl shadow-md">
       {children}
@@ -31,11 +31,11 @@ SurveyCard.TargetRespondents = () => {
 }
 
 SurveyCard.QuestionPreview = () => {
-  const { survey } = useContext(SurveyCardContext);
+  const { question } = useContext(SurveyCardContext);
 
   return <div className=" border-l-2 bg-blue-50 border-blue-300 rounded-r-lg my-3 mx-3 p-2">
     <p className="active:underline">Q1: {
-      survey.questions[0].question
+      question?.question
     }</p>
     <p>...</p>
   </div>

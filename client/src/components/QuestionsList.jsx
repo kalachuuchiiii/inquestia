@@ -6,7 +6,7 @@ const QuestionsList = ({questions = [], surveyId, modifyForm, getSurveyQuestionB
   
   
 return <div >
-  <List className = "p-2 rounded-r-xl bg-neutral-100 border-l-2 border-blue-300" list = {questions} renderItem = {(formField, i) => <QuestionCard handleChange = {modifyForm} answer = {getSurveyQuestionById(formField.id)?.answer || ""} formField = {formField} i = {i} /> } />
+  <List className = "p-2 rounded-r-xl bg-neutral-100 border-l-2 border-blue-300" list = {questions} renderItem = {(question, i) => <QuestionCard handleChange = {modifyForm} answer = {getSurveyQuestionById(question._id)?.answer || ""} questionData = {question} i = {i} /> } />
 </div>
 }
 

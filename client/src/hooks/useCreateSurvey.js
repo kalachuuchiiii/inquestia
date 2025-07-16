@@ -1,0 +1,115 @@
+import { useState, useCallback } from 'react';
+import { norm } from '../utils/norm.js';
+
+const useCreateSurvey = () => {
+  const [isCustomOptions, setIsCustomOptions] = useState(false);
+  const [option, setOption] = useState('');
+  const [showOptionManager, setShowOptionManager] = useState(false);
+  const [quest, setQuest] = useState({
+    question: "",
+    option: "text",
+    choices: {
+      allowMultipleChoice: false,
+      list: []
+    }
+  })
+  
+  const removeOption = (optionValue) => {
+    setQuest(prev => {
+      if(prev.option === "text")return;
+      const remainingChoices = prev.choices.list.filter(({value}) => value !== optionValue);
+      return {
+        ...prev, 
+        choices: {
+          ...prev.choices,
+          list: remainingChoices
+        }
+      }
+    })
+  }
+
+  const handleAddOption = useCallback(() => {
+    const label = option;
+    const value = norm(option);
+    console.log(label);
+    if(!label || !value)return;
+    setQuest(prev => {
+      return {
+        ...prev,
+        choices: {
+          ...prev.choices,
+          list: [...prev.choices.list, {
+            label,
+            value
+          }]
+        }
+      }
+    })
+    setOption('');
+  }, [option]);
+
+  const handleChangeCustomOptions = (e) => {
+    const { value, name } = e.target;
+    const isTrue = value === "true" && name === "custom";
+    if(!isTrue){
+      setQuest(prev => ({...prev,
+    option: "text",
+    choices: {
+      list: [], 
+      allowMultipleChoice: false
+    }}))
+    setIsCustomOptions(false);
+    return;
+    }
+    setQuest(prev => ({...prev,
+    option: "custom"
+    }));
+    setIsCustomOptions(true);
+  }
+  
+  const handleAddQuestion = () => {
+    console.log(quest);
+  }
+  
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setQuest(prev => ({
+      ...prev, 
+      [name]: value
+    }))
+  }, []);
+  
+  const toggleMultipleChoice = () => {
+    setQuest(prev => ({
+      ...prev, choices: {
+        ...prev.choices, 
+        allowMultipleChoice: !prev.choices.allowMultipleChoice
+      }
+    }))
+  }
+  
+  const toggleRequired = () => {
+    setQuest(prev => ({
+      ...prev, 
+      required: !prev.required
+    }))
+  }
+
+return {
+  isCustomOptions, 
+  showOptionManager, 
+  handleChange, 
+  handleAddQuestion,
+  handleChangeCustomOptions, 
+  quest, 
+  option, 
+  toggleRequired,
+  setOption,
+  handleAddOption,
+  setShowOptionManager, 
+  removeOption, 
+  toggleMultipleChoice
+}
+}
+
+export default useCreateSurvey

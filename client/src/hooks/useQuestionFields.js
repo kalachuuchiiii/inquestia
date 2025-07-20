@@ -83,7 +83,7 @@ const useQuestionFields = ({ initial, surveyId }) => {
         surveyId,
         answers: answerForm
       }
-      console.log(answerDoc);
+      
     } catch (e) {
       setError(e.message);
     }

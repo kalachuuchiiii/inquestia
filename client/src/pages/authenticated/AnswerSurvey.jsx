@@ -4,6 +4,7 @@ import SurveyCard from '../../components/SurveyCard.jsx';
 import QuestionsList from '../../components/QuestionsList.jsx';
 import useQuestionFields from '../../hooks/useQuestionFields.js';
 import { questions } from '../../data/mockData/questions.js';
+import QuestionCard from '../../components/QuestionCard.jsx';
 
 const AnswerSurvey = () => {
   
@@ -20,7 +21,11 @@ return <form onSubmit = {submitSurvey}>
   <SurveyCard survey = {selectedSurvey} >
     <SurveyCard.User /> 
     <SurveyCard.Header /> 
-    <QuestionsList modifyForm = {modifyForm} getSurveyQuestionById = {getSurveyQuestionById} questions = {questionList} surveyId = {_id} />
+    <QuestionsList modifyForm = {modifyForm} getSurveyQuestionById = {getSurveyQuestionById} questions = {questionList} surveyId = {_id} renderItem = {(question, i) => <QuestionCard handleChange = {modifyForm} answer = {getSurveyQuestionById(question._id)?.answer || [] } questionData = {question} i = {i} >
+      <QuestionCard.Question /> 
+      <QuestionCard.MultiChoice /> 
+      <QuestionCard.RenderOption />
+    </QuestionCard>} />
     <p className = "text-red-400 text-sm p-1">{error && error}</p>
     <SurveyCard.TargetRespondents />
     <div className = "text-right">

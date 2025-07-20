@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { norm } from '../utils/norm.js';
 
-const useCreateSurvey = () => {
+const useCreateQuestion = () => {
   const [isCustomOptions, setIsCustomOptions] = useState(false);
   const [option, setOption] = useState('');
   const [showOptionManager, setShowOptionManager] = useState(false);
@@ -13,6 +13,7 @@ const useCreateSurvey = () => {
       list: []
     }
   })
+  const [error, setError] = useState('');
   
   const removeOption = (optionValue) => {
     setQuest(prev => {
@@ -31,7 +32,6 @@ const useCreateSurvey = () => {
   const handleAddOption = useCallback(() => {
     const label = option;
     const value = norm(option);
-    console.log(label);
     if(!label || !value)return;
     setQuest(prev => {
       return {
@@ -67,10 +67,6 @@ const useCreateSurvey = () => {
     setIsCustomOptions(true);
   }
   
-  const handleAddQuestion = () => {
-    console.log(quest);
-  }
-  
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setQuest(prev => ({
@@ -94,12 +90,34 @@ const useCreateSurvey = () => {
       required: !prev.required
     }))
   }
+  
+  const validateQuestionForm = (question = {}, callback = () => {}) => {
+    if(!question || typeof question !== 'object'){
+      setError('Invalid question');
+      return;
+    }
+    if(!question.question || question.question.length < 6){
+      setError("Please provide more info about the question.");
+      return;
+    }
+    if(question.option !== "custom"){
+      callback();
+      return;
+    }
+    if(question.choices.list.length < 2){
+      setError("Please provide at least 2 valid option");
+      return;
+    }
+    callback();
+    setError('');
+  }
 
 return {
   isCustomOptions, 
   showOptionManager, 
   handleChange, 
-  handleAddQuestion,
+  error,
+  validateQuestionForm,
   handleChangeCustomOptions, 
   quest, 
   option, 
@@ -112,4 +130,4 @@ return {
 }
 }
 
-export default useCreateSurvey
+export default useCreateQuestion

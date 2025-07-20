@@ -4,6 +4,7 @@ import List from './List.jsx';
 import { getPercentage } from '../utils/getPercentage.js';
 import { NavLink } from "react-router-dom";
 import { createContext, useContext } from 'react';
+import useCtx from '../hooks/useCTX.js';
 
 const SurveyCardContext = createContext();
 const SurveyCard = ({ survey = {}, question, children }) => {
@@ -17,7 +18,10 @@ const SurveyCard = ({ survey = {}, question, children }) => {
 
 SurveyCard.TargetRespondents = () => {
 
-  const { survey } = useContext(SurveyCardContext);
+  const { survey = {
+    targetRespondents: 100, 
+    totalRespondents: 50
+  } } = useCtx(SurveyCardContext);
   const progress = `${getPercentage(survey.targetRespondents, survey.totalRespondents)}%`
 
   return <div className="w-full space-y-1 text-sm mb-4 mt-8">
@@ -31,10 +35,12 @@ SurveyCard.TargetRespondents = () => {
 }
 
 SurveyCard.QuestionPreview = () => {
-  const { question } = useContext(SurveyCardContext);
+  const { question = {
+    question: '...?'
+  } } = useCtx(SurveyCardContext);
 
-  return <div className=" border-l-2 bg-blue-50 border-blue-300 rounded-r-lg my-3 mx-3 p-2">
-    <p className="active:underline">Q1: {
+  return <div className=" rounded-r-lg my-3 mx-3 p-2">
+    <p className="active:underline italic">Q1: {
       question?.question
     }</p>
     <p>...</p>
@@ -42,16 +48,27 @@ SurveyCard.QuestionPreview = () => {
 }
 
 SurveyCard.Header = () => {
-  const { survey } = useContext(SurveyCardContext);
+  const { survey = {
+    _id: null, 
+    title: '...', 
+    description: '...'
+  } } = useCtx(SurveyCardContext);
 
   return <div className="my-4">
-    <NavLink to={`/survey/${survey._id}`} className="text-lg font-semibold">{survey.title}</NavLink>
-    <p>{survey.description}</p>
+    <NavLink to={`/survey/${survey?._id}`} className="text-lg font-semibold">{survey?.title}</NavLink>
+    <p>{survey?.description}</p>
   </div>
 }
 
 SurveyCard.User = () => {
-  const { survey } = useContext(SurveyCardContext);
+  const { survey = {
+    user: {
+      avatar: '', 
+      username: 'guest',
+      _id: null, 
+      createdAt: new Date().toISOString()
+    }
+  } } = useCtx(SurveyCardContext);
 
   return <UserIcon className="flex my-2 gap-3 items-center" user={survey?.user}>
     <UserIcon.Avatar size="9" />

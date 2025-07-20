@@ -6,8 +6,8 @@ export const surveys = [
     targetRespondents: 100,
     totalRespondents: 63,
     user: {
-      avatar: "https://randomuser.me/api/portraits/men/10.jpg",
-      username: "socialguru12"
+      avatar: "/jonas.jpeg",
+      username: "Jonas Rey Carranza"
     },
     createdAt: "2025-07-06T14:23:00.000Z",
     topics: ["mediaandcommunication", "technology"]

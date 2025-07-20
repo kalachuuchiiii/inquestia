@@ -1,11 +1,11 @@
 import { optionList } from '../../data/optionList.jsx';
 
-const Option = ({questionData, handleChange, answer}) => {
+const Option = ({questionData = {}, readOnly = false, handleChange = () => {}, answer = []}) => {
   const { option } = questionData
   
   
  const options = {
-    text: () => optionList["text"]({ handleChange, value: answer}), 
+    text: () => optionList["text"]({ handleChange, readOnly, value: answer}), 
     custom: () => optionList["custom"]({
       handleChange, choices: questionData.choices?.list, answer
     })
@@ -14,7 +14,7 @@ const Option = ({questionData, handleChange, answer}) => {
   const optionToRender = options[option]();
   
   
-return <div className = "mb-6 mt-1 py-2 border-l-2 border-l-blue-200">
+return <div className = "">
   {optionToRender}
 </div>
 }

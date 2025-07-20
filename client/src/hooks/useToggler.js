@@ -8,13 +8,13 @@ const useToggler = (initial = false) => {
   const handleClose = () => setIsOpen(false);
   const handleOpen = () => setIsOpen(true);
   const modify = (val = false) => setIsOpen(val || false);
-  return {
-    isOpen, 
-    toggler: handleToggler, 
-    open: handleOpen, 
-    close: handleClose,
+  return [
+     isOpen, 
+     handleOpen, 
+     handleClose,
+     handleToggler, 
     modify
-  };
+  ]
 }
 
 export default useToggler

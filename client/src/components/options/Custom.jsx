@@ -1,11 +1,14 @@
 import List from '../List.jsx';
 
-const CustomOption = ({handleChange, choices, answer}) => {
+const CustomOption = ({handleChange = () => {}, choices = {}, answer = []}) => {
 
 
-return <List list = {choices} className = "flex flex-col gap-1 mx-2 mb-4" renderItem = {({label, value}) => <button type = "button" className = {`${answer.includes(value) ? " border-blue-400" : "border-transparent"} border-l-2 rounded-r-xl p-2 text-left`} onClick = {handleChange} value = {value}>
+return <div>
+  <p className = "text-xs m-2">Choices</p>
+  <List list = {choices} className = "flex flex-col gap-2  py-2  mx-2 mb-4" renderItem = {({label, value}) => <button type = "button" className = {`${answer.includes(value) ? " bg-blue-100 outline outline-blue-400" : "outline-none bg-neutral-50"} shadow-sm rounded-lg px-6 py-3 truncate text-left`} onClick = {handleChange} value = {value}>
   { label }
 </button>} />
+</div>
 }
 
 export default CustomOption

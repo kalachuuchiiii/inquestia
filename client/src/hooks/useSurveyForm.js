@@ -81,6 +81,7 @@ const useSurveyForm = () => {
       questions, 
       ...surveySummary
     }
+    console.log(form);
     setError(false);
     
   }

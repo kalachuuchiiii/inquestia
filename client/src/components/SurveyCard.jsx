@@ -4,6 +4,7 @@ import List from './List.jsx';
 import { getPercentage } from '../utils/getPercentage.js';
 import { NavLink } from "react-router-dom";
 import { createContext, useContext } from 'react';
+import Bar from './html/Bar.jsx';
 import useCtx from '../hooks/useCTX.js';
 
 const SurveyCardContext = createContext();
@@ -22,15 +23,10 @@ SurveyCard.TargetRespondents = () => {
     targetRespondents: 100, 
     totalRespondents: 50
   } } = useCtx(SurveyCardContext);
-  const progress = `${getPercentage(survey.targetRespondents, survey.totalRespondents)}%`
-
-  return <div className="w-full space-y-1 text-sm mb-4 mt-8">
-    <p>{survey.totalRespondents} / {survey.targetRespondents}</p>
-    <div className="w-full shadow-md rounded-xl">
-      <div className={`bg-gradient-to-r from-purple-300 to-pink-200 p-2 w-[${progress}] text-xs text-center`} >
-      </div>
-    </div>
-    <p>Target respondents</p>
+  
+  return <div>
+    <Bar target = {survey.targetRespondents} total = {survey.totalRespondents} />
+    <p className = "text-xs">Target Respondents</p>
   </div>
 }
 

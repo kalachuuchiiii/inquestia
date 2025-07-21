@@ -6,6 +6,123 @@ export const questions = [
     option: "text",
     choices: { allowMultipleChoice: false, list: [] },
     required: true
+  }, 
+  {
+    _id: "q1011",
+    surveyId: "survey101",
+    question: "What is your favorite music genre?",
+    option: "custom",
+    choices: {
+      allowMultipleChoice: false,
+      list: [
+        { label: "Pop", value: "pop" },
+        { label: "Rock", value: "rock" },
+        { label: "Hip-hop", value: "hiphop" },
+        { label: "Jazz", value: "jazz" },
+        { label: "Classical", value: "classical" },
+        { label: "Other", value: "other" }
+      ]
+    },
+    required: true
+  },
+  {
+    _id: "q1012",
+    surveyId: "survey101",
+    question: "How many hours a day do you listen to music?",
+    option: "text",
+    choices: { allowMultipleChoice: false, list: [] },
+    required: true
+  },
+  {
+    _id: "q1013",
+    surveyId: "survey101",
+    question: "Which platform do you use most for listening to music?",
+    option: "custom",
+    choices: {
+      allowMultipleChoice: false,
+      list: [
+        { label: "Spotify", value: "spotify" },
+        { label: "Apple Music", value: "apple_music" },
+        { label: "YouTube", value: "youtube" },
+        { label: "SoundCloud", value: "soundcloud" },
+        { label: "Other", value: "other" }
+      ]
+    },
+    required: false
+  },
+
+  // Survey 102 - Teen Sleep Patterns
+  {
+    _id: "q1021",
+    surveyId: "survey102",
+    question: "What time do you usually go to bed on weekdays?",
+    option: "text",
+    choices: { allowMultipleChoice: false, list: [] },
+    required: true
+  },
+  {
+    _id: "q1022",
+    surveyId: "survey102",
+    question: "Do you feel rested when you wake up?",
+    option: "custom",
+    choices: {
+      allowMultipleChoice: false,
+      list: [
+        { label: "Yes, always", value: "always" },
+        { label: "Sometimes", value: "sometimes" },
+        { label: "Rarely", value: "rarely" },
+        { label: "Never", value: "never" }
+      ]
+    },
+    required: true
+  },
+  {
+    _id: "q1023",
+    surveyId: "survey102",
+    question: "How many hours of sleep do you get on average per night?",
+    option: "text",
+    choices: { allowMultipleChoice: false, list: [] },
+    required: true
+  },
+  {
+    _id: "q1031",
+    surveyId: "survey103",
+    question: "What online platform does your school use most?",
+    option: "custom",
+    choices: {
+      allowMultipleChoice: false,
+      list: [
+        { label: "Google Classroom", value: "google_classroom" },
+        { label: "Microsoft Teams", value: "teams" },
+        { label: "Zoom", value: "zoom" },
+        { label: "Moodle", value: "moodle" },
+        { label: "Other", value: "other" }
+      ]
+    },
+    required: true
+  },
+  {
+    _id: "q1032",
+    surveyId: "survey103",
+    question: "What do you find most challenging about online learning?",
+    option: "text",
+    choices: { allowMultipleChoice: false, list: [] },
+    required: true
+  },
+  {
+    _id: "q1033",
+    surveyId: "survey103",
+    question: "Do you prefer online learning or face-to-face learning?",
+    option: "custom",
+    choices: {
+      allowMultipleChoice: false,
+      list: [
+        { label: "Online", value: "online" },
+        { label: "Face-to-face", value: "f2f" },
+        { label: "Hybrid", value: "hybrid" }
+      ]
+    },
+    required: true
   },
   {
     _id: "q002",

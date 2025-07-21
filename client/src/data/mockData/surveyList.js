@@ -37,6 +37,45 @@ export const surveys = [
     },
     createdAt: "2025-07-30T17:45:00.000Z",
     topics: ["education"]
+  },
+  {
+    _id: "survey101",
+    title: "Music Taste Trends",
+    description: "Discovering how music preferences vary by age.",
+    targetRespondents: 120,
+    totalRespondents: 87,
+    user: {
+      avatar: "https://avatars.githubusercontent.com/u/202394364?v=4",
+      username: "Kalachuuchiiii"
+    },
+    createdAt: "2025-07-10T11:20:00.000Z",
+    topics: ["entertainment", "culture"]
+  },
+  {
+    _id: "survey102",
+    title: "Teen Sleep Patterns",
+    description: "Investigating how sleep schedules affect productivity.",
+    targetRespondents: 150,
+    totalRespondents: 92,
+    user: {
+      avatar: "https://avatars.githubusercontent.com/u/202394364?v=4",
+      username: "Kalachuuchiiii"
+    },
+    createdAt: "2025-07-13T08:45:00.000Z",
+    topics: ["health", "lifestyle"]
+  },
+  {
+    _id: "survey103",
+    title: "Online Learning Experience",
+    description: "Evaluating the effectiveness of digital classrooms.",
+    targetRespondents: 180,
+    totalRespondents: 144,
+    user: {
+      avatar: "https://avatars.githubusercontent.com/u/202394364?v=4",
+      username: "Kalachuuchiiii"
+    },
+    createdAt: "2025-07-15T16:30:00.000Z",
+    topics: ["education", "technology"]
   }
 ];
 

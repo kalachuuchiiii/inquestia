@@ -19,6 +19,17 @@ const Variants = function(){
   }
 } 
 
+this.longFade = {
+  hidden: {
+    opacity: 0, 
+    transition: smooth(2)
+  }, 
+  visible: {
+    opacity: 1, 
+    transition: smooth(2)
+  }
+}
+
 this.fromLeft = {
   hidden: {
     x: "-100%", 

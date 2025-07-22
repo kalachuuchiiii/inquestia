@@ -3,23 +3,27 @@ import { PiStarFour } from "react-icons/pi";
 
 const WelcomeGreet = () => {
   return (
-    <AnimationWrapper
-      variants="fromBottom"
-      className="h-[88vh] px-4"
-    >
-      <div className="space-y-6 my-16 text-left max-w-2xl">
+    <div className = "px-4" >
+              <div className = "backdrop-brightness-120 text-black px-6 py-2 w-fit rounded-xl">
+          <p className = "z-20 text-xs font-semibold" >
+            Terms Of Privacy
+          </p>
+        </div>
+      <div className="space-y-6 mt-8 mb-16 text-left max-w-2xl">
+
         <div className = "space-y-3">
-                  <p className="lato text-4xl leading-10">
+                  <p className="lato opacity-70 saturate-100 text-5xl sm:text-7xl ">
           Surveys that <span className = "block">Reaches</span> <span className = "block">
-            More <span className = "text-gradient">Possibilities.</span>
+            More Possibilities
           </span></p>
         <h1 className="text-base text-zinc-900">A place where you can publish surveys online and unlock more opportunities.</h1>
-        </div>
-        <button className = "flex gap-2 items-center text-black bg-gradient-to-l from-purple-100 rounded-xl px-6 py-2 shadow-md shadow-pink-100 to-pink-100">
-          <PiStarFour /> <a href = "/home">Get Started</a>
+                <button className = "flex text-lg items-center gap-2 px-6 py-2 rounded-xl backdrop-blue-lg ">
+          <PiStarFour size = "20" /> <a href = "/register">Get Started</a>
         </button>
+        </div>
+
       </div>
-    </AnimationWrapper>
+    </div>
   );
 };
 

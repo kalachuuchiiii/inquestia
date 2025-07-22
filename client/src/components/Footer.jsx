@@ -8,18 +8,17 @@ import user from '../data/user.js';
 const Footer = () => {
 
 
-  return <footer className=" text-zinc-900 bottom-0 p-4">
+  return <footer className=" text-zinc-900 bottom-0 mx-auto w-screen flex flex-col justify-center items-start">
     <div className="h-[1px] bg-black/30 w-full" />
-    <div className="h-40 flex flex-col justify-center gap-2">
+    <div className="h-40 px-4 flex flex-col justify-center gap-2">
       <div className = "flex items-center">
-        <AppIcon size = "16" />
-        <h1 className="text-3xl lato">Inquestia</h1>
+        <h1 className="text-3xl lato">Inquestia.ask</h1>
       </div>
-      <List className="flex gap-1 items-center text-2xl ml-4 opacity-90" list={outsideLinks} renderItem={(link) => <a href={link.path}>
+      <List className="flex gap-1 items-center text-2xl ml-2 opacity-90" list={outsideLinks} renderItem={(link) => <a href={link.path}>
         {link.icon}
       </a>} />
     </div>
-    <div className="flex justify-end items-end h-full">
+    <div className="flex p-4 justify-end items-end h-full">
       <List className = "flex w-full flex-col gap-6" list = {footerRoutes} renderItem = {(route) => <div>
            <label className="font-semibold my-4">{route.title}</label>
            <List className = "flex text-sm flex-col" list = {route.paths} renderItem = {(path) =>         <a className = "active:underline" href={path.path} >{path.label}</a>} />
@@ -29,7 +28,7 @@ const Footer = () => {
       </div>
     </div>
     <div className="h-[1px] bg-black/30 w-full mt-10 opacity-80" />
-    <div className="my-10 text-sm ">
+    <div className="my-10 text-sm px-4 ">
       <div className="text-sm my-4 flex gap-2 items-center">
         <img src = {user.avatar} className = "size-8 rounded-full outline" />
         <div className = "w-full flex flex-col">
@@ -42,7 +41,7 @@ const Footer = () => {
         <p>12 - Haskell</p>
       </div>
     </div>
-<p className = "text-sm ml-2">© 2025</p>
+<p className = "text-sm px-4">© 2025</p>
   </footer>
 }
 

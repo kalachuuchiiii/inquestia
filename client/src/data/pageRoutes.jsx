@@ -8,12 +8,19 @@ import WelcomePage from '../pages/not-authenticated/WelcomePage.jsx';
 import QuestsPage from '../pages/authenticated/Quests.jsx';
 import AnswerSurveyPage from '../pages/authenticated/AnswerSurvey.jsx';
 import TemplatePage from '../pages/authenticated/Templates.jsx'
-
+import LoginPage from '../pages/not-authenticated/Login.jsx';
+import RegisterPage from '../pages/not-authenticated/Register.jsx';
 export const publicPages = [
       {
       path: "/", 
-      element: <WelcomePage />
-    }, ];
+      element: <WelcomePage />, 
+    }, {
+      path: "/register", 
+      element: <RegisterPage/>
+    }, {
+      path: '/login', 
+      element: <LoginPage />
+    }];
     
 export const pages = [
     {

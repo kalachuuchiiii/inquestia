@@ -1,8 +1,7 @@
 import InquestiaLight from './app-light.jsx';
 import InquestiaDark from './app-dark.jsx';
 
-const Inquestia = ({className = "grid place-content-center", size = "10"}) => {
-  const theme = "dark";
+const Inquestia = ({className = "grid place-content-center", size = "10", theme = "dark"}) => {
   
   const logos = {
     dark: <InquestiaDark /> ,

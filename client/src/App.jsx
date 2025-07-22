@@ -9,11 +9,12 @@ import List from './components/List.jsx';
 import UserIcon from './components/UserIcon.jsx'
 import usePath from './hooks/usePath.js';
 import Footer from './components/Footer.jsx';
+import Wave from './components/designs/wave/Wave.jsx';
 function App() {
   const [isSidebarOpen, setIsSideBarOpen] = useState(false);
   const { isInThisPath } = usePath();
   
-  return <div className = "h-max mx-auto container">
+  return <div className = "h-max flex flex-col justify-center items-center container">
     <Routes>
       <Route element={
         <div className="w-full flex">
@@ -45,7 +46,8 @@ function App() {
         })
       }
       </Route>
-      <Route element = {<div>
+      <Route element = {<div className = "w-full ">
+        <Wave />
         <NavBar>
           <NavBar.App /> 
           <NavBar.SignUp />
@@ -54,7 +56,9 @@ function App() {
       </div>} >
            {
         publicPages.map((page) => {
-          return <Route path = {page.path} element = {page.element} />
+          return <Route path = {page.path} element = {<div className = "min-h-screen">
+            {page.element}
+          </div>} />
         })
       }
       </Route>

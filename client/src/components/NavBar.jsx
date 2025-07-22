@@ -23,12 +23,14 @@ NavBar.Relate = memo(({ gap = 2, children }) => {
 
 NavBar.App = memo(({size = "8", onToggleSidebar = () => null}) => {
   return <button onClick = {onToggleSidebar}>
-    <AppIcon size = {size} />
+    <div className = "flex">
+          <a href = "/" className = "text-lg font-bold text-white">Inquestia.ask</a>
+    </div>
   </button>
 })
 
 NavBar.SignUp = () => {
-  return <a className="px-6 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-zinc-900 rounded-xl shadow-md shadow-pink-100" href="/home">Sign up</a>
+  return <a className="px-6 py-2 font-bold text-white text-lg rounded-xl" href="/login">Login</a>
 }
 
 NavBar.Search = () => {

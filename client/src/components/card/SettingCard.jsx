@@ -1,6 +1,6 @@
 
 const SettingButton = ({children = null, onClick = () => {}}) => {
-  return <button onClick = {onClick} className = "w-full flex justify-between items-center p-1">
+  return <button onClick = {onClick} className = "w-full flex justify-between items-center p-2">
     {children}
   </button>
 }

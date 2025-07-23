@@ -26,7 +26,7 @@ return <div className = "absolute inset-x-0 top-0  z-[-100]">
   <div className = " w-[100vw]">
     <div className = "w-full grid overflow-hidden ">
                 <AnimatePresence >
-      <AnimationWrapper className = "col-span-1 col-start-1 w-[170%] sm:w-[140%] md:w-[110%] object-cover row-span-1 row-start-1" key = {currIndex} variants = "longFade">
+      <AnimationWrapper className = "col-span-1 col-start-1 w-[170%] sm:w-[140%] md:w-[110%] object-cover row-span-1 row-start-1" key = {currIndex} variants = "fade">
                           {designs[currIndex]}
       </AnimationWrapper>
     </AnimatePresence>

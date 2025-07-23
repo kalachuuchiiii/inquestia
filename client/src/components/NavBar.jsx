@@ -21,11 +21,15 @@ NavBar.Relate = memo(({ gap = 2, children }) => {
   </div>
 })
 
-NavBar.App = memo(({size = "8", onToggleSidebar = () => null}) => {
-  return <button onClick = {onToggleSidebar}>
-    <div className = "flex">
-          <a href = "/" className = "text-lg font-bold text-white">Inquestia.ask</a>
-    </div>
+NavBar.App = memo(({size = "8", color = "white", disabled = false}) => {
+  return ( <button className = "flex">
+          <a disabled = {disabled} href = "/" className = {`text-lg font-bold text-${color}`}>Inquestia.ask</a>
+    </button>)
+})
+
+NavBar.SideBarToggler = memo(({onToggleSidebar = () => {}, size = "20", color = "white"}) => {
+  return <button onClick = {onToggleSidebar} className = "backdrop-blur-md p-2 rounded">
+    <IoReorderThreeOutline color = {color} size = {size} />
   </button>
 })
 
@@ -33,26 +37,5 @@ NavBar.SignUp = () => {
   return <a className="px-6 py-2 font-bold text-white text-lg rounded-xl" href="/login">Login</a>
 }
 
-NavBar.Search = () => {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-
-  return <div className="flex justify-center gap-1 items-center justify-end w-full">
-
-    <button className = "p-2" onClick={() => setIsSearchOpen(true)}><CiSearch size="20" /></button>
-        <AnimatePresence> 
-    {
-    isSearchOpen && <AnimationWrapper className = "flex w-full rounded-lg outline-1 items-center"
-    variants = "emerge"
-    >
-      <form>
-       <input placeholder = "Search" className="p-2 outline-none w-full " /> 
-      </form>
-      <button onClick = {() => setIsSearchOpen(false)} className = "px-2"><IoMdClose /></button>
-    </AnimationWrapper>
-    }
-    </AnimatePresence>
-  </div>
-}
 
 export default NavBar

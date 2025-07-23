@@ -19,7 +19,7 @@ return <FormContext.Provider value = {{
   formField
 }}>
   <form className = " w-fit backdrop-blur-2xl rounded flex justify-start items-center" onSubmit = {handleOnSubmit}>
-    <div className = "flex  flex-col gap-8 p-4 rounded">
+    <div className = "flex flex-col gap-8 p-4 rounded">
           {children}
     </div>
   </form>

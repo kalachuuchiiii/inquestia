@@ -15,6 +15,7 @@ function App() {
   const { isInThisPath } = usePath();
   
   return <div className = "h-max flex flex-col justify-center items-center container">
+    <Wave />
     <Routes>
       <Route element={
         <div className="w-full flex">
@@ -26,10 +27,10 @@ function App() {
           <div className = "w-full transition-all duration-200">
              <NavBar >
                <NavBar.Relate >
-              <NavBar.App onToggleSidebar = {() => setIsSideBarOpen(prev => !prev)}  /> 
+                 <NavBar.SideBarToggler onToggleSidebar = {() => setIsSideBarOpen(prev => !prev)} size = "30" />
+              <NavBar.App color = "white" /> 
               
                </NavBar.Relate>
-               <NavBar.Search />
                <UserIcon user = {user} >
                  <UserIcon.Avatar className = "ml-4" size = "8" />
                </UserIcon>
@@ -47,7 +48,7 @@ function App() {
       }
       </Route>
       <Route element = {<div className = "w-full ">
-        <Wave />
+
         <NavBar>
           <NavBar.App /> 
           <NavBar.SignUp />

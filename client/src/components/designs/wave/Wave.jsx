@@ -9,7 +9,7 @@ const WaveDesign = () => {
   const [currIndex, setCurrIndex] = useState(0); 
   const designs = [
     <CyanWave />, 
-    <YellowWave />
+
     ]
   
   useEffect(() => {

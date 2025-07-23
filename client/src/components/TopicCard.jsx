@@ -10,7 +10,7 @@ const TopicCard = ({topic, setTopic}) => {
     setTopic(topic.label);
   }
 
-return <div role = "button" onClick = {handleChangeTopic} className = {` ${isSelected && ""} my-4 bg-zinc-100  truncate rounded-lg px-4 py-2`}>
+return <div role = "button" onClick = {handleChangeTopic} className = {` ${isSelected && ""} my-4 backdrop-brightness-150 text-black  truncate rounded-lg px-4 py-2`}>
   <p>{topic.label}</p>
 </div>
 }

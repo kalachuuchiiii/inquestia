@@ -2,6 +2,7 @@ import { createContext, useContext, memo } from "react";
 const UserContext = createContext();
 import Image from './html/Image.jsx';
 import useCtx from '../hooks/useCTX.js';
+import Textarea from './html/Textarea.jsx';
 const UserIcon = memo(({className = "", children, user}) => {
 
 
@@ -14,23 +15,29 @@ return <UserContext.Provider value = {{
 </UserContext.Provider>
 })
 
-UserIcon.Username = memo(({className = ""}) => {
+UserIcon.Username = memo(({className = "", username = "..."}) => {
   const { user = {
-    username: '...' 
+    username: '' 
   } }= useCtx(UserContext);
   
-  return <p className = {className}>{user?.username || '...'}</p>
+  return <p className = {className}>{user?.username || username}</p>
 })
 
-UserIcon.Avatar = memo(({className, size = "16"}) => {
+UserIcon.Avatar = memo(({className, size = "16", avatar = "..."}) => {
   const { user = {
-    avatar: "/jonas.jpeg" 
+    avatar: "" 
     }}= useCtx(UserContext);
   
   return <div className = {`rounded-full size-${size} text-xs overflow-hidden grid place-content-center outline-2 outline-blue-300 outline-offset-2 ${className}`}>
-    <Image className = "w-full  h-full object-cover" src = {user?.avatar} alt = "Avatar" />
+    <Image className = "w-full  h-full object-cover" src = {user?.avatar || avatar} alt = "Avatar" />
   </div>
 })
+
+UserIcon.Bio = ({bio = ""}) => {
+  return <div>
+    <Textarea value = {bio} maxLength = {60} />
+  </div>
+}
 
 UserIcon.Card = ({children, size = "10"}) => {
   

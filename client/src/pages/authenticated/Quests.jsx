@@ -8,7 +8,7 @@ const Quests = () => {
 
 
 return <div className = "p-2">
-  <div className = "mt-6 mb-10">
+  <div className = "mt-6 text-white mb-10">
    <h1 className = "text-3xl lato">Your Weekly Quests</h1>
   <p className = "text-md px-3">Completing quests helps you earn points and climb the leaderboard. The more quests you finish, the closer you get to reaching the top and unlocking recognition for your activity and consistency.</p>
   </div>

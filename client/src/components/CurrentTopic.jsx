@@ -1,18 +1,18 @@
 import useSearchQuery from '../hooks/useSearchQuery.js';
 import { CgFeed } from "react-icons/cg";
+import { useEffect, useState } from 'react';
 
 const CurrentTopic = ({topic}) => {
 
 
   return (
-    <div className="px-6 py-3 w-full grid gric-cols-12 grid-rows-3 overflow-hidden sticky rounded-xl bg-zinc-50">
-      <div className = "row-span-2 row-start-1 bg-white col-start-1 col-span-2 px-4 py-2 rounded-full flex items-center gap-1">
-        <CgFeed />
-        <h1 className="text-sm  grid place-content-center">Topic</h1>
-
+    <div className = "px-2">
+          <div className="backdrop-brightness-150 rounded-lg  mb-6">
+      <div className = "flex justify-between p-1 items-center gap-1"> 
+      <input className = "px-2 outline-none" placeholder = {topic} />
+        <button className = "bg-neutral-100/50 px-5 py-2 shadow-md text-black rounded-lg">Search</button>
       </div>
-
-      <input readOnly value={topic} className="ml-1 row-span-2 lexend-deca row-start-2 col-start-2 col-span-9  px-2 pb-2 outline-none tracking-wide text-2xl" />
+    </div>
     </div>
   )
 }

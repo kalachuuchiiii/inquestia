@@ -11,7 +11,7 @@ const Textarea = ({limit = 250, placeholder = 'Textarea', className = '', onChan
 return <div className = "w-full">
   <div className = "flex">
     <p className = "text-red-400 pt-2">{requiredDisplay && "*"}</p>
-      <textarea  readOnly = {readOnly} rows = {rows} name = {name} required = {required} placeholder = {placeholder} maxLength = {limit} value = {value} onChange = {onChange} ref = {ref} className = {`${className} bg-white outline-none p-2 resize-none w-full`}/> 
+      <textarea  readOnly = {readOnly} rows = {rows} name = {name} required = {required} placeholder = {placeholder} maxLength = {limit} value = {value} onChange = {onChange} ref = {ref} className = {`${className}  outline-none p-2 resize-none w-full`}/> 
   </div>
   <div className = "w-full p-2  text-right">
     <p className = {`${valueLength === limit && 'text-red-400' 

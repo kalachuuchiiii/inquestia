@@ -15,21 +15,28 @@ return <UserContext.Provider value = {{
 </UserContext.Provider>
 })
 
-UserIcon.Username = memo(({className = "", username = "..."}) => {
+UserIcon.Username = memo(({className = "", username = "...", showAt = false}) => {
   const { user = {
     username: '' 
   } }= useCtx(UserContext);
   
-  return <p className = {className}>{user?.username || username}</p>
+  return <p className = {className}>{showAt && '@'}{user?.username || username}</p>
 })
 
-UserIcon.Avatar = memo(({className, size = "16", avatar = "..."}) => {
+UserIcon.Nickname = memo(({nickname = "", className = ""}) => {
+  const { user = {
+    nickname: '' 
+  } }= useCtx(UserContext);
+  return <p className = {className}>{nickname || user.nickname}</p>
+})
+
+UserIcon.Avatar = memo(({className, size = "16", avatar = ""}) => {
   const { user = {
     avatar: "" 
-    }}= useCtx(UserContext);
+    }}= useCtx(UserContext)
   
   return <div className = {`rounded-full size-${size} text-xs overflow-hidden grid place-content-center outline-2 outline-blue-300 outline-offset-2 ${className}`}>
-    <Image className = "w-full  h-full object-cover" src = {user?.avatar || avatar} alt = "Avatar" />
+    <Image className = "w-full  h-full object-cover" src = { avatar || user?.avatar} alt = "Avatar" />
   </div>
 })
 

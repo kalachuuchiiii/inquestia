@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { memo } from 'react';
 const AnimationWrapper = ({variants = "fade", className = "", children, layout = false, onClick}) => {
   
-  return <>
+  return (
      <motion.div
   variants = {allVariants[variants]}
    initial = "hidden" 
@@ -17,7 +17,8 @@ const AnimationWrapper = ({variants = "fade", className = "", children, layout =
       children
     }
   </motion.div>
-  </>
+  )
+
 }
 
 export default memo(AnimationWrapper)

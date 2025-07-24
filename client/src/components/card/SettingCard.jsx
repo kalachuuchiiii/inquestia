@@ -10,7 +10,7 @@ const SettingButton = ({children = null, onClick = () => {}}) => {
 const SettingCard = ({children = null}) => {
 
 return <div>
-    <div className = "text-white my-8">
+    <div className = " my-8">
     <h1 className = " text-4xl lato">Settings</h1>
   <p className = "text-base">Adjust themes, and Manage your account, to your preferences
 </p>
@@ -25,7 +25,7 @@ return <div>
 
 SettingCard.NewOption = ({label = "", children = null}) => {
   
-  return <div className = "backdrop-brightness-150 rounded-lg py-3 px-6">
+  return <div className = "backdrop-brightness-50 rounded-lg py-3 px-6">
     <p className = "font-bold text-lg my-3">{label}</p>
     <div className = "flex flex-col gap-1 items-start divide-y-1">
       {children}

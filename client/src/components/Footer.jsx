@@ -2,13 +2,13 @@ import { outsideLinks } from '../data/outsideLinks.jsx';
 import footerRoutes from '../data/footerRoutes.js';
 import List from './List.jsx';
 import { FaCode } from "react-icons/fa6";
-import AppIcon from './icon/app-icon.jsx';
+
 import user from '../data/user.js';
 
 const Footer = () => {
 
 
-  return <footer className=" text-zinc-900 bottom-0 mx-auto w-screen flex flex-col justify-center items-start">
+  return <footer className=" bottom-0 mx-auto w-screen flex flex-col justify-center items-start">
     <div className="h-[1px] bg-black/30 w-full" />
     <div className="h-40 px-4 flex flex-col justify-center gap-2">
       <div className = "flex items-center">
@@ -33,7 +33,7 @@ const Footer = () => {
         <img src = {user.avatar} className = "size-8 rounded-full outline" />
         <div className = "w-full flex flex-col">
          <a href = "https://github.com/kalachuuchiiii">{user.username}</a>
-         <p className = "p-1 outline outline-gray-400 bg-gray-200 text-xs rounded-lg w-fit">Developer</p>
+         <p className = "px-3 py-1 bg-zinc-900/70 text-xs rounded-lg w-fit">Developer</p>
         </div>
       </div>
             <div className = "opacity-70">

@@ -5,7 +5,7 @@ import { useState, memo } from 'react';
 import { useSearchParams } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
-import AppIcon from './icon/app-icon.jsx';
+
 
 
 const NavBar = memo(({ onToggleSidebar, className = "top-0 z-20 inset-x-0 sticky px-5 py-6 bg-gradient-to-b w-full rounded-b-xl flex justify-between text-zinc-900 items-center ", children }) => {

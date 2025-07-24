@@ -4,6 +4,7 @@ import SurveyList from '../../components/SurveyList.jsx';
 import { useEffect, useState } from 'react';
 import useSearchQuery from '../../hooks/useSearchQuery.js';
 import { surveys } from '../../data/mockData/surveyList.js';
+import Dashboard from '../../components/Dashboard.jsx';
 
 const HomePage = () => {
   
@@ -24,12 +25,11 @@ const HomePage = () => {
   }, [currentParams, currTopic])
   
 
-return <div >
-  <TopicsList setTopic = {setCurrTopic} />
-  <CurrentTopic topic = {currTopic} />
+return <div className = "p-2" >
+      <Dashboard />
 
-      <SurveyList surveyList = {surveyList} />
-  
+              <SurveyList surveyList = {surveyList} />
+      
 </div>
 }
 

@@ -10,12 +10,12 @@ import UserIcon from './components/UserIcon.jsx'
 import usePath from './hooks/usePath.js';
 import Footer from './components/Footer.jsx';
 import Wave from './components/designs/wave/Wave.jsx';
+import StarryNightBg from './components/designs/background/StarryNight.jsx';
 function App() {
   const [isSidebarOpen, setIsSideBarOpen] = useState(false);
   const { isInThisPath } = usePath();
   
-  return <div className = "h-max flex flex-col justify-center items-center container">
-    <Wave />
+  return <div className = "h-max w-full flex flex-col justify-center items-center container">
     <Routes>
       <Route element={
         <div className="w-full flex">
@@ -25,6 +25,7 @@ function App() {
             }
           </AnimatePresence>
           <div className = "w-full transition-all duration-200">
+            
              <NavBar >
                <NavBar.Relate >
                  <NavBar.SideBarToggler onToggleSidebar = {() => setIsSideBarOpen(prev => !prev)} size = "30" />
@@ -48,7 +49,6 @@ function App() {
       }
       </Route>
       <Route element = {<div className = "w-full ">
-
         <NavBar>
           <NavBar.App /> 
           <NavBar.SignUp />

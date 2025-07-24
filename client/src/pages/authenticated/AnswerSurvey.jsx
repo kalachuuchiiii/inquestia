@@ -17,7 +17,9 @@ const AnswerSurvey = () => {
   
   const { getSurveyQuestionById, error, submitSurvey, modifyForm } = useQuestionFields({ initial: questionList, surveyId: _id});
   
-return <form onSubmit = {submitSurvey}>
+return (
+  <div className = "p-1">
+    <form className = "backdrop-brightness-25 p-2 rounded" onSubmit = {submitSurvey}>
   <SurveyCard survey = {selectedSurvey} >
     <SurveyCard.User /> 
     <SurveyCard.Header /> 
@@ -30,10 +32,11 @@ return <form onSubmit = {submitSurvey}>
     <SurveyCard.TargetRespondents />
     <div className = "text-right">
       
-          <button type = "submit" className = "text-right mx-3 pr-4 pl-2 py-1  text-zinc-900 mt-4 mb-10">Submit Response</button>
+          <button type = "submit" className = "text-right mx-3 pr-4 pl-2 py-1  mt-4 mb-10">Submit Response</button>
     </div>
   </SurveyCard>
 </form>
+  </div>)
 }
 
 export default AnswerSurvey

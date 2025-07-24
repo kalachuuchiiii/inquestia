@@ -5,9 +5,9 @@ const Image = ({src = "", alt = "Avatar", className = ''}) => {
 
 
 return <div className = "grid place-content-center w-full h-full">
-  <img src = {src} alt = {alt} className = {`${!isLoaded && 'hidden'} ${className}`} onLoad = {() => setIsLoaded(true)} />
+  <img src = {src} alt = {alt} className = {`${!isLoaded && ' hidden '} ${className}`} onLoad = {() => setIsLoaded(true)} />
   {
-    !isLoaded && <img src = {"/jonas.jpeg"} />
+    !isLoaded && <img src = {src} />
   }
 </div>
 }

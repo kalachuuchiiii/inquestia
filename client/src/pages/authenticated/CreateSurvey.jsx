@@ -16,11 +16,14 @@ const CreateSurvey = () => {
   
 
 
-  return <div className="p-3">
-    <AnimatePresence>
+  return (
+    <div className = "p-1">
+          <AnimatePresence>
       {isNewQuestionModalOpen && <NewQuestionModal createQuestion={(obj) => addQuestion(obj)} onClose={closeNewQuestionModal} />}
     </AnimatePresence>
-    <UserIcon user={user}>
+      <div className="p-3 rounded backdrop-brightness-25">
+
+    <UserIcon className = "p-2" user={user}>
       <UserIcon.Card >
         <p className="text-sm">New Survey</p>
       </UserIcon.Card>
@@ -61,6 +64,7 @@ const CreateSurvey = () => {
       </button>
     </div>
   </div>
+    </div>)
 }
 
 export default CreateSurvey

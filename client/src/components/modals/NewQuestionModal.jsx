@@ -24,9 +24,9 @@ const NewQuestionModal = ({ onClose, createQuestion }) => {
   }
 
 
-  return <AnimationWrapper onClick={onClose} className="fixed inset-0 z-30" variants="fade">
-    <div className="w-full h-full bg-black/80 flex flex-col items-center justify-center gap-6 ">
-      <AnimationWrapper variants="adapt" onClick={(e) => e.stopPropagation()} className="p-4 w-11/12 overflow-hidden rounded-xl   bg-neutral-50">
+  return <AnimationWrapper  className="fixed inset-0 z-30" variants="fade">
+    <div onClick={onClose} className=" bg-black/80 w-full h-full flex  items-center justify-center gap-6 ">
+      <AnimationWrapper variants="adapt" onClick={(e) => e.stopPropagation()} className="p-4 w-11/12 overflow-hidden rounded-xl bg-zinc-800 ">
         <p className="text-sm  w-full text-center">Add new question</p>
         <div>
           <div className="mb-4">
@@ -38,9 +38,9 @@ const NewQuestionModal = ({ onClose, createQuestion }) => {
           </div>
           <p className="text-xs w-10/12 text-left">In which way do you want the respondent to answer?</p>
           <div className="flex items-start flex-col text-sm gap-2 my-4 mx-2">
-            <button name="text" className={`${(!isCustomOptions && quest.option === "text") ? 'bg-blue-100 outline-blue-200' : 'outline-none'} rounded-lg p-2 outline-1`} onClick={handleChangeCustomOptions} value={false} type="radio">Through Text</button>
+            <button name="text" className={`${(!isCustomOptions && quest.option === "text") ? ' outline-blue-200' : 'outline-none'} rounded-lg p-2 outline-1`} onClick={handleChangeCustomOptions} value={false} type="radio">Through Text</button>
             <div className="flex gap-2 items-center">
-              <button name="custom" className={`${isCustomOptions && quest.option === "custom" ? 'bg-blue-100 outline-blue-200' : 'outline-none'} rounded-lg p-2 outline-1`} onClick={handleChangeCustomOptions} value={true}>Selected Options</button>
+              <button name="custom" className={`${isCustomOptions && quest.option === "custom" ? ' outline-blue-200' : 'outline-none'} rounded-lg p-2 outline-1`} onClick={handleChangeCustomOptions} value={true}>Selected Options</button>
               {
                 (isCustomOptions && !showOptionManager) ? <button onClick={() => setShowOptionManager(true)} className="text-xs">
                   Show

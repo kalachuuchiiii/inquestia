@@ -3,7 +3,7 @@ import Form from '../../components/html/Form.jsx';
  const Hero = () => {
    
    return <div className = "pr-10  space-y-1">
-     <h1 className = "text-5xl opacity-70 lato">Welcome Back!</h1>
+     <h1 className = "text-5xl lato">Welcome Back!</h1>
      <p>Ready to dive back in? Sign in to unlock everything</p>
    </div>
  }

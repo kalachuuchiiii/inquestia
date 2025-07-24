@@ -12,7 +12,7 @@ const Profile = () => {
 
 
   return <div className="p-3">
-    <div className="backdrop-brightness-150 p-6 rounded-lg">
+    <div className="backdrop-brightness-50 p-6 rounded-lg">
       <UserProfile className="flex gap-2">
         <div className="flex flex-col justify-center items-start gap-3">
           <UserProfile.Avatar className="" size="30" avatar={user.avatar} />

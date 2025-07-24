@@ -12,7 +12,7 @@ const SurveyList = ({surveyList = surveys}) => {
   }
 
 return <div>
-  <List list = {surveyList} renderItem = {(survey) => <SurveyCard question = {
+  <List className = "flex flex-col gap-3 " list = {surveyList} renderItem = {(survey) => <SurveyCard question = {
   prevQuestion(survey._id)
   } survey = {survey} >
     <SurveyCard.User />

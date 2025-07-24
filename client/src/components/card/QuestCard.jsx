@@ -13,7 +13,7 @@ const QuestCard = ({ quest = defaultQuest }) => {
 
   const { objective, targetNumber, totalNumber, difficulty, points, description } = quest ?? defaultQuest;
 
-  return <div className="px-4 py-6 rounded-xl shadow-md space-y-3 ">
+  return <div className="px-4 backdrop-brightness-50 py-6 rounded-xl shadow-md space-y-3 ">
 
     <div className = "">
       <div className="mt-4 mb-2">

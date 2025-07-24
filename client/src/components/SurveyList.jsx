@@ -11,8 +11,8 @@ const SurveyList = ({surveyList = surveys}) => {
    return question;
   }
 
-return <div>
-  <List className = "flex flex-col gap-3 " list = {surveyList} renderItem = {(survey) => <SurveyCard question = {
+return <div className = "w-full">
+  <List className = "flex  flex-col justify-center items-center gap-3 " list = {surveyList} renderItem = {(survey) => <SurveyCard question = {
   prevQuestion(survey._id)
   } survey = {survey} >
     <SurveyCard.User />

@@ -8,8 +8,7 @@ import user from '../data/user.js';
 const Footer = () => {
 
 
-  return <footer className=" bottom-0 mx-auto w-screen flex flex-col justify-center items-start">
-    <div className="h-[1px] bg-black/30 w-full" />
+  return <footer className=" bottom-0 mx-auto w-screen flex flex-col justify-center items-center py-2 bg-zinc-800">
     <div className="h-40 px-4 flex flex-col justify-center gap-2">
       <div className = "flex items-center">
         <h1 className="text-3xl lato">Inquestia.ask</h1>
@@ -18,12 +17,12 @@ const Footer = () => {
         {link.icon}
       </a>} />
     </div>
-    <div className="flex p-4 justify-end items-end h-full">
-      <List className = "flex w-full flex-col gap-6" list = {footerRoutes} renderItem = {(route) => <div>
+    <div className="flex p-4 gap-8 justify-end items-end sm:items-start h-full">
+      <List className = " w-full grid grid-cols-1 sm:grid-cols-2 gap-8" list = {footerRoutes} renderItem = {(route) => <div>
            <label className="font-semibold my-4">{route.title}</label>
            <List className = "flex text-sm flex-col" list = {route.paths} renderItem = {(path) =>         <a className = "active:underline" href={path.path} >{path.label}</a>} />
       </div>} />
-            <div className = "h-full flex flex-col">
+            <div className = "h-full flex flex-col ">
         <a href = "https://github.com/kalachuuchiiii/inquestia" className = "truncate items-center px-6 py-2 rounded-lg bg-zinc-900 active:text-zinc-900 active:bg-neutral-50 active:outline transition-colors duration-all flex gap-2 text-neutral-200">View Source Code <FaCode size = "20" /></a>
       </div>
     </div>

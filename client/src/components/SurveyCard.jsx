@@ -11,7 +11,7 @@ const SurveyCardContext = createContext();
 const SurveyCard = ({ survey = {}, question, children }) => {
   return <SurveyCardContext.Provider value = {{survey, question}}>
 
-    <div className="p-3 backdrop-brightness-50 rounded-xl shadow-md">
+    <div className="p-3 w-full backdrop-brightness-50 rounded-xl shadow-md">
       {children}
     </div>
   </SurveyCardContext.Provider>

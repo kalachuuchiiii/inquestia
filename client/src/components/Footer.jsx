@@ -8,7 +8,7 @@ import user from '../data/user.js';
 const Footer = () => {
 
 
-  return <footer className=" bottom-0 mx-auto w-screen flex flex-col justify-center items-center py-2 bg-zinc-800">
+  return <footer className=" bottom-0 mx-auto w-screen flex flex-col justify-center items-center py-2 bg-zinc-950">
     <div className="h-40 px-4 flex flex-col justify-center gap-2">
       <div className = "flex items-center">
         <h1 className="text-3xl lato">Inquestia.ask</h1>

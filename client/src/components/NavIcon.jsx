@@ -1,21 +1,17 @@
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import { memo, useMemo } from 'react';
 import usePath from '../hooks/usePath.js';
 
 const NavIcon = ({info = null, position}) => {
   
-  const { path, icon } = info;
+  const { path, icon, label } = info;
   const { isInThisPath } = usePath();
   
-  const border = {
-    first: "rounded-tr-[25px]", 
-    last: "rounded-br-[25px]",
-    "" : ""
-  }
   
-return <div className = {`py-6 px-3 border-r-3 ${border[position]}  transition-colors duration-200  ${ isInThisPath(path) ? "border-fuchsia-200/60" : "border-transparent"} `}>
-        <Link to = {path}>{icon}</Link>
-      </div>
+return <NavLink to = {path} className = {` flex gap-2 items-center px-3 py-4 ${isInThisPath(path) && "bg-zinc-400"} active:bg-zinc-400 transition-colors duration-200   `}>
+  <p>{icon}</p>
+        <p>{label}</p>
+      </NavLink>
 }
 
 export default memo(NavIcon);

@@ -8,7 +8,7 @@ import { IoMdClose } from "react-icons/io";
 
 
 
-const NavBar = memo(({ onToggleSidebar, className = "top-0 z-20 inset-x-0 sticky px-5 py-6 bg-gradient-to-b w-full rounded-b-xl flex justify-between text-zinc-900 items-center ", children }) => {
+const NavBar = memo(({ onToggleSidebar, className = "top-0 z-20 left-0 inset-x-0 sticky px-5 py-6 bg-gradient-to-b w-full rounded-b-xl flex justify-between text-zinc-900 items-center ", children }) => {
 
   return <div className={`${className} overflow-hidden h-18`}>
     {children}
@@ -21,10 +21,10 @@ NavBar.Relate = memo(({ gap = 2, children }) => {
   </div>
 })
 
-NavBar.App = memo(({size = "8", color = "white", disabled = false}) => {
-  return ( <button className = "flex">
-          <a disabled = {disabled} href = "/" className = {`text-lg font-bold text-${color}`}>Inquestia.ask</a>
-    </button>)
+NavBar.App = memo(({color = "white", disabled = false}) => {
+  return ( <p className = {`font-bold text-lg text-${color} `}>
+    Inquestia.ask
+    </p>)
 })
 
 NavBar.SideBarToggler = memo(({onToggleSidebar = () => {}, size = "20", color = "white"}) => {

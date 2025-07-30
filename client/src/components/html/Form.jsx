@@ -7,9 +7,9 @@ const FormContext = createContext(null);
 
 const Form = ({children = null, label = 'Form', handleChange = () => {}, onSubmit = () => {}, formField = {}}) => {
   
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async(e) => {
     e.preventDefault();
-    onSubmit();
+    await onSubmit();
   }
 
 
@@ -40,7 +40,7 @@ Form.Username = ({placeholder = "Username"}) => {
     <label className = "text-xs">
       Username
     </label> 
-    <input type = "text" placeholder = {placeholder} className = "p-1 rounded outline-none" name = "username" onChange = {handleChange} value = {formField?.username} />
+    <input required type = "text" placeholder = {placeholder} className = "p-1 rounded outline-none" name = "username" onChange = {handleChange} value = {formField?.username} />
   </div>
 }
 
@@ -50,6 +50,11 @@ Form.ForgotPassword = () => {
     Forgot password
   </p>
   </a>
+}
+
+Form.ErrorMessage = ({error = ''}) => {
+  
+  return <p className = "h-2 text-xs text-red-400">{error && error}</p>
 }
 
 
@@ -70,13 +75,13 @@ Form.Password = ({placeholder = "Password"}) => {
   const { handleChange = () => {}, formField = {}} = useCTX(FormContext);
   const [isShowPassword, setIsShowPassword] = useState(false);
   
-  return <div className = "flex flex-col ">
+  return <div className = "flex flex-col">
     <label className = "text-xs">
       Password
     </label> 
-    <div className = "p-1 rounded grid grid-cols-10 gap-1 items-center">
-          <input type = { isShowPassword ? "text" : "password"} placeholder = {placeholder} className = " outline-none col-span-8 col-start-1" name = "password" onChange = {handleChange} value = {formField?.password} /> 
-          <button onClick = {() => setIsShowPassword(prev => !prev)} className = "p-1 col-span-2 col-start-9">
+    <div className = "p-1 rounded flex  items-center">
+          <input required type = { isShowPassword ? "text" : "password"} placeholder = {placeholder} className = " outline-none p-1 rounded" name = "password" onChange = {handleChange} value = {formField?.password} /> 
+          <button type = "button" onClick = {() => setIsShowPassword(prev => !prev)} className = "p-3">
              {
                isShowPassword ? <IoEyeOutline  /> : <IoEyeOffOutline  />
              }
@@ -93,13 +98,13 @@ Form.Email = ({placeholder = "Email"}) => {
     <label className = "text-xs">
       Email
     </label> 
-    <input type = "email" placeholder = {placeholder} className = "p-1 rounded outline-none" name = "email" onChange = {handleChange} value = {formField?.email} />
+    <input required type = "email" placeholder = {placeholder} className = "p-1 rounded outline-none" name = "email" onChange = {handleChange} value = {formField?.email} />
   </div>
 }
 
-Form.Submit = ({label = "Submit"}) => {
+Form.Submit = ({label = "Submit", disabled = false}) => {
   
-  return <button>
+  return <button disabled = {disabled}>
     <p className = "w-fit px-6 py-1 bg-zinc-900/80 rounded text-white font-bold">
     {label}
   </p>

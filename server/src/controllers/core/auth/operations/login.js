@@ -10,7 +10,8 @@ const comparePasswords = async(candidatePass, pass) => {
 exports.login = async(req, res, commit) => {
   
   const { password: candidatePass = ''} = req.user;
- const user = req.user;
+ const user = req.verifiedUser
+ console.log(user);
  
   const isPasswordCorrect = await comparePasswords(candidatePass, user.password);
   if(!isPasswordCorrect){
@@ -20,7 +21,9 @@ exports.login = async(req, res, commit) => {
     })
   }
   
- const token = signToken({ user: user._id }); storeCookie(res, {
+ const token = await signToken({ user: user._id });
+
+ storeCookie(res, {
    key: "token", 
    value: token, 
  })
@@ -31,6 +34,7 @@ exports.login = async(req, res, commit) => {
  return res.status(200).json({
    success: true, 
    message: "Logged in successfully", 
-   user: userData
+   user: userData, 
+   token
  })
 }

@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import NavBar from './NavBar.jsx';
 import List from './List.jsx';
 import NavIcon from './NavIcon.jsx';
-import detectPosition from '../utils/detectPositionInAList.js';
+import UserIcon from '../components/UserIcon.jsx';
+import { useSelector } from 'react-redux';
 const Sidebar = ({onClose = () => {}, isLargeScreen = false}) => {
+  const { user } = useSelector(state => state.user);
   
   
 
@@ -18,7 +20,18 @@ className = {` ${isLargeScreen ? "sticky min-h-full" : "fixed h-screen"} top-0 z
     <NavBar.SideBarToggler onToggleSidebar = {onClose} size = "30"/>
             <NavBar.App />
     </div>
-    <List className = "w-60 my-6  z-50 overflow-hidden" list = {navRoutes} renderItem = {(info, i) => <NavIcon position = {detectPosition(i, navRoutes.length - 1)} key = {info?.path} info = {info} />} />
+    <div className = "p-4 text-xs flex opacity-50">
+      <div className = "size-16">
+        <UserIcon user = {user}>
+          <UserIcon.Avatar size = "10" />
+        </UserIcon>
+      </div>
+      <div className = "flex flex-col">
+                  <p >{user?.username}</p>
+          <p>{user?.email}</p>
+      </div>
+    </div>
+    <List className = "w-60 my-6  z-50 overflow-hidden" list = {navRoutes} renderItem = {(info, i) => <NavIcon key = {info?.path} info = {info} />} />
   </div>
   
 </AnimationWrapper>

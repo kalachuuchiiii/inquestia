@@ -8,26 +8,13 @@ exports.storeCookie = (res, {
     throw new Error("Key and value is expected to store cookies");
   }
   
-    res.cookies(key, value, {
+    const cookie = res.cookie(key, value, {
       httpOnly: true, 
       secure: process.env.NODE_ENV === "production", 
       maxAge: ThirtyDays, 
-      sameSite: "None"
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
     })
+    console.log(cookie);
+    return cookie;
   
-}
-
-exports.getCookie = async(res, {
-  key = ''
-}) => {
-  if(!key)throw new Error("Key must be defined to get the responding cookie");
-  
-  const cookie = res.cookie(key, {
-    httpOnly: true, 
-      secure: process.env.NODE_ENV === "production", 
-      maxAge: ThirtyDays, 
-      sameSite: "None"
-  })
-  
-  return cookie;
 }

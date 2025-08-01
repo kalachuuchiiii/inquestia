@@ -104,7 +104,7 @@ Form.Email = ({placeholder = "Email"}) => {
 
 Form.Submit = ({label = "Submit", disabled = false}) => {
   
-  return <button disabled = {disabled}>
+  return <button type = "submit" disabled = {disabled}>
     <p className = "w-fit px-6 py-1 bg-zinc-900/80 rounded text-white font-bold">
     {label}
   </p>

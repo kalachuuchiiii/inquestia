@@ -10,6 +10,8 @@ import AnswerSurveyPage from '../pages/authenticated/AnswerSurvey.jsx';
 import TemplatePage from '../pages/authenticated/Templates.jsx'
 import LoginPage from '../pages/not-authenticated/Login.jsx';
 import RegisterPage from '../pages/not-authenticated/Register.jsx';
+import EditProfilePage from '../pages/authenticated/EditProfile.jsx';
+
 export const publicPages = [
       {
       path: "/", 
@@ -26,6 +28,10 @@ export const pages = [
     {
       path: "/home", 
       element: <HomePage />
+    },
+    {
+      path: '/profile/edit', 
+      element: <EditProfilePage />
     },
     {
       path: "/survey/:id", 

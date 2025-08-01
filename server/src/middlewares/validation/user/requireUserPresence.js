@@ -8,13 +8,16 @@ exports.requireUserPresence = async(req, res, next) => {
     })
   }
   
-  if(req?.isUsernameAlreadyTaken){
+  
+  req.verifiedUser = req.isEmailAlreadyUsed;
+  
+  if(!req.verifiedUser){
     return res.status(400).json({
       success: false, 
-      message: "This user doesn't exist", 
-      usernamePresence: false
+      message: "User not found."
     })
   }
+  
   
   next();
 }

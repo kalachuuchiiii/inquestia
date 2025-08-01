@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express(); 
 const redis = require("./src/config/redis/index.js");
+const cookieParser = require("cookie-parser");
 const mainRouter = require("./src/router/index.js");
 const { connectDB } = require("./src/config/mongodb/index.js");
 
@@ -11,6 +12,7 @@ app.use(cors({
   origin: process.env.WEB_ORIGIN,
   credentials: true
 }))
+app.use(cookieParser());
 
 app.use("/api", mainRouter);
 
@@ -23,3 +25,5 @@ connectDB().then(() => {
   })
 })
 })
+
+module.exports = app;

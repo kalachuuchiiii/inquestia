@@ -18,7 +18,7 @@ const useLogin = () => {
         user: {
           ...form
         }, 
-      })
+      }, { withCredentials: true})
       if(res?.data?.user){
         setIsAuthenticated(true);
         nav("/home")

@@ -25,9 +25,10 @@ UserIcon.Username = memo(({className = "", username = "...", showAt = false}) =>
 
 UserIcon.Nickname = memo(({nickname = "", className = ""}) => {
   const { user = {
-    nickname: '' 
+    nickname: '' , 
+    username: ''
   } }= useCtx(UserContext);
-  return <p className = {className}>{nickname || user.nickname}</p>
+  return <p className = {className}>{user.nickname || user.username}</p>
 })
 
 UserIcon.Avatar = memo(({className, size = "16", avatar = ""}) => {
@@ -41,8 +42,8 @@ UserIcon.Avatar = memo(({className, size = "16", avatar = ""}) => {
 })
 
 UserIcon.Bio = ({bio = ""}) => {
-  return <div>
-    <Textarea value = {bio} maxLength = {60} />
+  return <div className = "w-full">
+    <Textarea className = "w-full" value = {bio} maxLength = {60} />
   </div>
 }
 

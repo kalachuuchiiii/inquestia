@@ -7,7 +7,6 @@ import { AnimatePresence } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 
 
-
 const NavBar = memo(({ onToggleSidebar, className = "top-0 z-20 left-0 inset-x-0 sticky px-5 py-6 bg-gradient-to-b w-full rounded-b-xl flex justify-between text-zinc-900 items-center ", children }) => {
 
   return <div className={`${className} overflow-hidden h-18`}>

@@ -1,19 +1,37 @@
-import { useState } from 'react'
-import { Routes, Route, Outlet } from "react-router-dom"
+import { useState, useEffect } from 'react'
+import { Routes, Route, Outlet, useNavigate } from "react-router-dom"
 import { pages, publicPages } from './data/pageRoutes.jsx';
 import SideBar from './components/SideBar.jsx';
 import { AnimatePresence } from 'framer-motion';
 import UserIcon from './components/UserIcon.jsx';
-import user from './data/user.js';
+import { getSession } from './state/slice/user.js';
 import NavBar from './components/NavBar.jsx';
 import usePath from './hooks/usePath.js';
+import { useSelector, useDispatch } from 'react-redux';
 import Footer from './components/Footer.jsx';
 import useWindow from './hooks/useWindow.js';
 function App() {
   const [isSidebarOpen, setIsSideBarOpen] = useState(window.innerWidth >= 720);
+  const { user = {} } = useSelector(state => state.user);
   const [isLargeScreen] = useWindow({
     screenSize: 720
   });
+  
+  const dispatch = useDispatch();
+  const nav = useNavigate();
+  
+  const session = async() => {
+    const res = await dispatch(getSession());
+    console.log(res);
+    if(!res.payload.authenticated){
+      nav("/login");
+    }
+  }
+  
+  useEffect(() => {
+    session();
+  }, [])
+  
 
   const { isInThisPath } = usePath();
   

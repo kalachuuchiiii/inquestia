@@ -5,31 +5,19 @@ import { useEffect, useState } from 'react';
 import useSearchQuery from '../../hooks/useSearchQuery.js';
 import { surveys } from '../../data/mockData/surveyList.js';
 import Dashboard from '../../components/Dashboard.jsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSession } from '../../state/slice/user.js';
+import { useNavigate } from "react-router-dom"
 
 const HomePage = () => {
-  
-  const [surveyList, setSurveyList] = useState([]);
-  const [currTopic, setCurrTopic] = useState("Technology");
   const { currentParams } = useSearchQuery({
     key: "topic", 
     initial: "technology"
   })
-  
-  
-  useEffect(() => {
-    const matcher = () => {
-   const d = surveys.filter(q => q.topics.includes(currentParams || "technology"));
-   setSurveyList(d);
-  }
-    matcher();
-  }, [currentParams, currTopic])
-  
 
 return <div className = "p-2" >
       <Dashboard />
-
-              <SurveyList surveyList = {surveyList} />
-      
+              <SurveyList surveyList = {surveys} />
 </div>
 }
 

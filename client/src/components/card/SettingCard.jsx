@@ -27,7 +27,7 @@ SettingCard.NewOption = ({label = "", children = null}) => {
   
   return <div className = "backdrop-brightness-50 rounded-lg py-3 px-6">
     <p className = "font-bold text-lg my-3">{label}</p>
-    <div className = "flex flex-col gap-1 items-start divide-y-1">
+    <div className = "flex flex-col gap-1 items-start text-sm divide-y-1">
       {children}
     </div>
   </div>
@@ -81,6 +81,14 @@ SettingCard.ChangePassword = ({user = {}}) => {
   return <SettingButton>
     <p>Security</p> 
     <button className = "text-sm">Change Password</button>
+  </SettingButton>
+}
+
+SettingCard.Account = () => {
+  return <SettingButton>
+    <a href = "/profile/edit">
+          <p>Update profile</p> 
+    </a>
   </SettingButton>
 }
 

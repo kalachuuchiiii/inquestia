@@ -13,6 +13,7 @@ const { folders: customAppRouters, directories } = folderReader([__dirname, "../
       appRouter.use(entityRouter);
       return;
     }
+    console.log(directories[entity]);
     const customRouter = require(path.join(directories[entity], "index.js"))
     appRouter.use(customRouter);
   })

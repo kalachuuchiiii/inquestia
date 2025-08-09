@@ -1,6 +1,7 @@
 const User = require("../../../models/user.js");
+const { catchError } = require("../../../utils/errorHandlers/catchError.js");
 
-exports.checkUserPresence = async (req, res, next) => {
+exports.checkUserPresence = catchError(async (req, res, next) => {
   const { username = null, email = ''} = req.user;
 
   const [isEmailAlreadyUsed, isUsernameAlreadyTaken] = await Promise.all([
@@ -12,4 +13,4 @@ exports.checkUserPresence = async (req, res, next) => {
   req.isUsernameAlreadyTaken = isUsernameAlreadyTaken
 
   next();
-}
+})

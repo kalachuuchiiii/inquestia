@@ -23,4 +23,11 @@ const streakSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 const Streak = mongoose.model("Streak", streakSchema);
+
+const deleteAll = async() => {
+   const inf = await Streak.deleteMany(); 
+   console.log(inf);
+ }
+ 
+ //deleteAll();
 module.exports = Streak;

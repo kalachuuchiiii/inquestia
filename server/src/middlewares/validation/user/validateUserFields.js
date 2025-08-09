@@ -1,8 +1,9 @@
 const User = require("../../../models/user.js");
 const { emailValidator, textValidator, lengthChecker } = require("../../../utils/string.validators.js")
+const { catchError } = require("../../../utils/errorHandlers/catchError.js");
 
 
-exports.validateUserFields = async(req, res, next) => {
+exports.validateUserFields = catchError(async(req, res, next) => {
   let { email, password } = req.body.user;
   
   if(typeof password !== "string" || typeof email !== "string"){
@@ -41,4 +42,4 @@ exports.validateUserFields = async(req, res, next) => {
   }
 
 next();
-}
+})

@@ -9,6 +9,7 @@ return <div className = "px-4">
      <SettingCard.HideDesigns />
     </SettingCard.NewOption>
     <SettingCard.NewOption label = "Account" >
+      <SettingCard.Account />
       <SettingCard.Email />
       <SettingCard.ChangePassword />
           <SettingCard.Logout />

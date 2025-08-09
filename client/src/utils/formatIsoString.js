@@ -15,19 +15,19 @@ export const formatIsoString = (date) => {
   }
   
   if(dayGap > 0){
-    return `${dayGap}d`;
+    return `${dayGap}d ago`;
   }
   
   const hourGap = detectHourGap(date);
   
   if(hourGap > 0){
-    return `${hourGap}h`;
+    return `${hourGap}h ago`;
   }
   
   const minuteGap = detectMinuteGap(date);
   
   if(minuteGap > 0){
-    return `${minuteGap}m`;
+    return `${minuteGap}m ago`;
   }
   
   return `Created a few seconds ago`;

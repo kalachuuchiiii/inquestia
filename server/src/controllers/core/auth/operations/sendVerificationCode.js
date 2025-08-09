@@ -1,6 +1,11 @@
 const { sendCode } = require("../../../../utils/email/sendEmail.js");
+const { validateUserFields } = require("../../../../middlewares/validation/user/validateUserFields.js");
+const {checkUserPresence} = require("../../../../middlewares/validation/user/checkUserPresence.js");
+const { preventUserDuplication } = require("../../../../middlewares/validation/user/preventUserDuplication.js");
+const { validateUsername } = require("../../../../middlewares/validation/user/validateUsername.js");
+const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 
-exports.sendVerificationCode = async(req, res) => {
+const sendVerificationCode = async(req, res) => {
 
   const { email } = req.user; 
   
@@ -14,3 +19,13 @@ exports.sendVerificationCode = async(req, res) => {
    sent: true
   })
 }
+
+module.exports = (build) => {
+  build({
+  name: "register_otp",
+  method: "post",
+  path: "/user/register/otp",
+  middlewares: [validateUserFields, validateUsername, checkUserPresence, preventUserDuplication],
+  fn: catchError(sendVerificationCode)
+})
+};

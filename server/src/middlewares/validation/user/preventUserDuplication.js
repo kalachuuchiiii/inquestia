@@ -1,4 +1,6 @@
-exports.preventUserDuplication = async(req, res, next) => {
+const { catchError } = require("../../../utils/errorHandlers/catchError.js");
+
+exports.preventUserDuplication = catchError(async(req, res, next) => {
   const { isEmailAlreadyUsed, isUsernameAlreadyTaken } = req; 
   if(isEmailAlreadyUsed){
     return res.status(409).json({
@@ -15,4 +17,4 @@ exports.preventUserDuplication = async(req, res, next) => {
   }
   
   next();
-}
+})

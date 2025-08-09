@@ -1,7 +1,8 @@
 const { decodeToken } = require("../../utils/auth/jwt.methods.js")
 const User = require("../../models/user.js");
+const { catchError } = require("../../utils/errorHandlers/catchError.js");
 
-exports.verifySession = async(req, res, next) => {
+exports.verifySession = catchError(async(req, res, next) => {
   const token = req.cookies.token;
   const decoded = await decodeToken(token);
   if(!decoded?.user){
@@ -21,4 +22,4 @@ exports.verifySession = async(req, res, next) => {
     })
   }
   next();
-}
+});

@@ -41,18 +41,14 @@ UserIcon.Avatar = memo(({className, size = "16", avatar = ""}) => {
   </div>
 })
 
-UserIcon.Bio = ({bio = ""}) => {
-  return <div className = "w-full">
-    <Textarea className = "w-full" value = {bio} maxLength = {60} />
-  </div>
-}
 
-UserIcon.Card = ({children, size = "10"}) => {
+UserIcon.Card = ({children, className = '' ,size = "10"}) => {
   
-  return <div className = "flex gap-2 items-center w-full">
+  return <div className = "flex gap-3 items-center ">
     <UserIcon.Avatar size = {size} /> 
     <div className = "flex flex-col ">
-          <UserIcon.Username className = "font-semibold" />
+       <UserIcon.Nickname />
+          <UserIcon.Username showAt className = "text-xs opacity-50" />
           {children}
     </div>
   </div>

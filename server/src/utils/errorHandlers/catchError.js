@@ -4,6 +4,7 @@ exports.catchError = (fn = () => { }) => {
     try {
       await fn(req, res, next); 
     } catch (e) {
+
       return res.status(500).json({
         success: false,
         message: e.message || "Internal Server Error."
@@ -15,13 +16,15 @@ exports.catchError = (fn = () => { }) => {
 exports.catchErrorWithSession = (fn = () => { }) => {
   return async (req, res, next) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
+    await session.startTransaction();
     try {
       req.session = session;
+      
       const commit = async() => {
         await session.commitTransaction();
       }
-      await fn(req, res, next, commit); //fn commits
+      await fn(req, res, next, commit); 
+      
     } catch (e) {
       await session.abortTransaction();
       return res.status(500).json({
@@ -29,7 +32,7 @@ exports.catchErrorWithSession = (fn = () => { }) => {
         message: e.message || "Internal Server Error."
       })
     } finally {
-      session.endSession();
+      await session.endSession();
     }
   }
 }

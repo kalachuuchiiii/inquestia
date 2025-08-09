@@ -4,6 +4,9 @@ exports.emailValidator = (value) => {
  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
 }
 
+exports.nicknameValidator = (value) => { /^(?!.*  )[a-zA-Z0-9._ ]+$/.test(value)
+}
+
 exports.lengthChecker = (value = '', {
   key = null,
   min = 0, 

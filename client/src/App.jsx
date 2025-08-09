@@ -12,7 +12,7 @@ import Footer from './components/Footer.jsx';
 import useWindow from './hooks/useWindow.js';
 function App() {
   const [isSidebarOpen, setIsSideBarOpen] = useState(window.innerWidth >= 720);
-  const { user = {} } = useSelector(state => state.user);
+  const { user = {}, isAuthenticated = false} = useSelector(state => state.user);
   const [isLargeScreen] = useWindow({
     screenSize: 720
   });
@@ -24,13 +24,15 @@ function App() {
     const res = await dispatch(getSession());
     console.log(res);
     if(!res.payload.authenticated){
-      nav("/login");
+      
     }
   }
   
   useEffect(() => {
-    session();
-  }, [])
+    if(!isAuthenticated){
+      session();
+    }
+  }, [isAuthenticated])
   
 
   const { isInThisPath } = usePath();

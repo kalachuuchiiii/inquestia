@@ -1,7 +1,7 @@
 const Dashboard = () => {
 
 
-return (<div className = "pr-8 pl-4 text-white bg-zinc-900/60 text-sm space-y-4 rounded my-8 py-4 mx-auto ">
+return (<div className = "pr-8 pl-4 text-white backdrop-brightness-50 text-sm space-y-4 rounded my-8 py-4 mx-auto ">
   <div className = "flex gap-4 justify-start items-center text-left divide-x-1 ">
     <div>
           <p className = "font-bold">Your Streak</p> 

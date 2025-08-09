@@ -8,7 +8,7 @@ const FormContext = createContext(null);
 const Form = ({children = null, label = 'Form', handleChange = () => {}, onSubmit = () => {}, formField = {}}) => {
   
   const handleOnSubmit = async(e) => {
-    e.preventDefault();
+    (e.preventDefault() && e.checkValidity())
     await onSubmit();
   }
 

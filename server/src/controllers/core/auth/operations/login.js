@@ -2,12 +2,16 @@ const User = require("../../../../models/user.js");
 const bcrypt = require("bcryptjs");
 const { signToken } = require("../../../../utils/auth/jwt.methods.js");
 const { storeCookie } = require("../../../../utils/auth/cookies.methods.js");
+const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
+const { validateUserFields } = require("../../../../middlewares/validation/user/validateUserFields.js");
+const { requireUserPresence } = require("../../../../middlewares/validation/user/requireUserPresence.js");
+const { checkUserPresence } = require("../../../../middlewares/validation/user/checkUserPresence.js");
 
 const comparePasswords = async(candidatePass, pass) => {
   return await bcrypt.compare(candidatePass, pass); 
 }
 
-exports.login = async(req, res, commit) => {
+const login = async(req, res) => {
   
   const { password: candidatePass = ''} = req.user;
  const user = req.verifiedUser
@@ -38,3 +42,14 @@ exports.login = async(req, res, commit) => {
    token
  })
 }
+
+
+module.exports = (build) => {
+  build({
+    name: "login",
+    path: "/user/login", 
+    method: "post", 
+    middlewares: [validateUserFields, checkUserPresence, requireUserPresence], 
+    fn: catchError(login)
+  })
+};

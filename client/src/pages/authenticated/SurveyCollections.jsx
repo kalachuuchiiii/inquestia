@@ -1,4 +1,4 @@
-import SurveyList from '../../components/SurveyList.jsx';
+
 import { surveys } from '../../data/mockData/surveyList.js';
 import Wave from '../../components/designs/wave/Wave.jsx';
 
@@ -10,7 +10,7 @@ return <div className = "p-2">
       <h1 className = "text-5xl lato">Your Surveys</h1>
       <p >List of the surveys you published.</p>
   </div>
-  <SurveyList surveyList = {mySurvey} />
+ 
 </div>
 }
 

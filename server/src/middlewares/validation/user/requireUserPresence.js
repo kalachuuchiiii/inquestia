@@ -1,4 +1,6 @@
-exports.requireUserPresence = async(req, res, next) => {
+const { catchError } = require("../../../utils/errorHandlers/catchError.js");
+
+exports.requireUserPresence = catchError(async(req, res, next) => {
   
   if(!req?.isEmailAlreadyUsed){
     return res.status(400).json({
@@ -7,7 +9,6 @@ exports.requireUserPresence = async(req, res, next) => {
       emailPresence: false
     })
   }
-  
   
   req.verifiedUser = req.isEmailAlreadyUsed;
   
@@ -18,6 +19,5 @@ exports.requireUserPresence = async(req, res, next) => {
     })
   }
   
-  
   next();
-}
+})

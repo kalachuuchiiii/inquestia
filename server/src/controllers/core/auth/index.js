@@ -1,16 +1,17 @@
 const Controller = require("../../utils/createCRUD/index.js");
 const { fileReader } = require("../../../utils/directoryReader.js");
 
+const UserController = Controller("user", {
+  defaultCRUD: false
+});
 
-const UserController = Controller("user");
+const { build, getRouter } = UserController;
 
-const { build } = UserController;
-
-const builders = fileReader([__dirname]);
+const builders = fileReader([__dirname, "operations"]);
 
 Object.entries(builders?.results || {}).forEach(([key, routeBuilder]) => routeBuilder(build))
 
 
-const userRouter = UserController.getRouter();
+const userRouter = getRouter();
 
 module.exports = userRouter;

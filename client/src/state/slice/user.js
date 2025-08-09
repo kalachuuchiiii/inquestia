@@ -15,7 +15,7 @@ const initialState = {
 
 export const getSession = createAsyncThunk("session", async(_,thunkAPI) => {
   try{
-    const res = await fetchApi("post", "/user/session", {}, { credentials: true })
+    const res = await fetchApi("post", "/user/session", {});
     return res;
   }catch(e){
     console.log("e", e);
@@ -27,7 +27,11 @@ export const getSession = createAsyncThunk("session", async(_,thunkAPI) => {
 const userSlice = createSlice({
   name: 'user', 
   initialState, 
-  reducers: {}, 
+  reducers: {
+    updateUser: (state, action) => {
+      state.user = action.payload.user;
+    }
+  }, 
   extraReducers: (builder) => {
     builder.addCase(getSession.pending, (state) => {
       state.user = initialState.user;
@@ -52,3 +56,4 @@ const userSlice = createSlice({
 })
 
 export default userSlice.reducer;
+export const { updateUser } = userSlice.actions;

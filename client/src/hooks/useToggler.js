@@ -13,7 +13,7 @@ const useToggler = (initial = false) => {
      handleOpen, 
      handleClose,
      handleToggler, 
-    modify
+     modify
   ]
 }
 

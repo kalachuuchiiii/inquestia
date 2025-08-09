@@ -1,10 +1,11 @@
 const redis = require("../../config/redis/index.js");
 const { emailValidator } = require("../../utils/string.validators.js");
+const { catchError } = require("../../utils/errorHandlers/catchError.js");
 
-exports.verifyOTP = async(req, res, next) => {
+exports.verifyOTP = catchError(async(req, res, next) => {
   const { email, password, username } = req.user;
   
-  let code = req.body.code.toString();
+  let code = `${req.body.code}`
   console.log(code);
 
   if(code.length !== 6){
@@ -31,4 +32,4 @@ exports.verifyOTP = async(req, res, next) => {
   }
   
   next();
-}
+})

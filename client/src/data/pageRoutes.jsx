@@ -11,6 +11,7 @@ import TemplatePage from '../pages/authenticated/Templates.jsx'
 import LoginPage from '../pages/not-authenticated/Login.jsx';
 import RegisterPage from '../pages/not-authenticated/Register.jsx';
 import EditProfilePage from '../pages/authenticated/EditProfile.jsx';
+import Onboarding from '../pages/authenticated/Onboarding.jsx';
 
 export const publicPages = [
       {
@@ -28,6 +29,10 @@ export const pages = [
     {
       path: "/home", 
       element: <HomePage />
+    },
+    {
+      path: '/interests', 
+      element: <Onboarding />
     },
     {
       path: '/profile/edit', 

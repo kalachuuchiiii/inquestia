@@ -1,6 +1,7 @@
 const { textValidator } = require("../../../utils/string.validators.js");
+const { catchError } = require("../../../utils/errorHandlers/catchError.js");
 
-exports.validateUsername = async(req, res, next) => {
+exports.validateUsername = catchError(async(req, res, next) => {
   console.log(req);
 const { username = '' } = req?.body?.user || {};
 
@@ -21,4 +22,4 @@ if(!username || !textValidator(username)){
   req.user.username = username;
   
   next();
-}
+})

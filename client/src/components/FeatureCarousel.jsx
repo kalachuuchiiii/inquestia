@@ -1,7 +1,6 @@
 import { features } from '../data/features.jsx';
 import List from '../components/List.jsx';
 import FeatureCard from '../components/FeatureCard.jsx';
-import useSlider from '../hooks/useSlider.js';
 
 const FeatureList = () => {
 

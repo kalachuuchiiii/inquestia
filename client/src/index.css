@@ -1,7 +1,11 @@
+@import 'tailwindcss'
+
 textarea {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
 }
+
+
 
 
 .purple-wave {

@@ -1,4 +1,4 @@
-@import 'tailwindcss'
+@import 'tailwindcss';
 
 textarea {
   scrollbar-width: none; /* Firefox */

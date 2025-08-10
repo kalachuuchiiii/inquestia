@@ -38,10 +38,14 @@ const HomePage = () => {
     if(inView && nextPage !== null){
       setPage(prev => prev + 1);
     }
-  }, [inView])
+  }, [inView, nextPage])
+
+  useEffect(() => {
+    getSurvey(1);
+  }, [])
   
   useEffect(() => {
-    if(nextPage === null && inView)return;
+    if(nextPage === null || page === 1)return;
     getSurvey(page);
   }, [page])
   

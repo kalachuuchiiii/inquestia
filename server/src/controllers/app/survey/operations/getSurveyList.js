@@ -47,10 +47,10 @@ const getSurveyList = async(req, res) => {
     }
   },
   {
-    $limit: limit
+    $skip: skip
   },
   {
-    $skip: skip
+    $limit: limit
   },
   {
     $lookup: {

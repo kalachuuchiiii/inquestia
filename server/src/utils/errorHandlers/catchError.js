@@ -4,7 +4,7 @@ exports.catchError = (fn = () => { }) => {
     try {
       await fn(req, res, next); 
     } catch (e) {
-
+console.log(e);
       return res.status(500).json({
         success: false,
         message: e.message || "Internal Server Error."
@@ -26,6 +26,8 @@ exports.catchErrorWithSession = (fn = () => { }) => {
       await fn(req, res, next, commit); 
       
     } catch (e) {
+      console.log(e);
+      
       await session.abortTransaction();
       return res.status(500).json({
         success: false,

@@ -11,7 +11,7 @@ const { hashPassword } = require("../../../../middlewares/hashing/hashPassword.j
 const { catchErrorWithSession } = require("../../../../utils/errorHandlers/catchError.js");
 
 
-const register = async(req, res) => {
+const register = async(req, res, _, commit) => {
   const user = req.user; 
   const { session } = req;
   const seed = Math.random().toString(36).substring(7);
@@ -23,6 +23,7 @@ const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
   }], {session});
   newUser.streak = newStreak._id;
   await newUser.save({session});
+  await commit();
   
   const userData = newUser.toObject(); 
   delete userData.password;

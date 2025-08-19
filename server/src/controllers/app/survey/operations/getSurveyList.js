@@ -8,15 +8,11 @@ const { catchError } = require('../../../../utils/errorHandlers/catchError.js');
 const getSurveyList = async(req, res) => {
   const { skip, limit, page } = req.paginationParams;
   const { interests } = req.verifiedUser;
-  const { seenSurveys = [] } = req.query;
+  const seenSurveys = JSON.parse(req?.query?.seenSurveys || "[]")
+  console.log(seenSurveys);
   
-  if(!Array.isArray(seenSurveys)){
-    return res.status(400).json({
-      success: false, 
-      message: 'Seen surveys must be an array.'
-    })
-  }
   const alreadySeenSurveysIds = seenSurveys.map(({_id}) => mongoose.Types.ObjectId(_id));
+
   
   
   const [totalSurveys, surveys] = await Promise.all([
@@ -37,6 +33,12 @@ const getSurveyList = async(req, res) => {
     }
   },
   {
+    $skip: skip
+  },
+  {
+    $limit: limit
+  },
+  {
     $addFields: {
       randomSeed: { $rand: {} }
     }
@@ -45,12 +47,6 @@ const getSurveyList = async(req, res) => {
     $sort: {
       randomSeed: 1
     }
-  },
-  {
-    $skip: skip
-  },
-  {
-    $limit: limit
   },
   {
     $lookup: {
@@ -82,7 +78,7 @@ const getSurveyList = async(req, res) => {
     ])
     
     const nextPage = getNextPage(totalSurveys, page, limit);
-    console.log(page, nextPage, totalSurveys);
+    console.log(skip, limit);
   
     return res.status(200).json({
       success: true, 
@@ -94,7 +90,7 @@ const getSurveyList = async(req, res) => {
 module.exports = build => build({
   name: 'get', 
   method: 'get', 
-  path: '/survey', 
+  path: '/surveys', 
   middlewares: [verifySession, getPageParam],
   fn: catchError(getSurveyList)
 })

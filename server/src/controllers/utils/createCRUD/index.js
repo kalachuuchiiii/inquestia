@@ -8,7 +8,7 @@ const { routeBuilder } = require("./routeBuilder.js");
 const { capitalize } = require("../../../utils/capitalize.js");
 
 const Controller = (modelName, {
-  defaultCRUD = true
+  defaultCRUD = false
 } = {}) => {
   const Model = verifyModel(capitalize(modelName));
   const entity = modelName.toLowerCase().trim();
@@ -23,32 +23,7 @@ const Controller = (modelName, {
     }
   }
 
-  if(defaultCRUD){
-  build({
-    name: "create",
-    method: "post",
-    path: `/${entity}/public/:id`,
-    fn: (req, res) => create(Model, req, res)
-  })
-  build({
-    name: "read",
-    method: "get",
-    path: `/${entity}/public/:id`,
-    fn: (req, res) => read(Model, req, res)
-  })
-  build({
-    name: "update",
-    method: "patch",
-    path: `/${entity}/public/:id`,
-    fn: (req, res) => update(Model, req, res),
-  })
-  build({
-    name: "delete",
-    method: "delete",
-    path: `/${entity}/public/:id`,
-    fn: (req, res) => deleteDoc(Model, req, res)
-  })
-  }
+  
   
   const getRouter = () => {
     Object.values(controller).forEach((field) => routeBuilder(router, { ...field }));

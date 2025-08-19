@@ -1,29 +1,6 @@
 const mongoose = require("mongoose");
 const { interests } = require("../data/interests.js");
-
-const questionSchema = new mongoose.Schema({
-  question: {
-    type: String, 
-    minlength: [6, 'Question must be at least 6 characters long.'], 
-    maxlength: [100, 'Question cannot exceed 100 characters.'],
-    required: [true, 'Question is required.']
-  }, 
-  type: {
-    type: String, 
-    required: [true, 'Question type is required.'], 
-    enum: {
-      values: ['text', 'select'],
-      message: 'Question type must be either "text" or "select".'
-    }
-  }, 
-  isRequired: {
-    type: Boolean, 
-    default: false
-  }
-}, {
-  collection: 'questions',
-  discriminatorKey: 'type',
-});
+const questionSchema = require("./subdoc/question.js");
 
 const selectTypeQuestionSchema = new mongoose.Schema({
   multipleChoice: {
@@ -40,7 +17,7 @@ const selectTypeQuestionSchema = new mongoose.Schema({
       validator: function(val) {
         return val.length >= 1 && val.length <= 8;
       },
-      message: 'You must provide between 1 and 8 choices.'
+      message: 'You must provide at least 2 choices. upto 8 choices.'
     }
   }
 }, { _id: false });
@@ -102,5 +79,8 @@ const deleteAll = async() => {
 }
 
 //deleteAll();
+module.exports = {
+  Question: mongoose.model("Question", questionSchema)
+}
 
 module.exports = Survey;

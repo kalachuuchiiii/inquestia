@@ -1,13 +1,13 @@
-const Controller = require("../../utils/createCRUD/index.js");
+const Controller = require("../../../controllers/utils/createCRUD/index.js");
 const { fileReader } = require("../../../utils/directoryReader.js");
 
-const surveyController = Controller('Survey', {
-  defaultCRUD: true
-});
- const { build, getRouter} = surveyController;
+const { build, getRouter } = Controller("Answer", {
+  defaultCrud: false
+})
  
  const builders = fileReader([__dirname, "operations"]);
 
 Object.entries(builders?.results || {}).forEach(([key, routeBuilder]) => routeBuilder(build))
  
  module.exports = getRouter();
+

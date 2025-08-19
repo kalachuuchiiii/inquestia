@@ -3,7 +3,6 @@ const { bodyValidator } = require("../../../utils/schema/bodyValidator.js");
 const { getValidInterestTags } = require('../../../utils/schema/getValidInterestTags.js');
 exports.validateSurveyFields = catchError(async(req, res, next) => {
   const { survey = {} } = req.body; 
-  console.log('raw',survey.tags)
   if(!survey){
     return res.status(400).json({
       success: false, 
@@ -164,14 +163,23 @@ for(const q of questions){
   validQuestions.push({ question, type, multipleChoice, choices, isRequired });
   continue;
 };
-  
-  req.verifiedSurvey = {
+
+const verifiedSurvey = {
     title, 
     description, 
     targetRespondents, 
     tags: validTags, 
     questions: validQuestions
-  }
+}
+
+if(verifiedSurvey.questions.every(q => !q.isRequired)){
+  return res.status(400).json({
+    success: false, 
+    message: "You must have at least 1 required question."
+  })
+}
+  
+  req.verifiedSurvey = verifiedSurvey;
 
 next();
 })

@@ -8,10 +8,11 @@ const { catchError } = require('../../../../utils/errorHandlers/catchError.js');
 const getSurveyList = async(req, res) => {
   const { skip, limit, page } = req.paginationParams;
   const { interests } = req.verifiedUser;
-  const seenSurveys = JSON.parse(req?.query?.seenSurveys || "[]")
-  console.log(seenSurveys);
+
+  const seenSurveys = JSON.parse(req?.query?.seenSurveys || "[]");
+
   
-  const alreadySeenSurveysIds = seenSurveys.map(({_id}) => mongoose.Types.ObjectId(_id));
+  const alreadySeenSurveysIds = seenSurveys?.length > 0 ? seenSurveys.map(({_id}) => mongoose.Types.ObjectId(_id)) : [];
 
   
   
@@ -76,9 +77,9 @@ const getSurveyList = async(req, res) => {
   }
 ])
     ])
+    console.log(surveys);
     
     const nextPage = getNextPage(totalSurveys, page, limit);
-    console.log(skip, limit);
   
     return res.status(200).json({
       success: true, 

@@ -10,7 +10,8 @@ const initialState = {
   },
   isAuthenticated: false, 
   isLoading: false, 
-  error: ''
+  error: '', 
+  isProcessOK: false
 }
 
 export const getSession = createAsyncThunk("session", async(_,thunkAPI) => {
@@ -37,18 +38,21 @@ const userSlice = createSlice({
       state.user = initialState.user;
       state.isLoading = true;
       state.error = '';
+      state.isProcessOK = false;
     })
     builder.addCase(getSession.fulfilled, (state, action) => {
       state.user = action?.payload?.user || {};
       state.isAuthenticated = true; 
       state.error = '';
       state.isLoading = false;
+      state.isProcessOK = true;
     })
     builder.addCase(getSession.rejected, (state, action) => {
       state.user = initialState.user;
       state.error = action?.payload?.message || "Internal Server Error";
       state.isLoading = false;
       state.isAuthenticated = false;
+      state.isProcessOK = true;
     })
     
     

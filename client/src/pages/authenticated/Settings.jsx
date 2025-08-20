@@ -2,7 +2,7 @@ import SettingCard from '../../components/card/SettingCard.jsx';
 const Settings = () => {
 
 
-return <div className = "px-4">
+return <div className = "p-2">
   <SettingCard >
     <SettingCard.NewOption label = "Theme"> 
      <SettingCard.ThemeColor /> 

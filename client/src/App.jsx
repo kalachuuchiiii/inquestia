@@ -10,6 +10,7 @@ import usePath from './hooks/usePath.js';
 import { useSelector, useDispatch } from 'react-redux';
 import Footer from './components/Footer.jsx';
 import useWindow from './hooks/useWindow.js';
+
 function App() {
   const [isSidebarOpen, setIsSideBarOpen] = useState(window.innerWidth >= 720);
   const { user = {}, isAuthenticated = false} = useSelector(state => state.user);
@@ -20,17 +21,16 @@ function App() {
   const dispatch = useDispatch();
   const nav = useNavigate();
   
-  const session = async() => {
+  const checkSession = async() => {
     const res = await dispatch(getSession());
-    console.log(res);
-    if(!res.payload.authenticated){
-      
+    if(!res?.payload?.authenticated){
+      nav("/login")
     }
   }
   
   useEffect(() => {
     if(!isAuthenticated){
-      session();
+      checkSession();
     }
   }, [isAuthenticated])
   

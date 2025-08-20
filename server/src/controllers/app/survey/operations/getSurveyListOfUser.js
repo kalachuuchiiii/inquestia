@@ -1,0 +1,35 @@
+
+const { catchError } = require('../../../../utils/errorHandlers/catchError.js');
+const { getPageParam } = require('../../../../middlewares/pagination/getPageParam.js');
+const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
+const Survey = require("../../../../models/survey.js");
+const { getNextPage } = require('../../../../utils/getNextPage.js');
+
+
+const getSurveyListOfUser = async(req, res) => {
+  const { skip, limit, page, sort } = req.paginationParams;
+  const { verifiedUser } = req;
+  
+  const [totalSurveys, surveys] = await Promise.all([  
+    Survey.countDocuments({user: verifiedUser._id }).lean(),
+    Survey.find({ user: verifiedUser._id }).sort({ createdAt: sort }).skip(skip).limit(limit).populate("user", "-password").lean()
+    ])
+    
+    const nextPage = getNextPage(totalSurveys, page, limit);
+  
+  return res.status(200).json({
+   success: true, 
+   surveys, 
+   totalSurveys,
+   nextPage
+  })
+}
+
+
+module.exports = (build) => build({
+  name: 'user_survey', 
+  path: '/survey-list/user', 
+  method: "get",
+  middlewares: [verifySession, getPageParam], 
+  fn: catchError(getSurveyListOfUser)
+})

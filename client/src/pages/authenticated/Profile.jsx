@@ -3,7 +3,12 @@ import SettingCard from '../../components/card/SettingCard.jsx';
 import { useSelector } from 'react-redux';
 import Textarea from '../../components/html/Textarea.jsx';
 import ExternalLinksList from '../../components/lists/ExternalLinksList.jsx';
+import { useEffect, useState } from 'react';
 import ArrowButton from '../../components/html/ArrowButton.jsx';
+import useAsync from '../../hooks/useAsync.js';
+import { fetchApi } from '../../utils/fetchApi.js';
+import SurveyCard from '../../components/card/SurveyCard.jsx';
+
 
 const Profile = () => {
   const { user = {
@@ -14,6 +19,30 @@ const Profile = () => {
     _id: '',
     externalLinks: []
   } } = useSelector(state => state.user);
+  const [surveys, setSurveys] = useState([]);
+  const [nextPage, setNextPage] = useState(1);
+  const [totalSurveys, setTotalSurveys] = useState(0);
+  const [sortingProcess, setSortingProcess] = useState(1);
+  const [getUserSurvey, { isLoading, error }] = useAsync(async(page = 1) => {
+    const res = await fetchApi("get", `/survey-list/user`, {
+      page, 
+      sort: sortingProcess
+    });
+    setSurveys(prev => [...prev, ...res?.surveys]);
+    setNextPage(res?.nextPage || null);
+    setTotalSurveys(res?.totalSurveys || 0)
+    console.log(res);
+  })
+  
+  useEffect(() => {
+    if(surveys.length > 0)return;
+    getUserSurvey();
+  }, []);
+  
+  useEffect(() => {
+    if(surveys.length === 0 || nextPage === null || isLoading)return;
+    getUserSurvey(nextPage);
+  }, [nextPage]);
 
 
   return <div className="p-3">
@@ -37,8 +66,8 @@ const Profile = () => {
         View Account
       </ArrowButton>
     </div>
-    <button className="w-full text-center my-8 text-lg">Your Surveys</button>
-    <div className="flex p-2 text-sm gap-2 ">
+    <button className="w-full text-left bg-zinc-900 my-2 p-2 rounded  text-sm">Your Surveys ({totalSurveys})</button>
+    <div className="flex p-2 text-xs mb-8 gap-2 ">
       <p className="shrink-0">Sort by: </p>
       <select className="outline-none truncate w-full rounded" >
         <option value="Newest">Newest</option>
@@ -47,6 +76,10 @@ const Profile = () => {
         <option value="highest_response">From highest # of responses to low</option>
       </select>
     </div>
+           {
+         
+       surveys?.length > 0 && surveys.map(survey => <SurveyCard survey={survey} key={survey._id} />)
+       }
    
   </div>
 }

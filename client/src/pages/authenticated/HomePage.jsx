@@ -3,14 +3,14 @@ import CurrentTopic from '../../components/CurrentTopic.jsx';
 import { useEffect, useState } from 'react';
 import useSearchQuery from '../../hooks/useSearchQuery.js';
 import Dashboard from '../../components/Dashboard.jsx';
-import { useDispatch, useSelector } from 'react-redux';
-import { getSession } from '../../state/slice/user.js';
-import { useNavigate } from "react-router-dom"
 import { fetchApi } from '../../utils/fetchApi.js';
 
 import { useInView } from 'react-intersection-observer';
 import SurveyCard from '../../components/card/SurveyCard.jsx';
 import useAsync from '../../hooks/useAsync.js';
+import LoadingDisplay from '../../components/html/LoadingDisplay.jsx';
+import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom"
 import SurveyCardPlaceholder from '../../components/card/placeholders/surveyCardPlaceholder.jsx';
 
 const HomePage = () => {
@@ -20,6 +20,8 @@ const HomePage = () => {
   })
   const [surveys, setSurveys] = useState([]);
   const [nextPage, setNextPage] = useState(1);
+  const nav = useNavigate();
+  const { isLoading: isSessionLoading, user, authenticated, isProcessOK } = useSelector(state => state.user);
 
   const [getSurveyList, { isLoading, error }] = useAsync(async (page = 1) => {
     const seenSurveys = [...surveys];
@@ -42,7 +44,20 @@ const HomePage = () => {
   useEffect(() => {
     if (surveys.length === 0 || nextPage === null || nextPage === 1 || isLoading || !inView) return;
     getSurveyList(nextPage);
-  }, [nextPage, isLoading, inView])
+  }, [nextPage, isLoading, inView]);
+  
+  useEffect(() => {
+    if(!isProcessOK || isSessionLoading)return;
+    
+    if(user.isFinishedOnboarding)return;
+    //return nav("/interests");
+    
+  }, [user, isSessionLoading, isProcessOK, authenticated])
+  
+  if(isSessionLoading || !isProcessOK){
+    return <LoadingDisplay message = "Setting everything up for you..." />
+  }
+  
 
   return <div className="p-2" >
     <Dashboard />

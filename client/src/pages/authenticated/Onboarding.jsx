@@ -6,6 +6,8 @@ import { fetchApi } from '../../utils/fetchApi.js';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../state/slice/user.js';
 import InterestTagList from '../../components/lists/InterestTagList.jsx';
+import AnimationWrapper from '../../components/AnimationWrapper.jsx';
+
 const Onboarding = () => {
   const { user = {
     interests: []
@@ -40,7 +42,7 @@ const Onboarding = () => {
   }
   
   
-return <div className = "rounded-lg w-full sm:w-11/12 mx-auto min-h-screen space-y-3 ">
+return <AnimationWrapper variants = "fromBottom" className = "rounded-lg w-full sm:w-11/12 mx-auto min-h-screen space-y-3 ">
   <div className = "p-2">
       <h1 className = "text-4xl lato">Your interests</h1>
   <p className = "text-sm">Choosing your interests helps us pick the right questions for you, making your experience more relevant and engaging.
@@ -55,7 +57,7 @@ return <div className = "rounded-lg w-full sm:w-11/12 mx-auto min-h-screen space
     <Button  disabled = {isLoading} onClick = {saveInterests} loadingState = {isLoading}>Save</Button>
     </div>
   </div>
-</div>
+</AnimationWrapper>
 }
 
 export default Onboarding

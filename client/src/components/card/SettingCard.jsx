@@ -1,5 +1,5 @@
 
-const SettingButton = ({children = null, onClick = () => {}}) => {
+const SettingButton = ({children = null, onClick = () => {} }) => {
   return <button onClick = {onClick} className = "w-full flex justify-between items-center p-2">
     {children}
   </button>
@@ -65,8 +65,8 @@ SettingCard.HideDesigns = () => {
 SettingCard.Email = ({user = {}}) => {
   return (
     <SettingButton>
-      <input type = "email" readOnly value = "parissrowlet@gmail.com" /> 
-      <p className = "text-sm">Verified</p>
+      <input className = "opacity-50" type = "email" readOnly value = "parissrowlet@gmail.com" /> 
+      <p className = "text-sm opacity-50">Verified</p>
     </SettingButton>
     )
 }

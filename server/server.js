@@ -18,6 +18,10 @@ app.use(cors({
   credentials: true
 }))
 
+app.get("/", (req, res) => {
+  res.send("Server is running")
+})
+
 app.use("/api", mainRouter);
 
 const PORT = process.env.PORT;

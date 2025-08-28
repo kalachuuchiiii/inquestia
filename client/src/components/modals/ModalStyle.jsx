@@ -8,7 +8,7 @@ const ModalStyle = ({label = "Verify your email.", displayCloseButton = true, on
 
 
 return <AnimationWrapper className = "z-100 fixed inset-0 bg-black/85" variants = "fade">
-  <div className = "w-11/12 md:w-8/12 mx-auto h-full flex justify-center items-center ">
+  <div className = "w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 mx-auto h-full flex justify-center items-center ">
      <main className = "bg-zinc-900 w-full p-3 rounded-lg space-y-7">
        <div className = "w-full text-center border-b-1 border-b-white">
          <div className = "w-full text-right text-sm">
@@ -16,9 +16,7 @@ return <AnimationWrapper className = "z-100 fixed inset-0 bg-black/85" variants 
          </div>
        <h1 className = "text-xl p-2 pb-5 lato">{label}</h1> 
        </div>
-       <div className = "w-11/12 sm:w-10/12 md:w-9/12 lg:w-8/12 mx-auto">
-           {children}
-       </div>     
+       {children}
        </main>
   </div>
 </AnimationWrapper>

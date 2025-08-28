@@ -1,5 +1,5 @@
 const path = require('path');
-const glob = require('glob');
+const requireDirectory = require('require-directory');
 
 /**
  * Reads a single JS file.
@@ -18,19 +18,17 @@ exports.readOneFile = (dir = []) => {
 exports.fileReader = (dir = [], { includeIndex = false } = {}) => {
   const directory = path.join(...dir);
 
-  // Find all .js files in this directory (non-recursive)
-  const files = glob.sync('*.js', { cwd: directory });
-  const results = {};
-  const fileNames = [];
+  // Load all JS files in the directory using require-directory
+  const results = requireDirectory(module, directory, {
+    visit: (obj, name) => {
+      if (!includeIndex && name === 'index') return undefined;
+      return obj;
+    },
+    rename: (name) => name, // keep original file names
+    recurse: false, // non-recursive, same as glob sync('*.js')
+  });
 
-  for (const file of files) {
-    const fileName = path.basename(file, '.js');
-    if (!includeIndex && fileName === 'index') continue;
-
-    results[fileName] = require(path.join(directory, file));
-    fileNames.push(fileName);
-  }
-
+  const fileNames = Object.keys(results);
   return { results, fileNames };
 };
 
@@ -41,16 +39,21 @@ exports.fileReader = (dir = [], { includeIndex = false } = {}) => {
 exports.folderReader = (dir = []) => {
   const directory = path.join(...dir);
 
-  // Find all folders (non-recursive)
-  const folders = glob.sync('*/', { cwd: directory });
-  const folderNames = [];
-  const directories = {};
+  // Load all subfolders as modules (non-recursive)
+  const results = requireDirectory(module, directory, {
+    visit: (obj, name) => {
+      if (name === 'index') return undefined;
+      return obj;
+    },
+    rename: (name) => name,
+    recurse: false,
+  });
 
+  const folders = Object.keys(results);
+  const directories = {};
   for (const folder of folders) {
-    const folderName = folder.replace(/\/$/, ''); // remove trailing slash
-    folderNames.push(folderName);
-    directories[folderName] = path.join(directory, folderName);
+    directories[folder] = path.join(directory, folder);
   }
 
-  return { folders: folderNames, directories };
+  return { folders, directories };
 };

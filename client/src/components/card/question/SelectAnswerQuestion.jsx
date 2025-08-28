@@ -34,6 +34,10 @@ const SelectAnswerQue = ({ question = {
   const deselectChoice = useCallback((choice) => {
     setQuestions(prev => prev.map((q, i) => i !== id ? q : {...q, choices: q.choices.filter(c => c !== choice)}));
   }, []);
+  
+  const handleRemoveQuestion = useCallback((index) => {
+    setQuestions(prev => prev.filter((q, i) => i !== index));
+  }, [])
 
   const handleAddChoice = useCallback(() => {
     if (question.choices.length === 8) {
@@ -70,6 +74,7 @@ const SelectAnswerQue = ({ question = {
     handleSetQuestion,
     question, 
     choice, 
+    handleRemoveQuestion,
     setChoice, 
     deselectChoice,
     error, 
@@ -100,6 +105,14 @@ SelectAnswerQue.RequireCheckbox = () => {
       </div>
     <input onClick={handleToggleRequired} checked={question.isRequired} type="checkbox" />
   </div>
+}
+
+SelectAnswerQue.RemoveButton = () => {
+  const { id = 1, handleRemoveQuestion = () => {}} = useCTX(SelectAnswerContext); 
+  
+  return <button onClick = {() => handleRemoveQuestion(id)} className = "p-1">
+    <IoMdClose />
+  </button>
 }
 
 SelectAnswerQue.Question = () => {

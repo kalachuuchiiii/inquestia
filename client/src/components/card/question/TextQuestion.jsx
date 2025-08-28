@@ -1,6 +1,7 @@
 import Textarea from '../../html/Textarea.jsx';
 import { useCallback } from 'react';
 import useCTX from '../../../hooks/useCTX.js';
+import { IoMdClose } from "react-icons/io";
 import { TextQuestionContext } from '../../../context/textQuestionContext.js';
 
 const TextQuestion = ({question = {
@@ -17,6 +18,11 @@ const TextQuestion = ({question = {
     })))
   }, []);
   
+  const handleRemoveQuestion = useCallback((index) => {
+    setQuestions(prev => prev.filter((q, i) => i !== index));
+  }, [])
+
+  
   const handleToggleRequired = useCallback((e) => {
     setQuestions(prev => prev.map((q, i) => i !== id ? q : ({
       ...q, 
@@ -28,12 +34,21 @@ return <TextQuestionContext.Provider value = {{
   handleToggleRequired,
   handleSetQuestion, 
   question, 
-  id
+  id,
+  handleRemoveQuestion
 }} >
   <div className = {className}>
     {children}
   </div>
 </TextQuestionContext.Provider>
+}
+
+TextQuestion.RemoveButton = () => {
+  const { id = 1, handleRemoveQuestion = () => {}} = useCTX(TextQuestionContext); 
+  
+  return <button onClick = {() => handleRemoveQuestion(id)} className = "p-1">
+    <IoMdClose />
+  </button>
 }
 
 TextQuestion.QuestionNum = () => {

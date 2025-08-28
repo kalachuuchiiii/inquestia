@@ -9,6 +9,10 @@ const modifyFieldById = useCallback((upd = () => {}, id) => {
   setFieldArray(prev => prev.map((f) => f._id !== id ? f : upd(f)))
 }, []);
 
+const removeFieldByIndex = useCallback((index) => {
+  setFieldArray(prev => prev.filter((f, i) => i !== index));
+}, []) 
+
 const removeFieldById = useCallback((id) => {
   setFieldArray(prev => prev.filter(p => p._id !== id));
   setTotalDocuments(prev => prev - 1);
@@ -31,7 +35,8 @@ return {
   getFieldById, 
   removeFieldById, 
   totalDocuments, 
-  setTotalDocuments
+  setTotalDocuments, 
+  removeFieldByIndex
 }
 
 

@@ -8,6 +8,7 @@ export const fetchApi = async(method = "get", route = "/", payload = {}, { crede
     }
     
     const fullUrl = `${import.meta.env.VITE_SERVER_URL}/api${route}`;
+    console.log(fullUrl);
 
     if(method === 'get' || method === 'delete'){
       const res = await axios[method](fullUrl, {

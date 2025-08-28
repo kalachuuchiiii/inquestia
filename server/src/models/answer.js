@@ -34,5 +34,12 @@ const answerSchema = new mongoose.Schema({
 
 const Answer = mongoose.model("Answer", answerSchema);
 
+const del = async () => {
+  const s = await Answer.deleteMany();
+  console.log(s);
+}
+
+//del();
+
 
 module.exports = Answer;

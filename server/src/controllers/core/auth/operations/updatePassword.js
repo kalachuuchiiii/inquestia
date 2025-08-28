@@ -51,7 +51,7 @@ const updatePassword = async (req, res) => {
   
   const link = `${process.env.WEB_ORIGIN}/login?forgotten=true`;
   
-  sendEmail({
+  await sendEmail({
     to: inf.email,
     subject: 'Password Updated',
     html: `<div style="font-family: Arial, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px;">

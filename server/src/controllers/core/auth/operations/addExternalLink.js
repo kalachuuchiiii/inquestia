@@ -6,7 +6,7 @@ const { verifySession } = require("../../../../middlewares/verification/verifySe
 const { bodyValidator } = require("../../../../utils/schema/bodyValidator.js")
 
 const addExternalLink = async(req, res) => {
-  const { externalLink } = bodyValidator(res, {
+  const { externalLink, error } = bodyValidator({
     externalLink: req?.body?.externalLink || ''
   }, {
     externalLink: {
@@ -14,6 +14,13 @@ const addExternalLink = async(req, res) => {
       max: [46, 'Link is too long.']
     }
   })
+  
+  if(error){
+    return res.status(400).json({
+      success: false, 
+      message: error
+    })
+  }
   
   const isValidUrl = urlValidator(externalLink);
   

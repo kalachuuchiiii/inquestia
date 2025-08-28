@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express(); 
 const redis = require("./src/config/redis/index.js");
+const cloudinary = require("./src/config/cloudinary/index.js");
 const cookieParser = require("cookie-parser");
 const mainRouter = require("./src/router/index.js");
 const { connectDB } = require("./src/config/mongodb/index.js");

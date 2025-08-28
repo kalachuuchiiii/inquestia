@@ -33,8 +33,6 @@ const [survey, setSurvey] = useState(null)
         throw new Error("Invalid answer.");
       }
       
-      console.log(answer, answer.length);
-      
       if(isRequired && answer.length === 0){
         throw new Error("Oops!, You missed a required question.");
       }
@@ -55,10 +53,9 @@ const [survey, setSurvey] = useState(null)
       answers: answerFields, 
       survey
     });
-    console.log(answerFields);
     
-    console.log(res);
-    
+    if(!res?.success)return; 
+    window.location.reload();
     
   })
 

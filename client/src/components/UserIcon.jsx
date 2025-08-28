@@ -1,13 +1,17 @@
-import { createContext, useContext, memo } from "react";
-const UserContext = createContext();
-import Image from './html/Image.jsx';
+import { memo } from "react";
+import { UserContext } from '../context/userContext.js';
+import ImageComponent from './html/Image.jsx';
+import { useSelector } from 'react-redux';
+import { NavLink } from "react-router-dom";
 import useCtx from '../hooks/useCTX.js';
 import Textarea from './html/Textarea.jsx';
 const UserIcon = memo(({className = "", children, user}) => {
+  const { user: sessionUser } = useSelector(state => state.user);
 
 
 return <UserContext.Provider value = {{
-  user
+  user, 
+  sessionUser
 }}>
   <div className = {className}>
 {children}
@@ -15,12 +19,13 @@ return <UserContext.Provider value = {{
 </UserContext.Provider>
 })
 
-UserIcon.Username = memo(({className = "", username = "...", showAt = false}) => {
+UserIcon.Username = memo(({className = "", username = "", showAt = false}) => {
   const { user = {
     username: '' 
-  } }= useCtx(UserContext);
+  }, sessionUser = {} }= useCtx(UserContext);
+  const navigateTo = user?._id === sessionUser?._id ? "/profile" : `/users/${user?.username}`
   
-  return <p className = {className}>{showAt && '@'}{user?.username || username}</p>
+  return <NavLink to = {navigateTo} className = {className}>{showAt && '@'}{user?.username || username}</NavLink>
 })
 
 UserIcon.Nickname = memo(({nickname = "", className = ""}) => {
@@ -31,13 +36,13 @@ UserIcon.Nickname = memo(({nickname = "", className = ""}) => {
   return <p className = {className}>{user.nickname || user.username}</p>
 })
 
-UserIcon.Avatar = memo(({className, size = "16", avatar = ""}) => {
+UserIcon.Avatar = memo(({size = 20, className = ''}) => {
   const { user = {
-    avatar: "" 
+    avatar: null
     }}= useCtx(UserContext)
   
-  return <div className = {`rounded-full size-${size} text-xs overflow-hidden grid place-content-center outline-2 outline-blue-300 outline-offset-2 ${className}`}>
-    <Image className = "w-full  h-full object-cover" src = { avatar || user?.avatar} alt = "Avatar" />
+  return <div className = {`rounded-full size-${size} text-xs overflow-hidden grid place-content-center object-cover outline-2 outline-blue-300 outline-offset-2 ${className}`}>
+    <ImageComponent className = "w-full  h-full object-cover " src = {user.avatar} alt = "Avatar" />
   </div>
 })
 

@@ -12,7 +12,7 @@ exports.validateSurveyFields = catchError(async(req, res, next) => {
   const fields = {
     title: survey?.title || '', 
     description: survey?.description || '', 
-    targetRespondents: survey?.targetRespondents || 3, 
+    targetRespondents: parseInt(survey?.targetRespondents) || 8, 
     tags: survey?.tags || [], 
     questions: survey?.questions || []
   }
@@ -30,7 +30,7 @@ exports.validateSurveyFields = catchError(async(req, res, next) => {
     }, 
     targetRespondents: {
       type: 'number', 
-      min: [3, "Target respondents must be at least 3."], 
+      min: [8, "Target respondents must be at least 8."], 
       max: [1000, "Target respondents cannot exceed 1000."]
     }, 
     tags: {

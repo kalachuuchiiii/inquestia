@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const useInterval = ({fn = () => null, interval = 1000}, deps) => {
+const useInterval = ({fn = () => null, interval = 1000}, deps = []) => {
   
   useEffect(() => {
     if(!fn)return;
@@ -11,7 +11,7 @@ const useInterval = ({fn = () => null, interval = 1000}, deps) => {
     return()=>{
       clearInterval(intervalId);
     }
-  }, [interval, fn, deps])
+  }, [interval, fn, ...deps])
 
 }
 

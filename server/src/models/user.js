@@ -13,24 +13,39 @@ const userSchema = new mongoose.Schema({
     index: true
   },
   streak: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Streak",
-    unique: true,
-    index: true
+    highest: {
+      type: Number,
+      default: 1,
+      index: true
+    },
+    lastResponseTime: {
+      type: Date,
+      default: () => new Date()
+    },
+    current: {
+      type: Number,
+      default: 1,
+      index: true
+    }
   },
   username: {
     type: String,
     unique: true,
-    minlength: 6,
+    minlength: [6, "Username must be at least 6 characters long."],
+    maxlength: [20, "Username must not exceed 20 characters."],
     lowercase: true,
     validate: {
       validator: textValidator,
-      message: "Username can only contain letters, numbers, underscores, and dot."
+      message: "Username can only contain letters, numbers, underscores, and dots."
     },
     index: true
   },
+  avatar_public_id: {
+    type: String, 
+    default: null
+  },
   nickname: {
-    maxlength: 26,
+    maxlength: 20,
     type: String,
     validate: {
       validator: nicknameValidator,
@@ -53,11 +68,19 @@ const userSchema = new mongoose.Schema({
   },
   lastUsernameUpdate: {
     type: Date,
-    default: null
+    default: () => new Date()
   },
-  points: {
-    type: Number, 
-    default: 0
+  point: {
+    highest: {
+      type: Number,
+      default: 0,
+      index: true
+    },
+    current: {
+      type: Number,
+      default: 0,
+      index: true
+    }
   },
   externalLinks: [
     {

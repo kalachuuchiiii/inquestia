@@ -4,10 +4,7 @@ const Settings = () => {
 
 return <div className = "p-2">
   <SettingCard >
-    <SettingCard.NewOption label = "Theme"> 
-     <SettingCard.ThemeColor /> 
-     <SettingCard.HideDesigns />
-    </SettingCard.NewOption>
+
     <SettingCard.NewOption label = "Account" >
       <SettingCard.Account />
       <SettingCard.Email />

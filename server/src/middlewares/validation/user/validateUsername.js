@@ -2,7 +2,6 @@ const { textValidator } = require("../../../utils/string.validators.js");
 const { catchError } = require("../../../utils/errorHandlers/catchError.js");
 
 exports.validateUsername = catchError(async(req, res, next) => {
-  console.log(req);
 const { username = '' } = req?.body?.user || {};
 
 if(!username || !textValidator(username)){
@@ -12,12 +11,20 @@ if(!username || !textValidator(username)){
     })
   }
   
-  if(username.length < 8 || username.length > 20){
+  if(username.length < 6){
     return res.status(400).json({
       success: false, 
-      message: "Username must contain 8-20 characters only."
+      message: "Username must be at least 6 characters long."
     })
   }
+  
+  if(username.length > 20){
+    return res.status(400).json({
+      success: false, 
+      message: "Username must not exceed 20 characters."
+    })
+  }
+  
   
   req.user.username = username;
   

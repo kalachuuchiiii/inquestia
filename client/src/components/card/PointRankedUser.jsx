@@ -1,10 +1,10 @@
 import UserHeader from '../UserIcon.jsx';
 
-const PointRanked = ({user = {}, i}) => {
+const PointRanked = ({user = {}, sort = ""}) => {
 
 
 return <UserHeader className = " p-3 rounded grid grid-cols-10 grid-rows-1 " user = {user}>
-      <p className = "col-span-1 m-auto col-start-1 pr-2">{i + 1}</p> 
+      <p className = "col-span-1 m-auto col-start-1 pr-2">{user?.rank}</p> 
 
       <div className = "flex col-span-7 col-start-2 justify-start items-center gap-3">
         <UserHeader.Avatar size = "10" /> 
@@ -13,7 +13,7 @@ return <UserHeader className = " p-3 rounded grid grid-cols-10 grid-rows-1 " use
                   <UserHeader.Username showAt className = "text-sm opacity-70" />
         </div>
       </div> 
-            <p className = "col-span-2 m-auto flex col-start-9">{user.points}</p>
+            <p className = "col-span-2 m-auto flex col-start-9">{user.point[sort]}</p>
     </UserHeader>
 }
 

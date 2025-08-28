@@ -13,7 +13,7 @@ const answerSchema = new mongoose.Schema({
     }, 
     question: {
       type: mongoose.Schema.Types.ObjectId, 
-      ref: "question"
+      ref: "Question"
     }, 
     type: {
       type: String, 
@@ -21,14 +21,15 @@ const answerSchema = new mongoose.Schema({
     }
   }], 
   user: {
-    index: true, 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: "user"
+    ref: "User",
+    required: true
   }
 }, {
   collection: "answers",
   discriminatorKey: "answerType",
-  _id: true
+  _id: true, 
+  timestamps: true
 });
 
 const Answer = mongoose.model("Answer", answerSchema);

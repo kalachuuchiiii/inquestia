@@ -13,7 +13,7 @@ exports.verifySession = catchError(async(req, res, next) => {
     })
   }
   
-  req.verifiedUser = await User.findById(decoded.user);
+  req.verifiedUser = await User.findById(decoded.user).populate("streak");
   if(!req.verifiedUser){
     return res.status(400).json({
       success: false, 

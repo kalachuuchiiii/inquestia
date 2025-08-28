@@ -1,27 +1,22 @@
+import { useSelector, useDispatch } from 'react-redux';
+import { IoStatsChartOutline } from "react-icons/io5";
+
+const Dashboard = ({user = {}}) => {
 
 
-const Dashboard = () => {
-
-
-return (<div className = "pr-8 pl-4 text-white backdrop-brightness-50 text-sm space-y-4 rounded my-8 py-4 mx-auto ">
-  <div className = "flex gap-4 justify-start items-center text-left divide-x-1 ">
-    <div>
-          <p className = "font-bold">Your Streak</p> 
-    <p>3</p>
+  return <div className="italic flex gap-1 items-center text-xs scrollbar-none overflow-x-auto serif" >
+    <div className="px-6 flex gap-2 items-center shrink-0">
+      <IoStatsChartOutline size="18" />  Stats
+    </div>
+    <div className="w-fit shrink-0">
+      <h1 >Highest Streak <span className="lato ">{user.streak.highest} day/s</span></h1>
+      <h1 className="ml-3 opacity-60">Current Streak <span className="lato">{user.streak.current} day/s</span></h1>
+    </div>
+    <div className="w-fit shrink-0">
+      <h1 >Highest Points: <span className="lato ">{user.point.highest} </span></h1>
+      <h1 className="ml-3 opacity-60" >Current Points: <span className="lato">{user.point.current} </span></h1>
     </div>
   </div>
-   <div className = "flex  justify-start items-center gap-4 text-left divide-x-1">
-    <div className = "pr-4">
-      <p className = " font-bold">Your points</p>
-      <p>{100}</p>
-    </div>
-    <div>
-              <h1 className = " lato">Surveys</h1>
-        <p>Earn points by answering surveys</p>
-
-    </div>
-  </div> 
-</div>)
 }
 
 export default Dashboard

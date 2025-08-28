@@ -1,7 +1,7 @@
 const { limit } = require('../../data/limit.js')
 
 exports.getPageParam = async (req, res, next) => {
-  if (isNaN(req.query?.page)) {
+  if (isNaN(parseInt(req?.query?.page || "1"))) {
     return res.status(400).json({
       success: false,
       message: 'Page is not a number'
@@ -16,6 +16,11 @@ exports.getPageParam = async (req, res, next) => {
       success: false,
       message: "Invalid sorting."
     })
+  }
+  
+  req.getNextPage = (total) => {
+    const hasNextPage = page * limit < total;
+    return hasNextPage ? page + 1 : null;
   }
 
   req.paginationParams = { skip, limit, sort, page };

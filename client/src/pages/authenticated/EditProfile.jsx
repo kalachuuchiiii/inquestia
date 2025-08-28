@@ -10,12 +10,15 @@ import Button from '../../components/html/Button.jsx';
 import EditNickname from '../../components/modals/edit/EditNickname.jsx';
 import EditUsername from '../../components/modals/edit/EditUsername.jsx';
 import EditBio from '../../components/modals/edit/EditBio.jsx';
+import ChangePasswordModal from '../../components/modals/edit/ChangePasswordModal.jsx';
+
 import ExternalLinksList from '../../components/lists/ExternalLinksList.jsx';
 import useAsync from '../../hooks/useAsync.js';
 import { fetchApi } from '../../utils/fetchApi.js';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../state/slice/user.js';
 import { HiOutlineChevronRight } from "react-icons/hi2";
+import ChangeAvatarModal from '../../components/modals/edit/ChangeAvatar.jsx';
 
 const EditProfile = () => {
   const [fieldEditing, setFieldEditing] = useState('');
@@ -28,7 +31,7 @@ const EditProfile = () => {
     nickname: '',
     email: '',
     bio: '',
-    avatar: '',
+    avatar: null,
     interests: []
   } } = useSelector(state => state.user);
   
@@ -36,9 +39,9 @@ const EditProfile = () => {
     isLoading,
     error
   }] = useAsync(async() => {
-    console.log('ran');
+    if(!externalLink || typeof externalLink !== "string")return;
     const res = await fetchApi("patch", "/user/link", {
-      externalLink: externalLink || ''
+      externalLink: externalLink
     })
     if(res?.success && res?.user){
       dispatch(updateUser({ user: res.user }));
@@ -55,11 +58,15 @@ const EditProfile = () => {
   const onClose = () => {
     setFieldEditing('');
   }
+  
+
 
   const updateModals = {
     nickname: <EditNickname previousNickname={user.nickname || user.username} onClose={onClose} />,
     username: <EditUsername previousUsername={user.username} onClose={onClose} />,
-    bio: <EditBio previousBio = {user.bio} onClose = {onClose} />
+    bio: <EditBio previousBio = {user.bio} onClose = {onClose} />, 
+    password: <ChangePasswordModal onClose = {onClose} />,
+    avatar: <ChangeAvatarModal onClose = {onClose} />
   }
 
   const inputStyle = "outline-none w-full p-2";
@@ -128,7 +135,7 @@ const EditProfile = () => {
           <label className="text-xs">Password</label>
           <div className="flex gap-1">
             <input readOnly name="password" value="*********" className="outline-none w-full p-2 " />
-            <button className="text-xs truncate shrink-0">Change Password</button>
+            <button name = "password" onClick = {handleChange} className="text-xs truncate shrink-0">Change Password</button>
           </div>
         </div>
         <div className="p-2">

@@ -52,9 +52,11 @@ return <AnimationWrapper variants = "fromBottom" className = "rounded-lg w-full 
     <InterestTagList select = {selectInterest} selected = {selectedInterests} />
 
   <div className = "w-full flex justify-end my-10 p-2 ">
-    <div className = "space-y-1 flex flex-col items-end">
+    <div className = "space-y-1 w-6/12 flex flex-col items-end">
           { error && <p className = "text-xs text-red-400">{error}</p>}
-    <Button  disabled = {isLoading} onClick = {saveInterests} loadingState = {isLoading}>Save</Button>
+          <div className = "w-full" >
+                <Button disabled = {isLoading} onClick = {saveInterests} loadingState = {isLoading}>Save</Button>
+          </div>
     </div>
   </div>
 </AnimationWrapper>

@@ -7,7 +7,9 @@ exports.connectDB = async() => {
       throw new Error("DB Connection String is missing.");
     }
     const connection = await mongoose.connect(connectionString);
+
     console.log("Mongo DB Connected");
+    
     return connection; 
   }catch(e){
     console.error(e);

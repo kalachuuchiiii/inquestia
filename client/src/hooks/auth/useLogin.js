@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom"
 import useAsync from '../useAsync.js';
 
 const useLogin = () => {
+  const [form, setForm] = useState({
+    username: '', 
+    password: ''
+  })
   
   const [login, { isLoading, isSuccess, error }] = useAsync(async() => {
       const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/user/login`, {
@@ -11,7 +15,7 @@ const useLogin = () => {
           ...form
         }, 
       }, { withCredentials: true});
-  })
+  }, [form])
   
   
   useEffect(() => {
@@ -21,10 +25,7 @@ const useLogin = () => {
   }, [isSuccess])
   
   
-  const [form, setForm] = useState({
-    username: '', 
-    password: ''
-  })
+  
   
   const handleChange = (e) => {
     const { name, value } = e.target; 
@@ -37,6 +38,7 @@ return {
   login, 
   handleChange,
   form, 
+  isLoginLoading: isLoading,
   loginError: error
 }
 

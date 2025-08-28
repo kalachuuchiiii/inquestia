@@ -4,7 +4,7 @@ const StreakRanked = ({user = {
   streak: 1, 
   username: "", 
   nickname: "", 
-  avatar: ""
+  avatar: null
 }, i = 0}) => {
 
 

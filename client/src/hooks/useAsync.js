@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 
-const useAsync = (fn = () => {}) => {
+const useAsync = (fn = () => {}, deps = null) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const call = async(arg) => {
+  const call = useCallback(async(arg) => {
     setIsLoading(true);
     try{
       await fn(arg);
@@ -14,10 +14,11 @@ const useAsync = (fn = () => {}) => {
     }catch(e){
       console.log(e);
       setError(e?.response?.data?.message || e?.message || 'Internal Server Error');
+      setIsSuccess(false)
     }finally{
       setIsLoading(false);
     }
-  }
+  }, deps)
   
   const resetState = () => {
     setIsLoading(false);

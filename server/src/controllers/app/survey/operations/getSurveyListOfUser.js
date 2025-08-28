@@ -7,12 +7,21 @@ const { getNextPage } = require('../../../../utils/getNextPage.js');
 
 
 const getSurveyListOfUser = async(req, res) => {
-  const { skip, limit, page, sort } = req.paginationParams;
+  const { skip, limit, page } = req.paginationParams;
   const { verifiedUser } = req;
+  const isDraft = JSON.parse(req?.query?.isDraft || "false")
+  
+  console.log(typeof isDraft, isDraft);
+  if(typeof isDraft !== "boolean"){
+    return res.status(400).json({
+      success: false, 
+      message: "Invalid boolean."
+    })
+  }
   
   const [totalSurveys, surveys] = await Promise.all([  
-    Survey.countDocuments({user: verifiedUser._id }).lean(),
-    Survey.find({ user: verifiedUser._id }).sort({ createdAt: sort }).skip(skip).limit(limit).populate("user", "-password").lean()
+    Survey.countDocuments({user: verifiedUser._id, isDraft }).lean(),
+    Survey.find({ user: verifiedUser._id, isDraft }).sort({ createdAt: -1 }).skip(skip).limit(limit).populate("user", "-password").lean()
     ])
     
     const nextPage = getNextPage(totalSurveys, page, limit);

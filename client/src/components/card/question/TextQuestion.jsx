@@ -70,7 +70,7 @@ TextQuestion.AnswerFieldPreview = () => {
     answer: ''
   }, handleSetQuestion = () => {}} = useCTX(TextQuestionContext);
   
-  return <Textarea requiredDisplay = {question.isRequired} readOnly isRequired = {question.isRequired} value = {question.answer} name = "answer" onChange = {handleSetQuestion} className = "bg-zinc-900 shadow-sm shadow-neutral-100/80 text-sm rounded-lg"  placeholder = "//This is where your respondents will answer." />
+  return <Textarea requiredDisplay = {question.isRequired} readOnly isRequired = {question.isRequired} value = {question.answer} name = "answer" onChange = {handleSetQuestion} className = "bg-zinc-900 text-sm rounded-lg"  placeholder = "This is where your respondents will answer." />
 }
 
 export default TextQuestion

@@ -7,6 +7,7 @@ import NewQuestionModal from '../../components/modals/NewQuestion.jsx';
 import Notice from '../../components/html/Notice.jsx';
 import useCreateSurvey from '../../hooks/useCreateSurvey.js';
 import Button from '../../components/html/Button.jsx';
+import { useParams } from "react-router-dom"
 
 import { useSelector } from 'react-redux';
 import TagsList from '../../components/lists/InterestTagList.jsx';
@@ -15,11 +16,10 @@ const CreateSurvey = () => {
   const { user = {
     username: '',
     nickname: '',
-    avatar: ''
+    avatar: null
   } } = useSelector(state => state.user);
   
-  const {
-  surveyTagline, 
+ const { surveyTagline, 
   closeModal,
   addQuestion, 
   isModalOpen, 
@@ -28,10 +28,16 @@ const CreateSurvey = () => {
   setQuestions,
   questions,
   error,
-  isLoading,
+  isPublishingPending,
   toggleModal, 
-  publishSurvey
+  publishSurvey,
+  saveSurveyAsDraft, 
+  isSavingAsDraft,
+  draftError,
+  isPublishSuccess,
+  isDraftSuccess,
   } = useCreateSurvey();
+
 
   return <>
     <AnimatePresence>
@@ -83,14 +89,14 @@ const CreateSurvey = () => {
           </div>
         </div>
         <QuestionList setQuestions={setQuestions} questions={questions} />
-        { error && <p className = "text-xs text-red-400">{error}</p>}
+        { ((!isPublishSuccess && !isDraftSuccess) && (draftError || error)) && <p className = "text-xs text-red-400">{error || draftError}</p>}
         <div className="flex flex-col gap-2 my-10" >
           <div className="flex gap-2">
-            <button className="w-full p-2 bg-zinc-800 text-neutral-100 rounded-lg">Save as Draft</button>
+            <Button color = "white" loadingState = {isSavingAsDraft} disabled = {isSavingAsDraft || isPublishingPending} onClick = {saveSurveyAsDraft} className="w-full p-2 bg-zinc-800 text-neutral-100 rounded-lg">Save as Draft</Button>
             <button onClick={toggleModal} className="w-full p-2 bg-neutral-100 text-zinc-900 rounded-lg">Add Question</button>
           </div>
           <div >
-            <Button loadingState = {isLoading} onClick = {publishSurvey} className={`w-full p-2 bg-neutral-100 text-zinc-900 rounded-lg text-center`} disabled = {isLoading}>Publish</Button>
+            <Button loadingState = {isPublishingPending} onClick = {publishSurvey} className={`w-full p-2 bg-neutral-100 text-zinc-900 rounded-lg text-center`} disabled = {isPublishingPending || isSavingAsDraft}>Publish</Button>
           </div>
         </div>
       </main>

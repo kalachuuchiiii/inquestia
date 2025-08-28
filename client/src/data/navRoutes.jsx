@@ -1,11 +1,9 @@
 import { FaRankingStar } from "react-icons/fa6";
 import { CiUser } from "react-icons/ci";
 import { GoPlus } from "react-icons/go";
-import { BsCollection } from "react-icons/bs";
+import { MdHistory } from "react-icons/md";
 import { TbSettings2 } from "react-icons/tb";
 import { GoHome } from "react-icons/go";
-import { RiFilePaper2Line } from "react-icons/ri";
-
 export const navRoutes = [
     {
     path: "/home", 
@@ -23,14 +21,9 @@ export const navRoutes = [
     icon: <FaRankingStar />
     }, 
     {
-      path: "/surveys", 
-      label: "Your surveys", 
-      icon: <BsCollection />
-    },
-    {
-      path: "/quests", 
-      label: "Quests", 
-      icon: <RiFilePaper2Line />
+      path: '/response-history', 
+      label: "Response History", 
+      icon: <MdHistory />
     },
     {
       path: "/settings", 
@@ -38,7 +31,7 @@ export const navRoutes = [
       icon: <TbSettings2 />
     },
     {
-      path: "/templates", 
+      path: "/create", 
     label: "Create a Survey", 
     icon: <GoPlus />
     }

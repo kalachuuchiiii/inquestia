@@ -16,7 +16,7 @@ const AnswerSurvey = () => {
 
   
   if (!survey || isFetchingPending || !isFetchingFulfilled) {
-    return <p>loading...</p>
+    return <p className = "h-60 flex justify-center items-center opacity-80">Loading...</p>
   }
 
   return <AnswerQuestionContext.Provider value = {{

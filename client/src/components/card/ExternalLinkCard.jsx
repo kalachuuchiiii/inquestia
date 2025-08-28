@@ -21,10 +21,12 @@ const ExternalLinkCard = ({link = '', hideDeleteButton = false}) => {
 
 
 return <div className=" w-full flex justify-between items-center truncate opacity-50" >
-     <a className = "active:underline" href={link}>{link}</a>
-     {
+     <a className = "active:underline w-full " href={link}>{link}</a>
+     <div >
+            {
        !hideDeleteButton && <Button color = "white" loadingState = {isLoading} size = {8}  className = "flex justify-center items-center" disabled = {isLoading} onClick = {() => deleteExternalLink(link)} ><IoMdClose /></Button>
      }
+     </div>
             </div>
 }
 

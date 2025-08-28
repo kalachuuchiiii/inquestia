@@ -49,12 +49,12 @@ this.fromBottom = {
   hidden: {
     opacity: 0 ,
     y: "40%",
-    transition: smooth(1)
+    transition: smooth(0.25)
   }, 
   visible: {
     opacity: 1, 
     y: 0,
-    transition: smooth(1)
+    transition: smooth(0.25)
   }
 }
 

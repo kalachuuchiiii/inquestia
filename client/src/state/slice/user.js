@@ -4,10 +4,18 @@ import { fetchApi } from '../../utils/fetchApi.js';
 const initialState = {
   user: {
     username: '', 
-    streak: {}, 
     nickname: '', 
-    _id: ''
+    _id: '', 
+    point: {
+      highest: 0, 
+      current: 0
+    }, 
+    streak: {
+      highest: 0, 
+      current: 0
+    }
   },
+  interests: ["personal"],
   isAuthenticated: false, 
   isLoading: false, 
   error: '', 

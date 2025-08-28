@@ -15,7 +15,6 @@ const login = async(req, res) => {
   
   const { password: candidatePass = ''} = req.user;
  const user = req.verifiedUser
- console.log(user);
  
   const isPasswordCorrect = await comparePasswords(candidatePass, user.password);
   if(!isPasswordCorrect){
@@ -38,8 +37,7 @@ const login = async(req, res) => {
  return res.status(200).json({
    success: true, 
    message: "Logged in successfully", 
-   user: userData, 
-   token
+   user: userData
  })
 }
 

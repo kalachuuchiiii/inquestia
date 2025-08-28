@@ -10,87 +10,72 @@ import usePath from './hooks/usePath.js';
 import { useSelector, useDispatch } from 'react-redux';
 import Footer from './components/Footer.jsx';
 import useWindow from './hooks/useWindow.js';
+import Profile from './pages/authenticated/Profile.jsx';
+import UserSurveyList from './components/lists/UserSurveyList.jsx';
+import UserDraftList from './components/lists/UserDraftsList.jsx';
+import SearchPage from './pages/authenticated/SearchPage.jsx';
+import QuerySurvey from './components/lists/QuerySurvey.jsx';
+import QueryUsers from './components/lists/QueryUsers.jsx';
+import AuthenticatedLayout from './layout/Authenticated.jsx';
 
 function App() {
-  const [isSidebarOpen, setIsSideBarOpen] = useState(window.innerWidth >= 720);
-  const { user = {}, isAuthenticated = false} = useSelector(state => state.user);
-  const [isLargeScreen] = useWindow({
-    screenSize: 720
-  });
   
   const dispatch = useDispatch();
   const nav = useNavigate();
-  
-  const checkSession = async() => {
+const { user = {}, isAuthenticated } = useSelector(state => state.user);
+  const checkSession = async () => {
     const res = await dispatch(getSession());
-    if(!res?.payload?.authenticated){
-      nav("/login")
-    }
   }
-  
+
   useEffect(() => {
-    if(!isAuthenticated){
+    if (!isAuthenticated) {
       checkSession();
     }
   }, [isAuthenticated])
-  
+
 
   const { isInThisPath } = usePath();
-  
-  return <div className = " w-full h-full  space-y-4 ">
-    <Routes>
-      <Route element={
-        <div className="w-full h-full flex">
 
-                      <AnimatePresence>
-            { (isLargeScreen || isSidebarOpen) && <SideBar isLargeScreen = {isLargeScreen} onClose = {() => setIsSideBarOpen(false)} />
-            }
-          </AnimatePresence>
-          <div className = "w-full transition-all duration-200">
-             <NavBar >
-               <div>
-                                {
-                 !isSidebarOpen && !isLargeScreen &&                <NavBar.Relate >
-                 <NavBar.SideBarToggler onToggleSidebar = {() => setIsSideBarOpen(prev => !prev)} size = "30" />
-              <NavBar.App color = "white" /> 
-              
-               </NavBar.Relate>
-               }
-               </div>
-               <UserIcon user = {user} >
-                 <UserIcon.Avatar className = "ml-4" size = "8" />
-               </UserIcon>
-            </NavBar>
-            <Outlet />
-          </div>
-        </div>
-      }>
-      {
-        pages.map((page) => {
-          return <Route path = {page.path} element = {<div className = "container mx-auto overflow-y-auto h-full ">
-            {page.element}
-          </div>} />
-        })
-      }
+  return <div className=" w-full h-full  space-y-4 ">
+    <Routes>
+      <Route element={ <AuthenticatedLayout /> }>
+        {
+          pages.map((page) => {
+            return <Route key={page.path} path={page.path} element={<div>
+              {page.element}
+            </div>} />
+          })
+        }
+        <Route path="/profile" element={<Profile />} >
+          <Route index path="/profile" element={<UserSurveyList />} />
+          <Route path="/profile/drafts" element={<UserDraftList />} />
+        </Route>
+        <Route path="/browse" element={<SearchPage />} >
+          <Route index path="/browse/users" element={<QueryUsers />} />
+          <Route path="/browse" element={<QuerySurvey />} />
+        </Route>
       </Route>
-      <Route element = {<div className = "w-full ">
+
+      <Route element={<div className="w-full ">
         <NavBar>
-          <NavBar.App /> 
+          <NavBar.App />
           <NavBar.SignUp />
         </NavBar>
-        <Outlet />
+        <div className="w-full min-h-96">
+          <Outlet />
+        </div>
       </div>} >
-           {
-        publicPages.map((page) => {
-          return <Route path = {page.path} element = {<div className = "">
-            {page.element}
-          </div>} />
-        })
-      }
+        {
+          publicPages.map((page) => {
+            return <Route key={page.path} path={page.path} element={<div className="">
+              {page.element}
+            </div>} />
+          })
+        }
       </Route>
 
     </Routes>
-                      <Footer />
+    <Footer />
   </div>
 }
 

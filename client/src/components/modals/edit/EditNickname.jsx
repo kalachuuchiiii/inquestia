@@ -18,21 +18,15 @@ const EditNickname = ({onClose = () => {}, previousNickname = ''}) => {
     isSuccess, 
     error
   }] = useAsync(async() => {
-      if(typeof nickname !== "string"){
-        throw new Error("Nickname can only contain letters, numbers, underscores, and dot.");
-      }
-      if(nickname.length > 26){
-        throw new Error("Nickname cannot exceed 18 characters.");
-      }
+
       const res = await fetchApi("patch", "/user/nickname", {
         nickname: nickname.toString() || ''
       });
-      console.log(res);
       if(res?.success && res?.user){
         dispatch(updateUser({user: res.user}));
         onClose();
       }
-  })
+  }, [nickname])
   
   const handleChange = (e) => {
     setNickname(e.target.value);

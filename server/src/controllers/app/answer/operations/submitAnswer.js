@@ -4,7 +4,7 @@ const { catchErrorWithSession } = require("../../../../utils/errorHandlers/catch
 const mongoose = require("mongoose");
 const Survey = require("../../../../models/survey.js");
 const Answer = require("../../../../models/answer.js");
-
+const { monitorStreak } = require("../../../utils/survey/monitorStreak.js");
 
 const submitAnswer = async(req, res, _, commit) => {
   const { verifiedUser } = req;
@@ -16,6 +16,22 @@ const submitAnswer = async(req, res, _, commit) => {
         success: false,
         message: "Survey not found."
       })
+  }
+  
+  if(surveyData.closed || surveyData.hasReachedTargetRespondents || surveyData.respondents.length >= surveyData.targetRespondents){
+    return res.status(400).json({
+      success: false, 
+      message: "Survey is already closed and/or over."
+    })
+  }
+  
+  const plainRespondentIds = surveyData.respondents.map(r => r.toString());
+  
+  if(plainRespondentIds.includes(verifiedUser._id.toString())){
+    return res.status(400).json({
+      success: false, 
+      message: "You already submitted a response."
+    })
   }
   
   const questionIds = surveyData.questions.map(({_id}) => _id.toString());
@@ -47,7 +63,7 @@ const submitAnswer = async(req, res, _, commit) => {
       if(qst.isRequired && answer.length === 0){
         return res.status(400).json({
           success: false, 
-          message: "Oops! You missed a required question."
+          message: "Oops! You missed a required question.4444444"
         })
       }
       
@@ -59,7 +75,7 @@ const submitAnswer = async(req, res, _, commit) => {
       }
       
     }
-      
+     .2  
       if(type === "select" && qst.type === "select"){
        if(!Array.isArray(answer)){
          return res.status(400).json({
@@ -106,19 +122,31 @@ const submitAnswer = async(req, res, _, commit) => {
   
   for(const qst of surveyData.questions){
     const ans = answers.find(an => an.questionId.toString() === qst._id.toString());
-    properFormat.answers.push({ questionId: qst._id, type: qst.type.trim().toLowerCase(), answer: ans.answer });
+    properFormat.answers.push({ question: qst._id, type: qst.type.trim().toLowerCase(), answer: ans.answer });
   }
+  
+  const { targetRespondents } = surveyData;
+  
+  surveyData.respondents.push(new mongoose.Types.ObjectId(verifiedUser._id));
+  surveyData.totalRespondents += 1;
+  surveyData.hasReachedTargetRespondents = surveyData.totalRespondents >= targetRespondents;
   
   const newAns = new Answer(properFormat);
   const { session } = req;
-  await newAns.save({session});
+  
+   const { modified } = monitorStreak({ user: verifiedUser });
+  if(modified){
+    await verifiedUser.save({session});
+  }
+  await surveyData.save({session});
+  const data = await newAns.save({session});
   await commit();
   
   
   
   return res.status(200).json({
    success: true, 
-   answerData: newAns, 
+   answerData: data, 
   })
   }
   

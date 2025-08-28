@@ -1,13 +1,13 @@
 import { MoonLoader } from 'react-spinners';
 
-const LoadingDisplay = ({message = "Loading..."}) => {
+const LoadingDisplay = ({children = null}) => {
 
 
-return <div className = "fixed bg-zinc-950 z-10 inset-0 flex justify-center items-center w-full h-screen gap-1">
+return <div className = "min-h-96 flex-col z-10  flex justify-center animate-pulse duration-200 items-center w-full gap-1">
   
   <div className = "flex gap-2 items-center">
         <MoonLoader color = "white" size = "20" />
-    <p>{message}</p>
+        {children}
   </div>
 </div>
 }

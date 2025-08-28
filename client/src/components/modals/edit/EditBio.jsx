@@ -25,7 +25,7 @@ const EditUsername = ({onClose = () => {}, previousBio = ''}) => {
       dispatch(updateUser({user: res.user}));
       onClose();
     }
-  })
+  }, [bio])
   
   const handleChange = (e) => {
     setBio(e.target.value);

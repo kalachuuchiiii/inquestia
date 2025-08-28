@@ -11,6 +11,6 @@ exports.verifyObjectId = catchError(async(req, res, next) => {
     })
   }
   
-  req.verifiedId = resourceId;
+  req.verifiedId = String(resourceId);
   next();
 })

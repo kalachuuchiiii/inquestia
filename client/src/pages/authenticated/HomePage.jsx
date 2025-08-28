@@ -1,7 +1,5 @@
-import TopicsList from '../../components/TopicsList.jsx';
-import CurrentTopic from '../../components/CurrentTopic.jsx';
+
 import { useEffect, useState } from 'react';
-import useSearchQuery from '../../hooks/useSearchQuery.js';
 import Dashboard from '../../components/Dashboard.jsx';
 import { fetchApi } from '../../utils/fetchApi.js';
 
@@ -12,12 +10,11 @@ import LoadingDisplay from '../../components/html/LoadingDisplay.jsx';
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom"
 import SurveyCardPlaceholder from '../../components/card/placeholders/surveyCardPlaceholder.jsx';
+import ArrowButton from '../../components/html/ArrowButton.jsx';
+
 
 const HomePage = () => {
-  const { currentParams } = useSearchQuery({
-    key: "topic",
-    initial: "technology"
-  })
+
   const [surveys, setSurveys] = useState([]);
   const [nextPage, setNextPage] = useState(1);
   const nav = useNavigate();
@@ -45,30 +42,39 @@ const HomePage = () => {
     if (surveys.length === 0 || nextPage === null || nextPage === 1 || isLoading || !inView) return;
     getSurveyList(nextPage);
   }, [nextPage, isLoading, inView]);
-  
-  useEffect(() => {
-    if(!isProcessOK || isSessionLoading)return;
-    
-    if(user.isFinishedOnboarding)return;
-    //return nav("/interests");
-    
-  }, [user, isSessionLoading, isProcessOK, authenticated])
-  
-  if(isSessionLoading || !isProcessOK){
-    return <LoadingDisplay message = "Setting everything up for you..." />
-  }
-  
 
+  useEffect(() => {
+    if (!isProcessOK || isSessionLoading) return;
+    if (user.isFinishedOnboarding) return;
+  }, [user, isSessionLoading, isProcessOK, authenticated])
+
+  if (isSessionLoading || !isProcessOK) {
+
+    return <LoadingDisplay>
+       <div className="flex gap-2 items-center">Welcome! Preparing everything for you...</div>
+    </LoadingDisplay>
+
+  }
   return <div className="p-2" >
-    <Dashboard />
+    <div className="my-6 space-y-6">
+      <Dashboard user={user} />
+      <div className="w-full flex justify-start px-6">
+        <ArrowButton to="/browse" >Search </ArrowButton>
+      </div>
+    </div>
     <div className="space-y-2 min-h-screen">
       {
-        surveys?.length > 0 && surveys.map(survey => <SurveyCard survey={survey} key={survey._id} />)
+        surveys?.length > 0 && surveys.map(survey => <SurveyCard survey={survey} key={survey._id} >
+          <SurveyCard.Preview />
+          <SurveyCard.Author />
+          <SurveyCard.Redirect />
+          <SurveyCard.Bar />
+        </SurveyCard  >
+        )
       }
       {
-        isLoading && <div className="h-64 w-64 flex flex-col w-full [mask-image:linear-gradient(to_bottom,black,transparent)] [-webkit-mask-image:linear-gradient(to_bottom,black,transparent)]">
-             <SurveyCardPlaceholder />
-        </div>
+        isLoading &&
+        <SurveyCardPlaceholder />
       }
     </div>
     <div className="h-1 " ref={ref} />

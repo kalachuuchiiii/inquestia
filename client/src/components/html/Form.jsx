@@ -1,8 +1,11 @@
 import useCTX from '../../hooks/useCTX.js';
-import { createContext } from 'react';
-import { useState } from 'react';
+import { createContext, useState } from 'react';
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+
 import { PiStarFour } from "react-icons/pi";
+import ForgotPasswordRequestModal from '../modals/edit/ForgotPasswordRequestModal.jsx';
+import { AnimatePresence } from 'framer-motion';
+
 const FormContext = createContext(null); 
 
 const Form = ({children = null, label = 'Form', handleChange = () => {}, onSubmit = () => {}, formField = {}}) => {
@@ -18,7 +21,7 @@ return <FormContext.Provider value = {{
   handleChange, 
   formField
 }}>
-  <form className = " w-fit backdrop-blur-2xl rounded flex justify-start items-center" onSubmit = {handleOnSubmit}>
+  <form className = " w-fit  rounded flex justify-start items-center" onSubmit = {handleOnSubmit}>
     <div className = "flex flex-col gap-8 p-4 rounded">
           {children}
     </div>
@@ -45,11 +48,19 @@ Form.Username = ({placeholder = "Username"}) => {
 }
 
 Form.ForgotPassword = () => {
-  return <a href = "/forgot-password">
-    <p className = "text-xs sm:text-[10px] truncate outline text-blue-400">
+  const params = new URLSearchParams(window.location.search);
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(params.get("forgotten") === "true");
+  
+  return <> 
+  <AnimatePresence>
+      {isForgotPasswordModalOpen && <ForgotPasswordRequestModal onClose = {() => setIsForgotPasswordModalOpen(false)} />}
+  </AnimatePresence>
+    <button form = "none" type = "button" onClick = {() => setIsForgotPasswordModalOpen(true)} >
+    <p className = "text-xs sm:text-[10px] truncate active:underline text-blue-400">
     Forgot password
   </p>
-  </a>
+  </button>
+  </>
 }
 
 Form.ErrorMessage = ({error = ''}) => {

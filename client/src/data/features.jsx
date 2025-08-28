@@ -16,16 +16,6 @@ export const features = [
     icon: <FaFire />
   },
   {
-    feature: "Milestones", 
-    description: "Celebrate progress as you grow.", 
-    icon: <GrAchievement />
-  },
-{
-  feature: "Quests", 
-  description: "Complete daily quests to earn points and stay engaged.", 
-  icon: <RiFilePaper2Line />
-},
-  {
     feature: "AI Summarization", 
     description: "Get quick summaries of your surveys", 
     icon: <BsStars />

@@ -12,9 +12,9 @@ const UserSurveyList = () => {
   const { fieldArray: surveys, setFieldArray: setSurveys, modifyFieldById, removeFieldById, totalDocuments: totalSurveys, setTotalDocuments: setTotalSurveys } = useFieldArray([]);
   const [nextPage, setNextPage] = useState(1);
 
-  const [getUserSurvey, { isLoading, error }] = useAsync(async ({ page = 1, rewrite = true} = {}) => {
+  const [getUserSurvey, { isLoading, error }] = useAsync(async ({ page = 1, rewrite = true } = {}) => {
     const res = await fetchApi("get", `/survey-list/user`, {
-      page, 
+      page,
       isDraft: false
     });
     setSurveys(prev => rewrite ? [...res.surveys] : [...prev, ...res.surveys]);
@@ -31,7 +31,7 @@ const UserSurveyList = () => {
 
   useEffect(() => {
     if (!inView || nextPage === null || isLoading) return;
-    getUserSurvey({page: nextPage, rewrite: false});
+    getUserSurvey({ page: nextPage, rewrite: false });
   }, [nextPage, inView, isLoading, surveys]);
 
 
@@ -41,15 +41,15 @@ const UserSurveyList = () => {
   }}>
     <p className="w-full text-left my-2 p-2 rounded  text-sm">Your Surveys {totalSurveys > 0 ? `(${totalSurveys})` : null}</p>
     {
-      surveys?.length > 0 ? surveys.map(survey => <SurveyCard Context = {UserSurveyContext} survey={survey} key={survey._id} >
+      surveys?.length > 0 ? surveys.map(survey => <SurveyCard Context={UserSurveyContext} survey={survey} key={survey._id} >
         <div className="grid grid-cols-12 items-start ">
-          <div className = "col-span-11 col-start-1">
-                      <SurveyCard.Preview />
+          <div className="col-span-11 col-start-1">
+            <SurveyCard.Preview />
           </div>
           {
-            !survey.closed && <div className = "col-span-1 col-start-12 z-100">
-                      <SurveyCard.OptionButton />
-          </div>
+            !survey.closed && <div className="col-span-1 col-start-12 z-100">
+              <SurveyCard.OptionButton />
+            </div>
           }
         </div>
         <SurveyCard.Author />
@@ -60,12 +60,12 @@ const UserSurveyList = () => {
         <p className="text-xs opacity-70">You don’t have any surveys yet. Start by creating one to begin collecting responses.
         </p>
         <a href="/create" className="p-2 bg-neutral-100 rounded-lg text-zinc-900">Create survey</a>
-      </div> 
+      </div>
     }
     {
       isLoading && <Placeholder />
     }
-       <div className = "h-2 w-full shrink-0 " ref = {ref} />
+    <div className="h-2 w-full shrink-0 " ref={ref} />
   </UserSurveyContext.Provider>
 }
 

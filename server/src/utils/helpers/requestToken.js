@@ -13,7 +13,7 @@ exports.requestToken = async({ email = null, user = null}) => {
   
   const resetUrl = `${process.env.WEB_ORIGIN}/update-password/${token}`
   
-   await sendEmail({
+    sendEmail({
      subject: "Your Reset Password Link for Inquestia.ask",
      to: email,
      html: `<div style="font-family: Arial, sans-serif; line-height:1.6; color:#333; background:#ffffff; padding:0; margin:0;">

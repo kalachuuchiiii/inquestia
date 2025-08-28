@@ -15,7 +15,7 @@ const LogoutModal = ({onClose = () => {}}) => {
 
 
 return <ModalStyle label = "Logging Out" onClose = {onClose}>
-  <div className = "flex flex-col gap-6">
+  <div className = "flex  flex-col gap-6">
 
           <Notice className = "text-sm">Are you sure you want to log out?</Notice>
           

@@ -58,7 +58,7 @@ setIsUnauthorizedModalOpen(true)
               <UserIcon.Avatar className="ml-4" size="8" />
             </UserIcon>
           </NavBar>
-          <div className="w-full min-h-96">
+          <div className="w-full sm:w-11/12 mx-auto md:w-10/12 min-h-96">
             <Outlet />
           </div>
         </div>

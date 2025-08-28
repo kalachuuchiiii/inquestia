@@ -16,7 +16,9 @@ return <AnimationWrapper className = "z-100 fixed inset-0 bg-black/85" variants 
          </div>
        <h1 className = "text-xl p-2 pb-5 lato">{label}</h1> 
        </div>
-       {children}
+       <div className = "w-11/12 sm:w-10/12 md:w-9/12 lg:w-8/12 mx-auto">
+           {children}
+       </div>     
        </main>
   </div>
 </AnimationWrapper>

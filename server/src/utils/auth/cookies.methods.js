@@ -14,7 +14,6 @@ exports.storeCookie = (res, {
     maxAge: ThirtyDays,
     sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
   })
-  console.log(cookie);
   return cookie;
 
 }

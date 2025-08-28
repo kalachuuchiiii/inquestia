@@ -2,8 +2,10 @@ if(process.env.NODE_ENV !== "production"){
   require("dotenv").config();
 }
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
+app.use(cookieParser());
 const redis = require("./src/config/redis/index.js");
 const cloudinary = require("./src/config/cloudinary/index.js");
 const { connectDB } = require("./src/config/mongodb/index.js");

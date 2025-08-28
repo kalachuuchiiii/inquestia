@@ -1,62 +1,56 @@
-const path = require("path"); 
-const fs = require("fs"); 
+const path = require('path');
+const glob = require('glob');
 
+/**
+ * Reads a single JS file.
+ * dir: array of path segments, e.g., ['src', 'models', 'User.js']
+ */
 exports.readOneFile = (dir = []) => {
-  const directory = path.join(...dir);
-  const result = require(directory);
-  
-  return result;
-}
+  const fullPath = path.join(...dir);
+  return require(fullPath);
+};
 
-exports.fileReader = (dir = [], {includeIndex = false} = {}) => {
+/**
+ * Reads all JS files in a directory.
+ * dir: array of path segments, e.g., ['src', 'models']
+ * options: { includeIndex: boolean }
+ */
+exports.fileReader = (dir = [], { includeIndex = false } = {}) => {
   const directory = path.join(...dir);
-  const filesInThisDirectory = fs.readdirSync(directory);
-  const files = [];
-  const fileNames = [];
+
+  // Find all .js files in this directory (non-recursive)
+  const files = glob.sync('*.js', { cwd: directory });
   const results = {};
-  
-  for(const file of filesInThisDirectory){
-    const stat = fs.statSync(path.join(directory, file));
-    const isFile = stat.isFile() && file.endsWith(".js");
-    if(!isFile) continue; 
-    files.push(file);
-  }
-  
-  for(const file of files){
-    const fullPath = path.join(directory, file);
-    const fileName = path.basename(file, ".js");
-    if(!includeIndex && fileName === "index") continue;
+  const fileNames = [];
+
+  for (const file of files) {
+    const fileName = path.basename(file, '.js');
+    if (!includeIndex && fileName === 'index') continue;
+
+    results[fileName] = require(path.join(directory, file));
     fileNames.push(fileName);
-    results[fileName] = require(fullPath);
   }
 
-  return {
-    results, 
-    fileNames
-  }
-}
+  return { results, fileNames };
+};
 
+/**
+ * Reads all folders in a directory.
+ * dir: array of path segments, e.g., ['src']
+ */
 exports.folderReader = (dir = []) => {
   const directory = path.join(...dir);
-  const folders = []; 
+
+  // Find all folders (non-recursive)
+  const folders = glob.sync('*/', { cwd: directory });
+  const folderNames = [];
   const directories = {};
-  
-  const foldersInThisDirectory = fs.readdirSync(directory);
-  
-  for(const folder of foldersInThisDirectory){
-    const stat = fs.statSync(path.join(directory, folder));
-    const isFolder = stat.isDirectory() && (!folder.endsWith(".js"));
-    
-    if(!isFolder)continue; 
-    folders.push(folder);
+
+  for (const folder of folders) {
+    const folderName = folder.replace(/\/$/, ''); // remove trailing slash
+    folderNames.push(folderName);
+    directories[folderName] = path.join(directory, folderName);
   }
-  
-  for(const folder of folders){
-    directories[folder] = path.join(directory, folder);
-  }
-  
-  return {
-    folders, 
-    directories
-  }
-}
+
+  return { folders: folderNames, directories };
+};

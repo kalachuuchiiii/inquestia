@@ -12,7 +12,7 @@ const WelcomeGreet = () => {
       <div className="space-y-6 mt-8 mb-16 text-left max-w-2xl">
 
         <div className = "space-y-3">
-                  <p className="lato saturate-100 text-5xl sm:text-3xl ">
+                  <p className="lato saturate-100 text-5xl ">
           Surveys that <span className = "block">Reaches</span> <span className = "block">
             More Possibilities
           </span></p>

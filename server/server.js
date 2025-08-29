@@ -3,6 +3,7 @@ if(process.env.NODE_ENV !== "production"){
 }
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 const app = express();
 app.use(cookieParser());
@@ -13,6 +14,16 @@ const mainRouter = require("./src/router/index.js");
 const serverless = require("serverless-http");
 
 app.use(express.json());
+
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, 
+  max: 5,
+  message: {
+    status: 429,
+    error: "Too many requests, please try again after a minute.",
+  },
+});
+
 app.use(cors({
   origin: process.env.WEB_ORIGIN,
   credentials: true
@@ -21,6 +32,10 @@ app.use(cors({
 app.get("/", (req, res) => {
   res.send("Server is running")
 })
+
+app.use(rateLimit)
+
+
 
 app.use("/api", mainRouter);
 

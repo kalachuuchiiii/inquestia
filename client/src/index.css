@@ -17,9 +17,23 @@ textarea {
   scrollbar-color: auto !important;
 }
 
+
 html, body {
-  overflow: hidden; /* disables scrollbars */
+  overflow: auto; 
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none; /* hides scrollbar but keeps scrolling */
+}
+
+html {
+  -ms-overflow-style: none;
+}
+
 
 
 .my-button {

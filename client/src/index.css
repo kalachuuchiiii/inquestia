@@ -17,6 +17,9 @@ textarea {
   scrollbar-color: auto !important;
 }
 
+html, body {
+  overflow: hidden; /* disables scrollbars */
+}
 
 
 .my-button {

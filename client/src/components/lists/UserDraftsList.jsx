@@ -4,6 +4,7 @@ import { fetchApi } from '../../utils/fetchApi.js';
 import useFieldArray from '../../hooks/useFieldArray.js'
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer'
+import { NavLink } from "react-router-dom"
 import { UserSurveyContext } from '../../context/userSurveyContext.js';
 import Placeholder from '../card/placeholders/surveyCardPlaceholder.jsx';
 import { UserDraftContext } from '../../context/userDraftContext.js';
@@ -57,7 +58,7 @@ return <UserDraftContext.Provider value = {{
         ) : !isLoading ? <div className="h-60 w-full flex flex-col justify-center gap-3 items-center text-center">
           <p className = "text-xs opacity-70">You don’t have any drafts yet. Start by creating one.
           </p>
-          <a href = "/create" className="p-2 bg-neutral-100 rounded-lg text-zinc-900">Create survey</a>
+          <NavLink to = "/create" className="p-2 bg-neutral-100 rounded-lg text-zinc-900">Create survey</NavLink>
         </div> : isLoading && <Placeholder />
       }
       <div className = "w-full h-2" ref = {ref} />

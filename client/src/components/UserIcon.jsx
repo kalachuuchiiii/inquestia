@@ -8,7 +8,6 @@ import Textarea from './html/Textarea.jsx';
 const UserIcon = memo(({className = "", children, user}) => {
   const { user: sessionUser } = useSelector(state => state.user);
 
-
 return <UserContext.Provider value = {{
   user, 
   sessionUser

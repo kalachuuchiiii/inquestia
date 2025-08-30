@@ -32,12 +32,21 @@ export const getSession = createAsyncThunk("session", async(_,thunkAPI) => {
 })
 
 
+
+
 const userSlice = createSlice({
   name: 'user', 
   initialState, 
   reducers: {
     updateUser: (state, action) => {
       state.user = action.payload.user;
+    }, 
+    resetState: (state) => {
+      state.user = initialState.user;
+      state.isAuthenticated = false; 
+      state.isLoading = false; 
+      state.error = ''; 
+      state.isProcessOK = false;
     }
   }, 
   extraReducers: (builder) => {
@@ -54,17 +63,20 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.isProcessOK = true;
     })
-    builder.addCase(getSession.rejected, (state, action) => {
+    builder.addCase(getSession.rejected, (state) => {
       state.user = initialState.user;
-      state.error = action?.payload?.message || "Internal Server Error";
       state.isLoading = false;
+      state.error = ''
       state.isAuthenticated = false;
       state.isProcessOK = true;
     })
+
+  
+
     
     
   }
 })
 
 export default userSlice.reducer;
-export const { updateUser } = userSlice.actions;
+export const { updateUser, resetState } = userSlice.actions;

@@ -30,6 +30,7 @@ const updateInterests = async (req, res) => {
   }
 
   verifiedUser.interests = validInterests;
+  verifiedUser.isFinishedOnboarding = true;
   const data = await verifiedUser.save();
   const user = data.toObject();
   delete user.password;

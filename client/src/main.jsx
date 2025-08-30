@@ -8,7 +8,7 @@ import store from './state/store.js';
 
 
 createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
+  <BrowserRouter basename = "/">
     <Provider store = {store} >
       <Main />
     </Provider>

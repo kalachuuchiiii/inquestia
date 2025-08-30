@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import useToggler from '../../hooks/useToggler.js';
 import LogoutModal from '../modals/LogoutModal.jsx';
 import { AnimatePresence } from "framer-motion";
+import { NavLink } from "react-router-dom"
 
 const SettingButton = ({ children = null, onClick = () => { } }) => {
   return <button onClick={onClick} className="w-full flex justify-between items-center p-2">
@@ -27,6 +28,16 @@ const SettingCard = ({ children = null }) => {
   </div>
 }
 
+SettingCard.Theme = () => {
+  return <div className = "w-full justify-between flex p-2">
+    <p>Theme</p>
+    <select className = "outline-none">
+      <option>Light</option>
+      <option>Dark</option>
+    </select>
+  </div>
+}
+
 SettingCard.NewOption = ({ label = "", children = null }) => {
 
   return <div className=" rounded-lg py-3 px-6">
@@ -38,27 +49,7 @@ SettingCard.NewOption = ({ label = "", children = null }) => {
 }
 
 
-SettingCard.ChangeName = () => {
-  return <SettingButton>
-    <button>Change Name</button>
-  </SettingButton>
-}
 
-SettingCard.ChangeAvatar = () => {
-  return <SettingButton>
-    <button>Change Avatar</button>
-  </SettingButton>
-}
-
-
-SettingCard.Email = ({ user = {} }) => {
-  return (
-    <SettingButton>
-      <input className="opacity-50" type="email" readOnly value="parissrowlet@gmail.com" />
-      <p className="text-sm opacity-50">Verified</p>
-    </SettingButton>
-  )
-}
 
 SettingCard.Logout = ({ onClick = () => { } }) => {
   const [isLogoutModalOpen, open, close, toggle] = useToggler();
@@ -73,18 +64,11 @@ SettingCard.Logout = ({ onClick = () => { } }) => {
   </>
 }
 
-SettingCard.ChangePassword = ({ user = {} }) => {
-  return <SettingButton>
-    <p>Security</p>
-    <button className="text-sm">Change Password</button>
-  </SettingButton>
-}
-
 SettingCard.Account = () => {
   return <SettingButton>
-    <a href="/profile/edit">
+    <NavLink to="/profile/edit">
       <p>Update profile</p>
-    </a>
+    </NavLink>
   </SettingButton>
 }
 

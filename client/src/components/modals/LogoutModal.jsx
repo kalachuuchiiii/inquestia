@@ -3,13 +3,21 @@ import Notice from '../html/Notice.jsx';
 import Button from '../html/Button.jsx';
 import useAsync from '../../hooks/useAsync.js';
 import { fetchApi } from '../../utils/fetchApi.js';
+import { useDispatch } from 'react-redux';
+import { resetState } from '../../state/slice/user.js';
+import { useNavigate } from 'react-router-dom';
+
 
 const LogoutModal = ({onClose = () => {}}) => {
   
+  const dispatch = useDispatch();
+  const nav = useNavigate();
+
   const [logout, {isLoading, error}] = useAsync(async() => {
     const res = await fetchApi("post", "/user/logout");
     if(res?.success){
-      window.location.href = "/login"
+      dispatch(resetState());
+      nav("/login");
     }
   })
 

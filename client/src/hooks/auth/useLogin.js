@@ -1,13 +1,19 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom"
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import useAsync from '../useAsync.js';
+import { getSession } from '../../state/slice/user.js';
 
 const useLogin = () => {
   const [form, setForm] = useState({
     username: '', 
     password: ''
   })
+
+  const dispatch = useDispatch();
+  const nav = useNavigate();
+
   
   const [login, { isLoading, isSuccess, error }] = useAsync(async() => {
       const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/user/login`, {
@@ -15,16 +21,11 @@ const useLogin = () => {
           ...form
         }, 
       }, { withCredentials: true});
-  }, [form])
-  
-  
-  useEffect(() => {
-    if(isSuccess){
-      window.location.href = "/home";
-    }
-  }, [isSuccess])
-  
-  
+      if(res?.data?.success){
+        await dispatch(getSession());
+        nav("/home");
+      }
+  }, [form]);
   
   
   const handleChange = (e) => {

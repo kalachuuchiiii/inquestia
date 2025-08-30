@@ -18,7 +18,7 @@ const HomePage = () => {
   const [surveys, setSurveys] = useState([]);
   const [nextPage, setNextPage] = useState(1);
   const nav = useNavigate();
-  const { isLoading: isSessionLoading, user, authenticated, isProcessOK } = useSelector(state => state.user);
+  const { isLoading: isSessionLoading, user, isAuthenticated, isProcessOK } = useSelector(state => state.user);
 
   const [getSurveyList, { isLoading, error }] = useAsync(async (page = 1) => {
     const seenSurveys = [...surveys];
@@ -34,27 +34,31 @@ const HomePage = () => {
   const { inView, ref } = useInView();
 
   useEffect(() => {
+  
     if (surveys.length > 0) return;
     getSurveyList();
-  }, [])
+  }, [isAuthenticated, user, isSessionLoading, isProcessOK])
 
   useEffect(() => {
-    if (surveys.length === 0 || nextPage === null || nextPage === 1 || isLoading || !inView) return;
+    if ( surveys.length === 0 || nextPage === null || nextPage === 1 || isLoading || !inView) return;
     getSurveyList(nextPage);
   }, [nextPage, isLoading, inView]);
 
   useEffect(() => {
     if (!isProcessOK || isSessionLoading) return;
-    if (user.isFinishedOnboarding) return;
-  }, [user, isSessionLoading, isProcessOK, authenticated])
+    if (!user.isFinishedOnboarding) {
+      nav('/interests');
+    }
+  }, [user, isSessionLoading, isProcessOK, isAuthenticated])
+
 
   if (isSessionLoading || !isProcessOK) {
-
     return <LoadingDisplay>
        <div className="flex gap-2 items-center">Welcome! Preparing everything for you...</div>
     </LoadingDisplay>
-
   }
+
+
   return <div className="p-2" >
     <div className="my-6 space-y-6">
       <Dashboard user={user} />

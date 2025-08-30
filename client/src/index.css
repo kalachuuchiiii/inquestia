@@ -4,11 +4,19 @@ textarea {
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
 }
 
+/* Reset Chrome / Safari / Edge */
 ::-webkit-scrollbar,
 ::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-track {
   all: unset;
 }
+
+/* Reset Firefox */
+* {
+  scrollbar-width: auto !important;
+  scrollbar-color: auto !important;
+}
+
 
 
 .my-button {

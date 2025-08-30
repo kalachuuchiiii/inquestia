@@ -36,7 +36,7 @@ const { user = {}, isAuthenticated } = useSelector(state => state.user);
 
   const { isInThisPath } = usePath();
 
-  return <div className=" w-full h-full  space-y-4 ">
+  return <div className=" w-full h-full scrollbar-none space-y-4 ">
     <Routes>
       <Route element={ <AuthenticatedLayout /> }>
         {

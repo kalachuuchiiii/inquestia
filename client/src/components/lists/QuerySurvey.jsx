@@ -43,7 +43,7 @@ const QuerySurvey = () => {
     getSurveys({page: nextPage, rewrite: false});
   }, [inView, ref, nextPage, isLoading])
 
-  return <div >
+  return <div className="space-y-1" >
     {
       (!isLoading && isNoResultsFound) ? <div className = "flex justify-center opacity-70 items-center h-96 ">
         No results found

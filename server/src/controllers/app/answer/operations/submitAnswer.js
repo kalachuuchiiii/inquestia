@@ -45,7 +45,7 @@ const submitAnswer = async(req, res, _, commit) => {
     }
     
     const qst = surveyData.questions.find(q => q._id.toString() === questionId);
-    console.log(qst);
+
     if(!qst){
       return res.status(400).json({
         success: false, 

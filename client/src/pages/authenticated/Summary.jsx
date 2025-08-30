@@ -22,7 +22,7 @@ const SurveySummary = () => {
     if (!res?.success) return;
     setSurvey(res.survey);
     setSummary(res?.response?.choices[0]?.message?.content);
-    console.log(res);
+ 
   }, [id]);
 
   useEffect(() => {

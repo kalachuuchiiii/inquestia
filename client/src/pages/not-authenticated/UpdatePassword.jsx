@@ -25,7 +25,6 @@ const UpdatePasswordPage = () => {
       token, 
       password
     })
-    console.log(res);
   }, [token, passForm])
   
   const handleChange = (e) => {

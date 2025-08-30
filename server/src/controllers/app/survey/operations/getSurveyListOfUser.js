@@ -10,8 +10,7 @@ const getSurveyListOfUser = async(req, res) => {
   const { skip, limit, page } = req.paginationParams;
   const { verifiedUser } = req;
   const isDraft = JSON.parse(req?.query?.isDraft || "false")
-  
-  console.log(typeof isDraft, isDraft);
+
   if(typeof isDraft !== "boolean"){
     return res.status(400).json({
       success: false, 

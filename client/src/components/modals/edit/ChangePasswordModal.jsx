@@ -28,7 +28,7 @@ const ChangePasswordModal = ({ onClose = () => {}}) => {
   
   const [requestToken, { isLoading, error, isSuccess }] = useAsync(async({ isResend = false} = {}) => {
     if(isResend && !isSuccess && timer > 0)return;
-    console.log("ran");
+
     const res = await fetchApi("post", "/user/send-request-token-c-p");
     setTimer(60);
     return res

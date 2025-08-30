@@ -6,7 +6,7 @@ exports.verifyOTP = catchError(async(req, res, next) => {
   const { email, password, username } = req.user;
   
   let code = `${req.body.code}`
-  console.log(code);
+
 
   if(code.length !== 6){
     return res.status(400).json({

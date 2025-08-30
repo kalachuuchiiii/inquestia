@@ -34,7 +34,7 @@ const SearchPage = () => {
     </div>
     <div className="min-h-100 flex justify-center items-start w-full ">
       {isSearchActive ?
-        <div className="w-full flex flex-col justify-start p-1  ">
+        <div className="w-full sm:w-11/12 mx-auto flex flex-col justify-start p-1  ">
           <Outlet />
         </div> : !isLoading && <div className=" flex gap-2 items-center w-full justify-center h-96" >
           <CiSearch size={30} />
@@ -43,10 +43,7 @@ const SearchPage = () => {
 
     </div>
 
-    <div className="my-10">
-      <NearlyCompletedSurveys nearlyCompletedSurveys={nearlyCompletedSurveys} />
-    </div>
-
+      
   </div>
 }
 

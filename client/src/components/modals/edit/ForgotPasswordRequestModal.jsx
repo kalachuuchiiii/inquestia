@@ -28,7 +28,7 @@ const ForgotPasswordRequestModal = ({ onClose = () => { } }) => {
   const [timer, setTimer] = useState(60);
   const [requestToken, { isLoading, error, isSuccess }] = useAsync(async ({ isResend = false} = {}) => {
     if(isResend && !isSuccess && timer > 0)return;
-    console.log("ran");
+
     const res = await fetchApi("post", "/user/send-request-token-f-p", {
       email
     });

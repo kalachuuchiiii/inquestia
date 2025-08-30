@@ -17,7 +17,7 @@ app.use(express.json());
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, 
-  max: 5,
+  max: 5  ,
   message: {
     status: 429,
     error: "Too many requests, please try again after a minute.",
@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
   res.send("Server is running")
 })
 
-app.use(rateLimit)
+//app.use(limiter)
 
 
 

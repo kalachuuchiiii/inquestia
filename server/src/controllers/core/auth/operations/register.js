@@ -20,6 +20,7 @@ const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
   
   const userData = newUser.toObject(); 
   delete userData.password;
+
   
   return res.status(200).json({
    success: true, 

@@ -4,7 +4,7 @@ import App from '../App.jsx';
 
 const MainTheme = ({theme = "dark"}) => {
 
-return <div className = "w-full ">
+return <div className = "w-full scrollbar-none  ">
   <div className = {` ${theme === "dark" ? " text-white  placeholder-white " : " text-black placeholder-black/80 "} h-full w-full`}>
     <App />
   </div>

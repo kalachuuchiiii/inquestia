@@ -42,7 +42,7 @@ const SurveyCard = ({ survey = {}, Context = null, children = null }) => {
     onClose: toggle
   }
 
-  return <div className="grid overflow-hidden place-content-center grid-rows-1 grid-cols-1">
+  return <div className="grid h-80 overflow-hidden place-content-center grid-rows-1 grid-cols-1">
     <AnimatePresence>
       {isOptionOpen && (survey?.isDraft ? <SurveyWidget.Draft {...props} /> : <SurveyWidget {...props}/>)}
     </AnimatePresence>
@@ -51,7 +51,7 @@ const SurveyCard = ({ survey = {}, Context = null, children = null }) => {
       toggle,
       isOptionOpen
     }}>
-      <div className="flex row-span-1 col-span-1 row-start-1 col-start-1 rounded-lg overflow-hidden flex-col p-1 bg-zinc-900  gap-1">
+      <div className="flex justify-between  row-span-1 col-span-1 row-start-1 col-start-1 rounded-lg overflow-hidden flex-col p-1 bg-zinc-900  gap-1">
         {
           (survey?.closed || survey.hasReachedTargetRespondents) ? <div className="w-full h-full grid grid-rows-1  grid-cols-1  place-content-center">
             <div className="row-span-1 col-span-1 row-start-1 space-y-1 space-x-1 col-start-1">
@@ -79,18 +79,16 @@ const SurveyCard = ({ survey = {}, Context = null, children = null }) => {
 SurveyCard.Preview = () => {
   const { title = null, description = null, questions = [] } = useCTX(SurveyCardContext);
 
-  const firstTwoQuestions = questions.slice(0, 2);
-
   return (
-    <div className="text-sm shrink-1 w-full min-h-30 bg-zinc-950 rounded-lg p-3">
+    <div className="text-sm overflow-y-auto  scrollbar-none  shrink-1 w-full h-28 bg-zinc-950 rounded-lg p-3">
       <div>
         <h1 className="text-xl leading-5 lato truncate">{title}</h1>
         <p className="text-sm truncate opacity-80">{description}</p>
       </div>
-      <div className=" py-2 text-xs opacity-80">
+      <div className=" p-2 text-xs opacity-80">
         {
-          firstTwoQuestions.map((q = {}, i) => <div key = {i}>
-            <p>Question {(i + 1)}: {q?.question}</p>
+          questions.map((q = {}, i) => <div key = {i}>
+            <p  >Question {(i + 1)}: {q?.question}</p>
           </div>)
         }
       </div>

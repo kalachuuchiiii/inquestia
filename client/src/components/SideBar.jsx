@@ -14,7 +14,7 @@ const Sidebar = ({ onClose = () => { }, isLargeScreen = false }) => {
     variants="fromLeft"
     className={` ${isLargeScreen ? "sticky min-h-full" : "fixed h-screen"} top-0 z-40 `}
   >
-    <div className="flex sticky  top-0 overflow-x-hidden bg-zinc-950  flex-col w-full justify-start h-full py-2" >
+    <div className="flex sticky  top-0 overflow-x-hidden bg-zinc-950 flex-col w-full justify-start h-full py-2" >
       <div className="py-3 flex gap-2 items-center">
         <NavBar.SideBarToggler onToggleSidebar={onClose} size="30" />
         <NavBar.App />

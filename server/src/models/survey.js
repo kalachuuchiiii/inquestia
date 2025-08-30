@@ -93,12 +93,12 @@ Survey.schema.path('questions').discriminator('select', selectTypeQuestionSchema
 
 const deleteAll = async () => {
   const res = await Survey.deleteMany();
-  console.log(res)
+
 }
 
 const indexes = async() => {
   const d = await Survey.collection.dropIndex("respondents_1");
-  console.log(d);
+
 }
 
 //deleteAll();

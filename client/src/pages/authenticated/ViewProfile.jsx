@@ -30,7 +30,7 @@ const ViewProfilePage = () => {
     const res = await fetchApi("get", `/user/${userProfile?._id}/survey-list`, {
       page
     });
-    console.log(res);
+    
     if (!res?.success) return;
     setUserSurveys(prev => rewrite ? res.surveys : [...prev, ...res.surveys]);
     setTotalUserSurvey(res.totalSurveys);

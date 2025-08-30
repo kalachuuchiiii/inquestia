@@ -44,8 +44,41 @@ textarea {
   font-style: normal;
 }
 
+html, body {
+  overflow: hidden; /* disables scrollbars */
+}
+
+/* Hide scrollbar but keep scroll enabled */
+html, body {
+  overflow: auto; /* scrolling still works */
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: none; /* hides scrollbar but keeps scrolling */
+}
+
+/* IE/Edge Legacy */
+html {
+  -ms-overflow-style: none;
+}
 
 
-.scrollbar-none::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+
+
+::-webkit-scrollbar,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-track {
+  all: unset;
+}
+
+
+.scrollbar-none {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; 
 }

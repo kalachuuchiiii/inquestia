@@ -44,7 +44,7 @@ const SearchBar = () => {
       <button className = "p-2" onClick={handleReset}> <IoIosClose size = "20" /> </button>
     </div>
     <button onClick={handleSearch} className="col-span-2 w-full bg-neutral-100 text-zinc-900 place-items-center place-content-center text-center col-start-11">
-      <CiSearch size="20" />
+      <CiSearch color = 'black' size="20" />
     </button>
   </div>
 }

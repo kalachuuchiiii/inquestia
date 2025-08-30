@@ -1,6 +1,6 @@
 import AnimationWrapper from './AnimationWrapper.jsx';
 import { PiStarFour } from "react-icons/pi";
-
+import { NavLink } from "react-router-dom"
 const WelcomeGreet = () => {
   return (
     <div className = "px-4" >
@@ -18,7 +18,7 @@ const WelcomeGreet = () => {
           </span></p>
         <h1 className="text-base ">A place where you can publish surveys online and unlock more opportunities.</h1>
                 <button className = "flex text-lg sm:text-base items-center gap-2 px-6 py-2 rounded-xl backdrop-blue-lg ">
-          <PiStarFour size = "20" /> <a href = "/register">Get Started</a>
+          <PiStarFour size = "20" /> <NavLink to = "/register">Get Started</NavLink>
         </button>
         </div>
 

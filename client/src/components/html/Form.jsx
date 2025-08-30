@@ -5,6 +5,7 @@ import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { PiStarFour } from "react-icons/pi";
 import ForgotPasswordRequestModal from '../modals/edit/ForgotPasswordRequestModal.jsx';
 import { AnimatePresence } from 'framer-motion';
+import { NavLink } from "react-router-dom"
 
 const FormContext = createContext(null); 
 
@@ -72,13 +73,13 @@ Form.ErrorMessage = ({error = ''}) => {
 Form.NavigateToLogin = () => {
   
   return <div className = "text-xs sm:text-[10px]">
-    <p>Already signed up? <a href = "/login" className = "text-blue-400">Login</a></p>
+    <p>Already signed up? <NavLink to = "/login" className = "text-blue-400">Login</NavLink></p>
   </div>
 }
 Form.NavigateToRegister = () => {
   
   return <div className = "text-xs sm:text-[10px]">
-    <p>Doesn't have an account yet? <a href = "/register" className = "text-blue-400">Register</a></p>
+    <p>Doesn't have an account yet? <NavLink to = "/register" className = "text-blue-400">Register</NavLink></p>
   </div>
 }
 

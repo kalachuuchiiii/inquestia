@@ -18,6 +18,7 @@ import { fetchApi } from '../../utils/fetchApi.js';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../state/slice/user.js';
 import { HiOutlineChevronRight } from "react-icons/hi2";
+import { NavLink } from "react-router-dom"
 import ChangeAvatarModal from '../../components/modals/edit/ChangeAvatar.jsx';
 
 const EditProfile = () => {
@@ -139,12 +140,12 @@ const EditProfile = () => {
           </div>
         </div>
         <div className="p-2">
-          <a href = "/interests" className="flex items-center justify-between">
+          <NavLink to = "/interests" className="flex items-center justify-between">
             <label>
               Your interests
             </label>
             <div ><HiOutlineChevronRight /></div>
-          </a>
+          </NavLink>
           <div className="text-xs grid grid-cols-2 opacity-50">
             {user?.interests?.length > 0 && user.interests.map((interest) => <p>{capitalize(interest)}</p>)}
           </div>

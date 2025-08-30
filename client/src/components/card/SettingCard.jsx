@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import useToggler from '../../hooks/useToggler.js';
 import LogoutModal from '../modals/LogoutModal.jsx';
 import { AnimatePresence } from "framer-motion";
+import { NavLink } from "react-router-dom"
 
 const SettingButton = ({ children = null, onClick = () => { } }) => {
   return <button onClick={onClick} className="w-full flex justify-between items-center p-2">
@@ -82,9 +83,9 @@ SettingCard.ChangePassword = ({ user = {} }) => {
 
 SettingCard.Account = () => {
   return <SettingButton>
-    <a href="/profile/edit">
+    <NavLink to="/profile/edit">
       <p>Update profile</p>
-    </a>
+    </NavLink>
   </SettingButton>
 }
 

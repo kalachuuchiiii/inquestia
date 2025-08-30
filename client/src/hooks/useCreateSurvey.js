@@ -3,10 +3,12 @@ import useAsync from './useAsync.js';
 import { useSelector } from 'react-redux';
 import useToggler from './useToggler.js';
 import { fetchApi } from '../utils/fetchApi.js';
-import { useParams } from "react-router-dom";
+
+import { useParams, useNavigate } from "react-router-dom";
 
 const useCreateSurvey = () => {
   const [questions, setQuestions] = useState([]);
+  const nav = useNavigate();
   const [surveyTagline, setSurveyTagline] = useState({
     title: '',
     description: '',
@@ -32,7 +34,7 @@ const useCreateSurvey = () => {
     }); 
     
     if(!res?.success)return; 
-    window.location.href = "/profile"
+    nav("/profile");
     
   })
 
@@ -45,7 +47,7 @@ const useCreateSurvey = () => {
       _id: id,
       isDraft: true
     })
-    window.location.href = "/profile/drafts";
+    nav("/profile/drafts");
   })
 
   const [getDraft, { isLoading: isDraftLoading }] = useAsync(async () => {

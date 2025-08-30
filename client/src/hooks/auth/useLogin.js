@@ -8,6 +8,7 @@ const useLogin = () => {
     username: '', 
     password: ''
   })
+  const nav = useNavigate();
   
   const [login, { isLoading, isSuccess, error }] = useAsync(async() => {
       const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/user/login`, {
@@ -20,7 +21,7 @@ const useLogin = () => {
   
   useEffect(() => {
     if(isSuccess){
-      window.location.href = "/home";
+      nav("/home");
     }
   }, [isSuccess])
   

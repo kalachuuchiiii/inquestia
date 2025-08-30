@@ -2,7 +2,7 @@ import { IoReorderThreeOutline } from "react-icons/io5";
 import AnimationWrapper from './AnimationWrapper.jsx';
 import { CiSearch } from "react-icons/ci";
 import { useState, memo } from 'react';
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, NavLink } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 
@@ -33,7 +33,7 @@ NavBar.SideBarToggler = memo(({onToggleSidebar = () => {}, size = "20", color = 
 })
 
 NavBar.SignUp = () => {
-  return <a className="px-6 py-2 font-bold text-white text-lg rounded-xl" href="/login">Login</a>
+  return <NavLink className="px-6 py-2 font-bold text-white text-lg rounded-xl" to="/login">Login</NavLink>
 }
 
 

@@ -27,7 +27,7 @@ setIsUnauthorizedModalOpen(true)
   }, [user, isAuthenticated, isProcessOK])
 
   return (
-    <div className=" mr-auto overflow-y-auto min-h-96 " >
+    <div className=" container mx-auto overflow-y-auto min-h-96 " >
       <AnimatePresence>
         {isUnauthorizedModalOpen && <UnauthorizedModal />}
       </AnimatePresence>
@@ -58,7 +58,7 @@ setIsUnauthorizedModalOpen(true)
               <UserIcon.Avatar className="ml-4" size="8" />
             </UserIcon>
           </NavBar>
-          <div className="w-full sm:w-11/12 mr-auto md:w-10/12 min-h-96">
+          <div className="w-full mx-auto sm:w-11/12 mr-auto md:w-10/12 min-h-96">
             <Outlet />
           </div>
         </div>

@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
   res.send("Server is running")
 })
 
-app.use(rateLimit)
+app.use(limiter)
 
 
 

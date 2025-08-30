@@ -2,17 +2,16 @@ import SettingCard from '../../components/card/SettingCard.jsx';
 const Settings = () => {
 
 
-return <div className = "p-2">
-  <SettingCard >
+  return <div className="p-2">
+    <SettingCard >
 
-    <SettingCard.NewOption label = "Account" >
-      <SettingCard.Account />
-      <SettingCard.Email />
-      <SettingCard.ChangePassword />
-          <SettingCard.Logout />
-    </SettingCard.NewOption>
-  </SettingCard>
-</div>
+      <SettingCard.NewOption label="Account" >
+        <SettingCard.Theme />
+        <SettingCard.Account />
+        <SettingCard.Logout />
+      </SettingCard.NewOption>
+    </SettingCard>
+  </div>
 }
 
 export default Settings

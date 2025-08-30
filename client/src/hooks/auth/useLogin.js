@@ -7,42 +7,44 @@ import { getSession } from '../../state/slice/user.js';
 
 const useLogin = () => {
   const [form, setForm] = useState({
-    username: '', 
-    password: ''
-  })
+    username: "",
+    password: "",
+  });
 
   const dispatch = useDispatch();
   const nav = useNavigate();
 
-  
-  const [login, { isLoading, isSuccess, error }] = useAsync(async() => {
-      const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/user/login`, {
+  const [login, { isLoading, isSuccess, error }] = useAsync(async () => {
+    const res = await axios.post(
+      `${import.meta.env.VITE_SERVER_URL}/api/user/login`,
+      {
         user: {
-          ...form
-        }, 
-      }, { withCredentials: true});
-      if(res?.data?.success){
-        await dispatch(getSession());
-        nav("/home");
-      }
+          ...form,
+        },
+      },
+      { withCredentials: true }
+    );
+    if (res?.data?.success) {
+      await dispatch(getSession());
+      nav("/home");
+    }
   }, [form]);
-  
-  
+
   const handleChange = (e) => {
-    const { name, value } = e.target; 
-    setForm(prev => ({
-      ...prev, [name]: value
-    }))
-  }
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-return { 
-  login, 
-  handleChange,
-  form, 
-  isLoginLoading: isLoading,
-  loginError: error
-}
-
+  return {
+    login,
+    handleChange,
+    form,
+    isLoginLoading: isLoading,
+    loginError: error,
+  };
 }
 
 export default useLogin

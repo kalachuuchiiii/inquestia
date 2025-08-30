@@ -5,11 +5,11 @@ const Dashboard = ({user = {}}) => {
 
 
   return <div className="italic flex gap-1 items-center text-xs scrollbar-none overflow-x-auto serif" >
-    <div className="px-6 flex gap-2 items-center shrink-0">f
+    <div className="px-6 flex gap-2 items-center shrink-0">
       <IoStatsChartOutline size="18" />  Stats
     </div>
     <div className="w-fit shrink-0">
-      <h1 >Highest Streak <span className="lato ">{user.streak.highest} day(s)_</span></h1>
+      <h1 >Highest Streak <span className="lato ">{user.streak.highest} day(s)</span></h1>
       <h1 className="ml-3 opacity-60">Current Streak <span className="lato">{user.streak.current} day(s)</span></h1>
     </div>
     <div className="w-fit shrink-0">

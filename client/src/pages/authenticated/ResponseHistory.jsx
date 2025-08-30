@@ -29,23 +29,29 @@ const ResponseHistory = () => {
     getAnswerList({ page: nextPage, rewrite: false})
   }, [ref, inView, nextPage])
   
-  if(isLoading){
-    return <LoadingDisplay>
-      Getting your response records...
-    </LoadingDisplay>
-  }
   
-return <div className = "p-1">
-  {
-    answerList?.length > 0 && <div>
-      <div className = "p-1 flex justify-center">
-        <p className = "">Your response records: </p>
+return (
+  <div className="p-1">
+    {answerList?.length > 0 && (
+      <div>
+        <div className="p-1 flex justify-center">
+          <p className="">Your response records: </p>
+        </div>
+        {answerList.map((ans) => (
+          <AnswerCard showRedirect key={ans._id} answer={ans} />
+        ))}
+        <div ref={ref} />
       </div>
-      {answerList.map((ans) => <AnswerCard showRedirect key = {ans._id} answer = {ans} />)}
-      <div ref = {ref} />
-    </div>
-  }
-</div>
+    )}
+    {isLoading ? (
+      <LoadingDisplay>Loading more responses...</LoadingDisplay>
+    ) : (
+      answerList?.length === 0 && (
+        <LoadingDisplay>You have not answered any surveys yet.</LoadingDisplay>
+      )
+    )}
+  </div>
+);
 }
 
 export default ResponseHistory

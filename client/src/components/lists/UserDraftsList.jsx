@@ -14,14 +14,14 @@ const UserDraftLists = () => {
   const { fieldArray: drafts, setFieldArray: setDrafts, modifyFieldById, removeFieldById, totalDocuments: totalDrafts, setTotalDocuments: setTotalDrafts } = useFieldArray([]);
   const [nextPage, setNextPage] = useState(1);
 
-  const [getUserDrafts, { isLoading, error }] = useAsync(async ({ page = 1, rewrite = true} = {}) => {
+  const [getUserDrafts, { isLoading, error }] = useAsync(async ({ page = 1, overwrite = true} = {}) => {
     const res = await fetchApi("get", `/survey-list/user`, {
       page, 
       isDraft: true
     });
     if(!res?.success)return;
     
-    setDrafts(prev => rewrite ? [...res.surveys] : [...prev, ...res.surveys]);
+    setDrafts(prev => overwrite ? [...res.surveys] : [...prev, ...res.surveys]);
     setNextPage(res?.nextPage || null);
     setTotalDrafts(res?.totalSurveys || 0)
   })
@@ -35,7 +35,7 @@ const UserDraftLists = () => {
 
   useEffect(() => {
     if (!inView || drafts.length === 0 || nextPage === null|| isLoading) return;
-    getUserDrafts({ page: nextPage, rewrite: false});
+    getUserDrafts({ page: nextPage, overwrite: false});
   }, [nextPage, inView, isLoading, drafts]);
 
 

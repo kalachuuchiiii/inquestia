@@ -16,7 +16,7 @@ const AnswerListPage = () => {
   const { ref, inView } = useInView();
   const { id } = useParams();
   
-  const [getAnswers, { isLoading, error }] = useAsync(async({ page = 1, rewrite = true} = {}) => {
+  const [getAnswers, { isLoading, error }] = useAsync(async({ page = 1, overwrite = true} = {}) => {
     const res = await fetchApi("get", `/answer/s/${id}`, {
       page
     }); 
@@ -24,7 +24,7 @@ const AnswerListPage = () => {
     setSurvey(res.survey)
     setTotalAnswers(res.totalAnswers);
     setNextpage(res.nextPage);
-    setAnswers(prev => !rewrite ? [...prev, ...res.answers] : [...res.answers]);
+    setAnswers(prev => !overwrite ? [...prev, ...res.answers] : [...res.answers]);
   });
   
   useEffect(() => {
@@ -33,7 +33,7 @@ const AnswerListPage = () => {
   
   useEffect(() => {
     if(nextPage === null || isLoading || !inView)return; 
-    getAnswers({ page: nextPage, rewrite: false})
+    getAnswers({ page: nextPage, overwrite: false})
   }, [nextPage, isLoading, inView]);
   
 

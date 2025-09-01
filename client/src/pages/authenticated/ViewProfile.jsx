@@ -25,14 +25,14 @@ const ViewProfilePage = () => {
     setNextPage(1);
   }, [username])
 
-  const [getUserSurvey, { isLoading: isFetchingSurvey, error: isFetchingSurveyError }] = useAsync(async ({ rewrite = true, page = 1 } = {}) => {
+  const [getUserSurvey, { isLoading: isFetchingSurvey, error: isFetchingSurveyError }] = useAsync(async ({ overwrite = true, page = 1 } = {}) => {
     if (!userProfile?._id) return;
     const res = await fetchApi("get", `/user/${userProfile?._id}/survey-list`, {
       page
     });
     
     if (!res?.success) return;
-    setUserSurveys(prev => rewrite ? res.surveys : [...prev, ...res.surveys]);
+    setUserSurveys(prev => overwrite ? res.surveys : [...prev, ...res.surveys]);
     setTotalUserSurvey(res.totalSurveys);
     setNextPage(res.nextPage);
   }, [userProfile]);
@@ -50,7 +50,7 @@ const ViewProfilePage = () => {
 
   useEffect(() => {
     if (!inView || isFetchingSurvey || nextPage === null) return;
-    getUserSurvey({ page: nextPage, rewrite: false });
+    getUserSurvey({ page: nextPage, overwrite: false });
   }, [nextPage, inView, ref])
   
   if(isLoading ){

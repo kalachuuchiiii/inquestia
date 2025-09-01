@@ -20,7 +20,7 @@ const HomePage = () => {
   const nav = useNavigate();
   const { isLoading: isSessionLoading, user, isAuthenticated, isProcessOK } = useSelector(state => state.user);
 
-  const [getSurveyList, { isLoading, error }] = useAsync(async ({ page = 1, rewrite = true} = {}) => {
+  const [getSurveyList, { isLoading, error }] = useAsync(async ({ page = 1, overwrite = true} = {}) => {
     const seenSurveys = [...surveys];
     const res = await fetchApi('get', '/surveys', {
       seenSurveys,
@@ -28,7 +28,7 @@ const HomePage = () => {
     })
     const uniqueSurveys = res.surveys.filter(s => !seenSurveys.some(survey => survey._id === s._id));
     setNextPage(res.nextPage);
-    setSurveys(prev => rewrite ? res.surveys : [...prev, ...uniqueSurveys]);
+    setSurveys(prev => overwrite ? res.surveys : [...prev, ...uniqueSurveys]);
   })
 
   const { inView, ref } = useInView();
@@ -46,12 +46,12 @@ const HomePage = () => {
       isLoading ||
       !inView
     ) return;
-    getSurveyList({ page: nextPage, rewrite: false });
+    getSurveyList({ page: nextPage, overwrite: false });
   }, [nextPage, inView]);
 
   useEffect(() => {
     if (!isProcessOK || isSessionLoading || !isAuthenticated) return;
-    if (!user.isFinishedOnboarding) {
+    if (!user.isFinishedOnboarding  ) {
       nav('/interests');
     }
   }, [user, isSessionLoading, isProcessOK, isAuthenticated])

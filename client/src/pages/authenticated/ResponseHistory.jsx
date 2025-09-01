@@ -9,13 +9,13 @@ import LoadingDisplay from '../../components/html/LoadingDisplay.jsx';
 const ResponseHistory = () => {
   const [answerList, setAnswerList] = useState([]); 
   const [nextPage, setNextPage] = useState(1);
-  const [getAnswerList, { isLoading, error }] = useAsync(async({page = 1, rewrite = true} = {}) => {
+  const [getAnswerList, { isLoading, error }] = useAsync(async({page = 1, overwrite = true} = {}) => {
     const res = await fetchApi("get", "/answer/list", {
       page
     });
     if(!res?.success)return;
     setNextPage(res.nextPage);
-    setAnswerList(prev => rewrite ? res.answers : [...prev, ...res.answers])
+    setAnswerList(prev => overwrite ? res.answers : [...prev, ...res.answers])
   })
   
   const { ref, inView } = useInView();
@@ -26,7 +26,7 @@ const ResponseHistory = () => {
   
   useEffect(() => {
     if(!inView || nextPage === null || isLoading)return;
-    getAnswerList({ page: nextPage, rewrite: false})
+    getAnswerList({ page: nextPage, overwrite: false})
   }, [ref, inView, nextPage])
   
   

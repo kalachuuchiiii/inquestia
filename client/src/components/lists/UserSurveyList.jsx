@@ -12,12 +12,12 @@ const UserSurveyList = () => {
   const { fieldArray: surveys, setFieldArray: setSurveys, modifyFieldById, removeFieldById, totalDocuments: totalSurveys, setTotalDocuments: setTotalSurveys } = useFieldArray([]);
   const [nextPage, setNextPage] = useState(1);
 
-  const [getUserSurvey, { isLoading, error }] = useAsync(async ({ page = 1, rewrite = true } = {}) => {
+  const [getUserSurvey, { isLoading, error }] = useAsync(async ({ page = 1, overwrite = true } = {}) => {
     const res = await fetchApi("get", `/survey-list/user`, {
       page,
       isDraft: false
     });
-    setSurveys(prev => rewrite ? [...res.surveys] : [...prev, ...res.surveys]);
+    setSurveys(prev => overwrite ? [...res.surveys] : [...prev, ...res.surveys]);
     setNextPage(res?.nextPage || null);
     setTotalSurveys(res?.totalSurveys || 0)
   })
@@ -31,7 +31,7 @@ const UserSurveyList = () => {
 
   useEffect(() => {
     if (!inView || nextPage === null || isLoading) return;
-    getUserSurvey({ page: nextPage, rewrite: false });
+    getUserSurvey({ page: nextPage, overwrite: false });
   }, [nextPage, inView, isLoading, surveys]);
 
 

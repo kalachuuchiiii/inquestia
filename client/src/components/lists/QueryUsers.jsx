@@ -16,13 +16,13 @@ const QueryUsers = () => {
   const [isNoResultsFound, setIsNoResultsFound] = useState(false);
   
   const { ref, inView } = useInView();
-  const [getUsers, { isLoading, error, isSuccess }] = useAsync(async ({ page = 1, rewrite = true } = {}) => {
+  const [getUsers, { isLoading, error, isSuccess }] = useAsync(async ({ page = 1, overwrite = true } = {}) => {
     const res = await fetchApi("get", `/user/search/${searchQuery.get("q")}`, {
       page
     });
     if (!res?.success) return;
-    setUsers(prev => rewrite ? res.users : [...prev, ...res?.users]);
-    setNextPage(rewrite ? 1 : res?.nextPage);
+    setUsers(prev => overwrite ? res.users : [...prev, ...res?.users]);
+    setNextPage(overwrite ? 1 : res?.nextPage);
     setIsNoResultsFound(res?.isNoResultsFound)
   })
 
@@ -36,7 +36,7 @@ const QueryUsers = () => {
   
   useEffect(() => {
     if (isSearchInactive || isLoading || nextPage === null || !inView ) return;
-    getUsers({page: nextPage, rewrite: false})
+    getUsers({page: nextPage, overwrite: false})
   }, [nextPage, isSearchInactive, isLoading, inView, query, ref])
 
   return <div className = "space-y-1"  >

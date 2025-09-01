@@ -19,7 +19,7 @@ const QuerySurvey = () => {
   const [surveys, setSurveys] = useState([]);
   const [isNoResultsFound, setIsNoResultsFound] = useState(false);
 
-  const [getSurveys, { isLoading, error }] = useAsync(async ({ page = 1, rewrite = true } = {}) => {
+  const [getSurveys, { isLoading, error }] = useAsync(async ({ page = 1, overwrite = true } = {}) => {
     if (!user) return;
     const rand = user?.interests.length > 0 ? Math.floor(Math.random() * user.interests.length) : 0;
     const query = searchQuery.get("q") || user.interests[rand] || "personal";
@@ -27,10 +27,10 @@ const QuerySurvey = () => {
       page
     });
     if (!res?.success) return;
-    setSurveys(prev => rewrite ? res.surveys : [...prev, ...res.surveys])
+    setSurveys(prev => overwrite ? res.surveys : [...prev, ...res.surveys])
     setTotalSurveys(res.totalSurveys);
     setIsNoResultsFound(res?.isNoResultsFound)
-    setNextPage(rewrite ? 1 : res?.nextPage);
+    setNextPage(overwrite ? 1 : res?.nextPage);
   }, [searchQuery, user, searchQuery.get("q")])
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const QuerySurvey = () => {
   
   useEffect(() => {
     if(nextPage === null || isLoading || !inView)return; 
-    getSurveys({page: nextPage, rewrite: false});
+    getSurveys({page: nextPage, overwrite: false});
   }, [inView, ref, nextPage, isLoading])
 
   return <div className="space-y-1" >

@@ -15,7 +15,7 @@ const Sidebar = ({ onClose = () => {}, isLargeScreen = false }) => {
         isLargeScreen ? "sticky min-h-screen" : "fixed h-screen"
       } top-0 z-40 overflow-hidden`}
     >
-      <aside className="flex flex-col  h-full bg-neutral-50 dark:bg-zinc-950 shadow-xl">
+      <aside className="flex flex-col w-68 h-screen bg-neutral-50 dark:bg-zinc-950 shadow-xl">
         {/* Header / Brand */}
         <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-200 dark:border-gray-800">
           <NavBar.SideBarToggler onToggleSidebar={onClose} size="28" />

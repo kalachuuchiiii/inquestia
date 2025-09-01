@@ -3,16 +3,29 @@ import useLogin from '../../hooks/auth/useLogin.js';
 import Button from '../../components/html/Button.jsx';
 
 const Hero = () => {
-  return <div className="pr-10 sm:mx-12 space-y-1">
-    <h1 className="text-5xl lato">Welcome Back!</h1>
-    <p>Ready to dive back in? Sign in to unlock everything</p>
-  </div>
-}
+  return (
+    <div className="space-y-4 flex flex-col justify-center h-full sm:mx-12 mb-auto pr-10 max-w-md">
+      <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-zinc-900 dark:text-neutral-100">
+        Welcome Back!
+      </h1>
+      <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300">
+        Ready to dive back in? Sign in to unlock everything.
+      </p>
+      <p className="text-sm sm:text-base text-zinc-500 dark:text-neutral-100/60 leading-relaxed">
+        Access personalized dashboards, track your progress, and continue where 
+        you left off. We’re excited to have you back on board!
+      </p>
+    
+    </div>
+  );
+};
+
+
 
 const LoginPage = () => {
   const { form, login, isLoginLoading, loginError, handleChange } = useLogin();
 
-  return <div className="space-y-10 flex flex-col  items-start sm:flex-row w-full pl-6 justify-start pt-8">
+  return <div className="space-y-10 grid grid-rows-2 align-content-start sm:grid-cols sm:grid-cols-2  w-full pl-6 pt-8">
     <Hero />
     <Form onSubmit={login} handleChange={handleChange} formField={form} label="Login" >
       <Form.Label defaultLabel="Login" />

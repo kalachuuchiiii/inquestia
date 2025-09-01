@@ -67,23 +67,25 @@ const SelectAnswerQue = ({ question = {
     })))
   }, [])
 
-  return <SelectAnswerContext.Provider value={{
-    handleToggleMultipleChoice,
-    handleToggleRequired,
-    handleAddChoice,
-    handleSetQuestion,
-    question, 
-    choice, 
-    handleRemoveQuestion,
-    setChoice, 
-    deselectChoice,
-    error, 
-    id
-  }}>
-    <div className = {className}>
-          {children}
-    </div>
-  </SelectAnswerContext.Provider>
+  return (
+    <SelectAnswerContext.Provider
+      value={{
+        handleToggleMultipleChoice,
+        handleToggleRequired,
+        handleAddChoice,
+        handleSetQuestion,
+        question,
+        choice,
+        handleRemoveQuestion,
+        setChoice,
+        deselectChoice,
+        error,
+        id,
+      }}
+    >
+      <div className={className}>{children}</div>
+    </SelectAnswerContext.Provider>
+  );
 }
 
 SelectAnswerQue.QuestionNum = () => {
@@ -116,9 +118,20 @@ SelectAnswerQue.RemoveButton = () => {
 }
 
 SelectAnswerQue.Question = () => {
-  const { handleSetQuestion = () => {}, question = { question: '' }} = useCTX(SelectAnswerContext);
-  
-  return <Textarea onChange={handleSetQuestion} name="question" value={question.question} rows={1} limit={150} placeholder="What's your question?" />
+  const { handleSetQuestion = () => {}, question = { question: "" } } =
+    useCTX(SelectAnswerContext);
+
+  return (
+    <Textarea
+      onChange={handleSetQuestion}
+      name="question"
+      className=''
+      value={question.question}
+      rows={1}
+      limit={150}
+      placeholder="What's your question?"
+    />
+  );
 }
 
 SelectAnswerQue.MultipleChoiceButton = () => {
@@ -136,20 +149,33 @@ SelectAnswerQue.Choices = () => {
     choices: [] },
     deselectChoice = () => {}} = useCTX(SelectAnswerContext);
   
-  return <div className = "space-y-2">
-    <div>
-          <div className="text-sm flex gap-1">{question.isRequired && <p className="text-red-400 text-xs">*</p>}Choices</div>
-          <Notice className = "text-xs opacity-50">Minimum of 2 choices and maximum of 8</Notice>
-    </div>
-      <div className="p-2 border-l-1 border-l-neutral-100 flex flex-col gap-1 items-start text-sm">
-        {
-          question.choices.length > 0 ? question.choices.map(choice => <div className="px-3 animate-pulse bg-neutral-100/50 transition-all flex items-center justify-between duration-200 w-full shrink-0  py-2">
-            <p> {choice}</p>
-            <button onClick = {() => deselectChoice(choice)}><IoMdClose /></button>
-          </div>) : <p className="p-1 opacity-50 ">No options were added yet</p>
-        }
+  return (
+    <div className="space-y-2">
+      <div>
+        <div className="text-sm flex gap-1">
+          {question.isRequired && <p className="text-red-400 text-xs">*</p>}
+          Choices
+        </div>
+        <Notice className="text-xs opacity-50">
+          Minimum of 2 choices and maximum of 8
+        </Notice>
       </div>
-  </div>
+      <div className="p-2 border-l-1 border-l-zinc-900 dark:border-l-neutral-100 flex flex-col gap-1 items-start text-sm">
+        {question.choices.length > 0 ? (
+          question.choices.map((choice) => (
+            <div className="px-3 dark:text-zinc-900 bg-neutral-100 flex items-center justify-between  w-full shrink-0  py-2">
+              <p> {choice}</p>
+              <button onClick={() => deselectChoice(choice)}>
+                <IoMdClose />
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="p-1 opacity-50 ">No options were added yet</p>
+        )}
+      </div>
+    </div>
+  );
 }
 
 SelectAnswerQue.AddOption = () => {

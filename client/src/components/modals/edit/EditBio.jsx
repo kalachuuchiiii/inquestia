@@ -31,18 +31,27 @@ const EditUsername = ({onClose = () => {}, previousBio = ''}) => {
     setBio(e.target.value);
   }
 
-return <ModalStyle label = "Update your bio" onClose = {onClose}>
-  <div className = "space-y-1">
-    <Textarea limit = {100} onChange = {handleChange}  placeholder = "A short description of yourself" className = "rounded-lg bg-zinc-800" value = {bio} displayLimit/>
-       {
-    error && <p className = "text-xs text-red-400">{error}</p>
-  }
-  </div>
+return (
+  <ModalStyle label="Update your bio" onClose={onClose}>
+    <div className="space-y-1">
+      <Textarea
+        limit={100}
+        onChange={handleChange}
+        placeholder="A short description of yourself"
+        className="rounded-lg bg-neutral-100 dark:bg-zinc-700"
+        value={bio}
+        displayLimit
+      />
+      {error && <p className="text-xs text-red-400">{error}</p>}
+    </div>
 
-  <div className = "my-1 w-full flex justify-end">
-    <Button onClick = {saveBio} loadingState = {isLoading} >Save</Button>
-  </div>
-</ModalStyle>
+    <div className="my-1 w-full flex justify-end">
+      <Button onClick={saveBio} loadingState={isLoading}>
+        Save
+      </Button>
+    </div>
+  </ModalStyle>
+);
 }
 
 export default EditUsername

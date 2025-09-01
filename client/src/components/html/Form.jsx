@@ -22,8 +22,8 @@ return <FormContext.Provider value = {{
   handleChange, 
   formField
 }}>
-  <form className = " w-fit  rounded flex justify-start items-center" onSubmit = {handleOnSubmit}>
-    <div className = "flex flex-col gap-8 p-4 rounded">
+  <form className = " w-11/12 sm:w-10/12 md:w-9/12 lg:w-8/12 mx-auto sm:pl-8 py-4 pr-10  rounded-2xl shadow-xl bg-neutral-100 dark:bg-zinc-950 flex justify-start items-center" onSubmit = {handleOnSubmit}>
+    <div className = "flex flex-col gap-8 pl-8 pr-10 py-4">
           {children}
     </div>
   </form>

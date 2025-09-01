@@ -1,7 +1,5 @@
-import { memo } from 'react';
 import SurveyTagList from '../lists/SurveyTagList.jsx';
 import { formatIsoString } from '../../utils/formatIsoString.js';
-import { useState } from 'react';
 import Bar from '../html/Bar.jsx';
 import UserIcon from '../UserIcon.jsx';
 import useCTX from '../../hooks/useCTX.js';
@@ -15,147 +13,178 @@ import { IoCloseOutline } from "react-icons/io5";
 import { useSelector } from 'react-redux';
 import { fetchApi } from '../../utils/fetchApi.js';
 import useAsync from '../../hooks/useAsync.js';
-import { UserSurveyContext } from '../../context/userSurveyContext.js';
 import ArrowButton from '../html/ArrowButton.jsx';
 
 const SurveyCard = ({ survey = {}, Context = null, children = null }) => {
   const [isOptionOpen, o, closeOptionWidget, toggle] = useToggler(false);
-  const { user = { _id: null } } = useSelector(state => state.user);
-  const { modifyFieldById = () => { } } = useCTX(Context);
+  const { user = { _id: null } } = useSelector((state) => state.user);
+  const { modifyFieldById = () => {} } = useCTX(Context);
 
-  const [setIsSurveyClosed, { isLoading, error }] = useAsync(async (bool = false) => {
-    const res = await fetchApi("patch", `/survey/${survey?._id}`, {
-      closed: bool
-    });
-    if(!res?.success)return;
-      modifyFieldById(prev => ({ ...prev, closed: bool }), survey._id);
+  const [setIsSurveyClosed, { isLoading }] = useAsync(
+    async (bool = false) => {
+      const res = await fetchApi("patch", `/survey/${survey?._id}`, {
+        closed: bool,
+      });
+      if (!res?.success) return;
+      modifyFieldById((prev) => ({ ...prev, closed: bool }), survey._id);
       closeOptionWidget();
-  })
-  
+    }
+  );
+
   const props = {
-    surveyId: survey?._id, 
+    surveyId: survey?._id,
     isDraft: survey?.isDraft,
     Context: Context,
     closeSurvey: () => setIsSurveyClosed(true),
     isClosingSurvey: isLoading,
-    title: survey?.title, 
-    onClose: toggle
-  }
+    title: survey?.title,
+    onClose: toggle,
+  };
 
-  return <div className="grid h-80 overflow-hidden place-content-center grid-rows-1 grid-cols-1">
-    <AnimatePresence>
-      {isOptionOpen && (survey?.isDraft ? <SurveyWidget.Draft {...props} /> : <SurveyWidget {...props}/>)}
-    </AnimatePresence>
-    <SurveyCardContext.Provider value={{
-      ...survey,
-      toggle,
-      isOptionOpen
-    }}>
-      <div className="flex justify-between  row-span-1 col-span-1 row-start-1 col-start-1 rounded-lg overflow-hidden flex-col p-1 bg-zinc-900  gap-1">
-        {
-          (survey?.closed || survey.hasReachedTargetRespondents) ? <div className="w-full h-full grid grid-rows-1  grid-cols-1  place-content-center">
-            <div className="row-span-1 col-span-1 row-start-1 space-y-1 space-x-1 col-start-1">
-              {children}
-            </div>
-            <div onClick={e => e.stopPropagation()} className="row-span-1 col-span-1 flex justify-center flex-col gap-2 items-center bg-zinc-950/90 z-30 row-start-1 z-20 col-start-1">
-              <p >{survey.closed ? "Survey has been closed." : "Survey is over."}</p>
-              <div className = " text-center mx-auto">
-                {(user._id === survey.user._id) && <div className = "flex flex-col justify-center gap-4" >
-                  <Button onClick={() => setIsSurveyClosed(false)} className="truncate w-26  text-center bg-neutral-100 rounded-lg px-6 py-2 text-zinc-900" color="black" loadingState={
-                  isLoading
-                }>Re-open</Button>
-                <ArrowButton to = {`/answer/s/${survey._id}`} >View Answers</ArrowButton>
-                </div>}
-              </div>
-            </div>
-          </div> : children
-        }
-      </div>
-    </SurveyCardContext.Provider>
-  </div>
-}
+  return (
+    <div className="grid grid-cols-1 grid-rows-1 place-content-center relative dark:bg-zinc-900 bg-neutral-50 rounded-lg shadow-xl overflow-hidden">
+      <AnimatePresence>
+        {isOptionOpen &&
+          (survey?.isDraft ? (
+            <SurveyWidget.Draft {...props} />
+          ) : (
+            <SurveyWidget {...props} />
+          ))}
+      </AnimatePresence>
 
+      <SurveyCardContext.Provider
+        value={{
+          ...survey,
+          toggle,
+          isOptionOpen,
+        }}
+      >
+        <div className="flex row-start-1 col-start-1 flex-col gap-2 p-2 relative">
+          {children}
+
+          {(survey?.closed || survey.hasReachedTargetRespondents) && (
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="absolute inset-0 flex flex-col items-center justify-center gap-4 
+                         rounded-md backdrop-blur-sm bg-black/50 text-neutral-100 z-20"
+            >
+              <p>
+                {survey.closed
+                  ? "Survey has been closed."
+                  : "Survey is over."}
+              </p>
+              {user._id === survey.user._id && (
+                <div className="flex flex-col items-center gap-3">
+                  <Button
+                    onClick={() => setIsSurveyClosed(false)}
+                    className="truncate w-26 text-center bg-neutral-100 rounded-lg px-6 py-2 text-zinc-900"
+                    color="black"
+                    loadingState={isLoading}
+                  >
+                    Re-open
+                  </Button>
+                  <ArrowButton to={`/answer/s/${survey._id}`}>
+                    View Answers
+                  </ArrowButton>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </SurveyCardContext.Provider>
+    </div>
+  );
+};
 
 SurveyCard.Preview = () => {
   const { title = null, description = null, questions = [] } = useCTX(SurveyCardContext);
 
   return (
-    <div className="text-sm overflow-y-auto  scrollbar-none  shrink-1 w-full h-28 bg-zinc-950 rounded-lg p-3">
+    <div className="text-sm overflow-y-auto scrollbar-none w-full shrink-0 bg-neutral-100 p-4 dark:bg-zinc-950 rounded-lg">
       <div>
         <h1 className="text-xl leading-5 lato truncate">{title}</h1>
-        <p className="text-sm truncate opacity-80">{description}</p>
+        <p className="text-sm opacity-80 line-clamp-2">{description}</p>
       </div>
-      <div className=" p-2 text-xs opacity-80">
-        {
-          questions.map((q = {}, i) => <div key = {i}>
-            <p  >Question {(i + 1)}: {q?.question}</p>
-          </div>)
-        }
+      <div className="p-2 text-xs opacity-80">
+        {questions.map((q = {}, i) => (
+          <p key={i}>
+            Question {i + 1}: {q?.question}
+          </p>
+        ))}
       </div>
-    </div>)
-}
+    </div>
+  );
+};
 
 SurveyCard.Author = () => {
   const { user = null, createdAt = new Date().toISOString(), questions = [] } = useCTX(SurveyCardContext);
 
   return (
-    <div className="text-xs p-2">
+    <div className="text-xs p-2 border-t border-gray-200 dark:border-gray-800">
       <UserIcon user={user}>
-        <UserIcon.Card size="6" />
+        <UserIcon.Card />
       </UserIcon>
-      <div className="opacity-80 items-center flex text-sm gap-2 py-1 ">
-        <p> {formatIsoString(createdAt)}</p>
+      <div className="opacity-80 flex items-center text-sm gap-2 py-1">
+        <p>{formatIsoString(createdAt)}</p>
         <p>•</p>
-        <p >
-          {`${questions.length} ${questions.length === 1 ? 'question' : 'questions'
-            }`}</p>
+        <p>{`${questions.length} ${questions.length === 1 ? "question" : "questions"}`}</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
 SurveyCard.Redirect = () => {
   const { _id = null, tags = [] } = useCTX(SurveyCardContext);
   return (
-    <div className=" items-center flex justify-between p-2 rounded">
-      <div className="text-xs">
-        <SurveyTagList tags={tags} />
-      </div>
-      <ArrowButton className="gap-6 p-2  m-2 text-xs shrink-0 w-fit" to={`/survey/${_id}`}>View Survey</ArrowButton>
-    </div>)
-}
+    <div className="flex items-center justify-between p-2 rounded border-t border-gray-200 dark:border-gray-800">
+      <SurveyTagList tags={tags} />
+      <ArrowButton className="gap-6 p-2 m-2 text-xs shrink-0 w-fit" to={`/survey/${_id}`}>
+        View Survey
+      </ArrowButton>
+    </div>
+  );
+};
 
 SurveyCard.Redirect.Draft = () => {
   const { _id = null, tags = [] } = useCTX(SurveyCardContext);
   return (
-    <div className=" items-center flex justify-between p-2 rounded">
-      <div className="text-xs">
-        <SurveyTagList tags={tags} />
-      </div>
-      <ArrowButton className="gap-6 p-2  m-2 text-xs shrink-0 w-fit" to={`/create/${_id}`}>View Draft</ArrowButton>
-    </div>)
-}
-
+    <div className="flex items-center justify-between p-2 rounded border-t border-gray-200 dark:border-gray-800">
+      <SurveyTagList tags={tags} />
+      <ArrowButton className="gap-6 p-2 m-2 text-xs shrink-0 w-fit" to={`/create/${_id}`}>
+        View Draft
+      </ArrowButton>
+    </div>
+  );
+};
 
 SurveyCard.Bar = () => {
-  const { targetRespondents = 8, totalRespondents = 0 } = useCTX(SurveyCardContext)
+  const { targetRespondents = 8, totalRespondents = 0 } = useCTX(SurveyCardContext);
   return (
-    <div className="bg-gradient-to-t from-zinc-950 to-transparent">
-
-      <div className="p-1">
-        <Bar total={totalRespondents} target={targetRespondents} />
-      </div>
-    </div>)
-}
+    <div className="border-t border-gray-200 dark:border-gray-800 p-2 bg-gradient-to-t from-zinc-50 dark:from-zinc-950">
+      <Bar total={totalRespondents} target={targetRespondents} />
+    </div>
+  );
+};
 
 SurveyCard.OptionButton = ({ size = 20 }) => {
-  const { toggle = () => { }, isOptionOpen = false } = useCTX(SurveyCardContext);
+  const { toggle = () => {}, isOptionOpen = false } = useCTX(SurveyCardContext);
+  const { mode } = useSelector((state) => state.theme);
 
-  return <button onClick={toggle} className="shrink-0 z-20 p-1 text-center" >
-    {
-      isOptionOpen ? <IoCloseOutline size={size} color="white" /> : <BsThreeDotsVertical size={size} color="white" />
-    }
-  </button>
-}
+  return (
+    <button
+      onClick={toggle}
+      className="shrink-0 z-30 flex justify-center items-center p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition"
+    >
+      {isOptionOpen ? (
+        <IoCloseOutline size={size} className="text-white" />
+      ) : (
+        <BsThreeDotsVertical
+          size={size}
+          className={mode === "Dark" ? "text-white" : "text-black"}
+        />
+      )}
+    </button>
+  );
+};
 
 export default SurveyCard;

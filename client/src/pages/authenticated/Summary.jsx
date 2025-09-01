@@ -44,15 +44,15 @@ const SurveySummary = () => {
         </div>
       )}
       {survey && (
-        <div className="mb-6 bg-zinc-950">
+        <div className="mb-6 dark:bg-zinc-950 dark:text-neutral-100 text-zinc-900 bg-neutral-50 p-4 rounded-lg ">
           <h1 className="text-2xl font-bold ">{survey.title}</h1>
-          {survey.description && <p className="text-neutral-100 mb-1">{survey.description}</p>}
-          {survey.targetRespondents && <p className="text-neutral-100/80 text-sm">Target: {survey.targetRespondents}</p>}
-          {survey.createdAt && <p className="text-neutral-100/50 text-sm">Conducted {formatIsoString(survey.createdAt)}</p>}
+          {survey.description && <p className=" mb-1">{survey.description}</p>}
+          {survey.targetRespondents && <p className=" text-sm">Target: {survey.targetRespondents}</p>}
+          {survey.createdAt && <p className=" text-sm">Conducted {formatIsoString(survey.createdAt)}</p>}
         </div>
       )}
       {summary ? (
-        <div className="prose max-w-none text-neutral-100 p-3 sm:p-6 bg-zinc-900 rounded-lg shadow-md">
+        <div className="prose max-w-none text-neutral-100 p-3 sm:p-6 text-zinc-900 dark:bg-zinc-900 rounded-lg shadow-xl">
           <div className = "flex flex-col justify-center my-3 items-center">
                       <div className = "w-full flex justify-center items-center gap-2"> 
           <BsStars size = "20" />

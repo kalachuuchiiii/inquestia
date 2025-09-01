@@ -43,7 +43,7 @@ const SearchBar = () => {
       <input  value={query} onChange={(e) => setQuery(e.target.value)} placeholder={placeholders[currIndex]} className="w-full outline-none" />
       <button className = "p-2" onClick={handleReset}> <IoIosClose size = "20" /> </button>
     </div>
-    <button onClick={handleSearch} className="col-span-2 w-full bg-neutral-100 text-zinc-900 place-items-center place-content-center text-center col-start-11">
+    <button type onClick={handleSearch} className="col-span-2 w-full bg-neutral-100 text-zinc-900 place-items-center place-content-center text-center col-start-11">
       <CiSearch color = 'black' size="20" />
     </button>
   </div>

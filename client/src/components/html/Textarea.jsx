@@ -1,7 +1,7 @@
 import useRefActions from '../../hooks/useRefActions.js'
 import { memo, useEffect } from 'react';
 
-const Textarea = ({ limit = 250, placeholder = '', className = '', onChange = () => { }, name = '', value = '', readOnly = false, required = true, rows = 3, requiredDisplay = false, displayLimit = true }) => {
+const Textarea = ({ limit = 250, placeholder = '', className = 'dark:bg-zinc-900 dark:text-neutral-100 bg-neutral-300 rounded-lg', onChange = () => { }, name = '', value = '', readOnly = false, required = true, rows = 3, requiredDisplay = false, displayLimit = true }) => {
   const { ref, heightAdapt, valueLength } = useRefActions();
 
   useEffect(() => {
@@ -9,7 +9,7 @@ const Textarea = ({ limit = 250, placeholder = '', className = '', onChange = ()
   }, [value]);
 
   return <div className="w-full">
-    <div className={`${className}  w-full flex gap-2 p-2 `}>
+    <div className={`${className}   w-full flex gap-2 p-2 `}>
       { 
         requiredDisplay && <p className="text-red-400 ">*</p>
       }

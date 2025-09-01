@@ -1,20 +1,29 @@
-import UserHeader from '../UserIcon.jsx';
+import UserHeader from "../UserIcon.jsx";
 
-const PointRanked = ({user = {}, sort = ""}) => {
+const PointRanked = ({ user = {}, sort = "current" }) => {
+  const points = user?.point?.[sort] ?? 0;
 
+  return (
+    <UserHeader
+      className="p-3 rounded-lg grid grid-cols-10 items-center hover:bg-neutral-50 dark:hover:bg-zinc-800 transition"
+      user={user}
+    >
+      {/* Rank */}
+      <p className="col-span-1 text-center font-semibold">{user?.rank ?? "-"}</p>
 
-return <UserHeader className = " p-3 rounded grid grid-cols-10 grid-rows-1 " user = {user}>
-      <p className = "col-span-1 m-auto col-start-1 pr-2">{user?.rank}</p> 
-
-      <div className = "flex col-span-7 col-start-2 justify-start items-center gap-3">
-        <UserHeader.Avatar size = "10" /> 
-        <div className = "flex flex-col">
+      {/* User Info */}
+      <div className="flex col-span-7 items-center gap-3">
+        <UserHeader.Avatar size="10" />
+        <div className="flex flex-col">
           <UserHeader.Nickname />
-                  <UserHeader.Username showAt className = "text-sm opacity-70" />
+          <UserHeader.Username showAt className="text-sm opacity-70" />
         </div>
-      </div> 
-            <p className = "col-span-2 m-auto flex col-start-9">{user.point[sort]}</p>
-    </UserHeader>
-}
+      </div>
 
-export default PointRanked
+      {/* Points */}
+      <p className="col-span-2 text-right font-medium">{points}</p>
+    </UserHeader>
+  );
+};
+
+export default PointRanked;

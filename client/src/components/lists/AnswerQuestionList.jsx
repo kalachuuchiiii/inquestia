@@ -8,7 +8,7 @@ const AnswerQuestionList = ({questionList = []}) => {
   }
 
 
-return <div className = "bg-zinc-950 " >
+return <div className = " " >
   <div className = "text-sm px-2 opacity-50">Questions provided for you:</div>
   {
     questionList.map((q, i) => questionCard[q.type](q, i))

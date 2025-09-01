@@ -1,15 +1,11 @@
-import { useState, useEffect } from 'react'
+import {  useEffect } from 'react'
 import { Routes, Route, Outlet, useNavigate } from "react-router-dom"
 import { pages, publicPages } from './data/pageRoutes.jsx';
-import SideBar from './components/SideBar.jsx';
-import { AnimatePresence } from 'framer-motion';
-import UserIcon from './components/UserIcon.jsx';
 import { getSession } from './state/slice/user.js';
 import NavBar from './components/NavBar.jsx';
 import usePath from './hooks/usePath.js';
 import { useSelector, useDispatch } from 'react-redux';
 import Footer from './components/Footer.jsx';
-import useWindow from './hooks/useWindow.js';
 import Profile from './pages/authenticated/Profile.jsx';
 import UserSurveyList from './components/lists/UserSurveyList.jsx';
 import UserDraftList from './components/lists/UserDraftsList.jsx';
@@ -36,7 +32,7 @@ const { user = {}, isAuthenticated } = useSelector(state => state.user);
 
   const { isInThisPath } = usePath();
 
-  return <div className=" w-full h-full scrollbar-none space-y-4 ">
+  return <div className=" w-full  flex flex-col justify-between  scrollbar-none space-y-4 ">
     <Routes>
       <Route element={ <AuthenticatedLayout /> }>
         {
@@ -59,10 +55,11 @@ const { user = {}, isAuthenticated } = useSelector(state => state.user);
       <Route element={<div className="w-full ">
         <NavBar>
           <NavBar.App />
-          <NavBar.SignUp />
         </NavBar>
         <div className="w-full min-h-96">
           <Outlet />
+          <Footer />
+
         </div>
       </div>} >
         {
@@ -75,7 +72,7 @@ const { user = {}, isAuthenticated } = useSelector(state => state.user);
       </Route>
 
     </Routes>
-    <Footer />
+
   </div>
 }
 

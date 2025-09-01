@@ -18,9 +18,17 @@ const ResendButton = ({ requestToken = () => {}, isLoading = false, timer = 60, 
     setTimer(60);
   }
   
-  return <>
-        <Button className = "w-full p-2 bg-zinc-800 rounded-lg text-neutral-100" disabled = {!isSuccess || isLoading || timer > 0} onClick = {handleResend}>Resend {timer}</Button>
-  </>
+  return (
+    <>
+      <Button
+        className="w-full p-2 bg-zinc-700 rounded-lg text-neutral-100"
+        disabled={!isSuccess || isLoading || timer > 0}
+        onClick={handleResend}
+      >
+        Resend {timer}
+      </Button>
+    </>
+  );
 }
 const ChangePasswordModal = ({ onClose = () => {}}) => {
   const { user } = useSelector(state => state.user);
@@ -34,23 +42,40 @@ const ChangePasswordModal = ({ onClose = () => {}}) => {
     return res
   })
 
-return <ModalStyle label = "Change Password" onClose = {onClose} >
-  <div className = "space-y-6" > 
-  <div>
-      <h1>Send password reset link to your email?</h1>
-  <div className = "text-sm opacity-80">
-    <p>{user.email}</p>
-  </div>
-  </div>
-  <div className = "flex flex-col items-end justify-center gap-2"> 
-  {isSuccess ? <p className = "text-xs text-blue-400">Successfully sent!</p> : error && <p className = "text-red-400 text-xs">{error}</p>}
-    <Button disabled = {isLoading || isSuccess || timer !== 60} onClick = {requestToken}>Request</Button>
-    {
-      isSuccess && <ResendButton isSuccess = {isSuccess} timer = {timer} setTimer = {setTimer} requestToken = {requestToken} isLoading = {isLoading} />
-    }
-  </div>
-  </div>
-</ModalStyle>
+return (
+  <ModalStyle label="Change Password" onClose={onClose}>
+    <div className="space-y-6">
+      <div>
+        <h1>Send password reset link to your email?</h1>
+        <div className="text-sm opacity-80">
+          <p>{user.email}</p>
+        </div>
+      </div>
+      <div className="flex flex-col items-end justify-center gap-2">
+        {isSuccess ? (
+          <p className="text-xs text-blue-400">Successfully sent!</p>
+        ) : (
+          error && <p className="text-red-400 text-xs">{error}</p>
+        )}
+        <Button
+          disabled={isLoading || isSuccess || timer !== 60}
+          onClick={requestToken}
+        >
+          Request
+        </Button>
+        {isSuccess && (
+          <ResendButton
+            isSuccess={isSuccess}
+            timer={timer}
+            setTimer={setTimer}
+            requestToken={requestToken}
+            isLoading={isLoading}
+          />
+        )}
+      </div>
+    </div>
+  </ModalStyle>
+);
 }
 
 export default ChangePasswordModal

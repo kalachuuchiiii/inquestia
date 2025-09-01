@@ -1,43 +1,55 @@
-import AnimationWrapper from './AnimationWrapper.jsx';
-import { navRoutes } from '../data/navRoutes.jsx';
-import { useEffect, useState } from 'react';
-import NavBar from './NavBar.jsx';
-import NavIcon from './NavIcon.jsx';
-import UserIcon from '../components/UserIcon.jsx';
-import { useSelector } from 'react-redux';
-const Sidebar = ({ onClose = () => { }, isLargeScreen = false }) => {
-  const { user } = useSelector(state => state.user);
+import AnimationWrapper from "./AnimationWrapper.jsx";
+import { navRoutes } from "../data/navRoutes.jsx";
+import NavBar from "./NavBar.jsx";
+import NavIcon from "./NavIcon.jsx";
+import UserIcon from "../components/UserIcon.jsx";
+import { useSelector } from "react-redux";
 
+const Sidebar = ({ onClose = () => {}, isLargeScreen = false }) => {
+  const { user } = useSelector((state) => state.user);
 
-
-  return <AnimationWrapper
-    variants="fromLeft"
-    className={` ${isLargeScreen ? "sticky min-h-full" : "fixed h-screen"} top-0 z-40 `}
-  >
-    <div className="flex sticky  top-0 overflow-x-hidden bg-zinc-950 flex-col w-full justify-start h-full py-2" >
-      <div className="py-3 flex gap-2 items-center">
-        <NavBar.SideBarToggler onToggleSidebar={onClose} size="30" />
-        <NavBar.App />
-      </div>
-      <div className="p-4 text-xs flex opacity-50">
-        <div className="size-16">
-          <UserIcon user={user}>
-            <UserIcon.Avatar size="10" />
-          </UserIcon>
+  return (
+    <AnimationWrapper
+      variants="fromLeft"
+      className={`${
+        isLargeScreen ? "sticky min-h-screen" : "fixed h-screen"
+      } top-0 z-40`}
+    >
+      <aside className="flex flex-col h-screen w-64  bg-neutral-50 dark:bg-zinc-950 shadow-xl">
+        {/* Header / Brand */}
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-200 dark:border-gray-800">
+          <NavBar.SideBarToggler onToggleSidebar={onClose} size="28" />
+          <NavBar.App />
         </div>
-        <div className="flex flex-col">
-          <p >{user?.username}</p>
-          <p>{user?.email}</p>
+
+        {/* User Info */}
+        <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-200 dark:border-gray-800">
+          <div className="shrink-0">
+            <UserIcon user={user}>
+              <UserIcon.Avatar size="12" />
+            </UserIcon>
+          </div>
+          <div className="flex flex-col truncate">
+            <p className="font-semibold truncate">{user?.username}</p>
+            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+          </div>
         </div>
-      </div>
-      <div className="w-60 my-6  z-50 overflow-hidden">
-        {
-          navRoutes?.length > 0 && navRoutes.map((info, i) => <NavIcon key={info.path} info={info} />)
-        }
-      </div>
-    </div>
 
-  </AnimationWrapper>
-}
+        {/* Navigation Links */}
+        <nav className="flex-1 px-2 py-6 overflow-y-auto scrollbar-none">
+          {navRoutes?.length > 0 &&
+            navRoutes.map((info) => (
+              <NavIcon key={info.path} info={info} />
+            ))}
+        </nav>
 
-export default Sidebar
+        {/* Footer (optional for extra actions) */}
+        <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-500">
+          © 2025 Inquestia.ask
+        </div>
+      </aside>
+    </AnimationWrapper>
+  );
+};
+
+export default Sidebar;

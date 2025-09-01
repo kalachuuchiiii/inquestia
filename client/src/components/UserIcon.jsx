@@ -40,13 +40,13 @@ UserIcon.Avatar = memo(({size = 20, className = ''}) => {
     avatar: null
     }}= useCtx(UserContext)
   
-  return <div className = {`rounded-full size-${size} text-xs overflow-hidden grid place-content-center object-cover outline-2 outline-blue-300 outline-offset-2 ${className}`}>
-    <ImageComponent className = "w-full  h-full object-cover " src = {user.avatar} alt = "Avatar" />
+  return <div className = {`rounded-full w-${size} h-${size} aspect-square text-xs overflow-hidden grid place-content-center object-cover outline-2 outline-blue-300 outline-offset-2 ${className}`}>
+    <ImageComponent  src = {user.avatar} alt = "Avatar" />
   </div>
 })
 
 
-UserIcon.Card = ({children, className = '' ,size = "10"}) => {
+UserIcon.Card = ({children, className = '' ,size = "8"}) => {
   
   return <div className = "flex gap-3 items-center ">
     <UserIcon.Avatar size = {size} /> 

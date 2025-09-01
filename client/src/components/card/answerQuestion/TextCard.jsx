@@ -21,7 +21,7 @@ const TextCard = ({question = {
   }
   
 
-return <div className = "bg-zinc-950 px-3 py-6">
+return <div className = " px-3 py-6">
   <div>
     <div className = "" >
       <div className = "flex gap-1 items-start">
@@ -35,7 +35,7 @@ return <div className = "bg-zinc-950 px-3 py-6">
     
   </div>
   <div className = "my-3">
-    <TextArea value = {getFieldById(_id)?.answer} onChange = {handleChange} className = "bg-zinc-900 rounded" placeholder = "Your answer here..." />
+    <TextArea value = {getFieldById(_id)?.answer} onChange = {handleChange} className = "dark:bg-zinc-800 bg-neutral-200 rounded-lg" placeholder = "Your answer here..." />
   </div>
 </div>
 }

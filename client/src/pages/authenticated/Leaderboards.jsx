@@ -1,10 +1,6 @@
 
 
 import PointRankingList from '../../components/lists/PointRankingList.jsx';
-import StreakRankingList from '../../components/lists/StreakRankingList.jsx';
-import { useEffect, useState } from 'react';
-
-
 const Leaderboards = () => {
   
   

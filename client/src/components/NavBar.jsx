@@ -1,40 +1,78 @@
 import { IoReorderThreeOutline } from "react-icons/io5";
-import AnimationWrapper from './AnimationWrapper.jsx';
-import { CiSearch } from "react-icons/ci";
-import { useState, memo } from 'react';
-import { useSearchParams, NavLink } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
+import { useSelector } from "react-redux";
+import { memo } from "react";
 
+// Base NavBar wrapper
+const NavBar = memo(
+  ({
+    onToggleSidebar,
+    className = "",
+    children,
+  }) => {
+    return (
+      <nav
+        className={`top-0 z-20 left-0 inset-x-0 sticky h-19 
+          px-6 py-4 w-full flex justify-between items-center 
+          bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md 
+          shadow-sm transition-colors ${className}`}
+      >
+        {children}
+      </nav>
+    );
+  }
+);
 
-const NavBar = memo(({ onToggleSidebar, className = "top-0 z-20 left-0 inset-x-0 sticky px-5 py-6 bg-gradient-to-b w-full rounded-b-xl flex justify-between text-zinc-900 items-center ", children }) => {
+// Group wrapper for navbar items
+NavBar.Relate = memo(({ gap = "gap-4", children }) => {
+  return <div className={`flex items-center ${gap}`}>{children}</div>;
+});
 
-  return <div className={`${className} overflow-hidden h-18`}>
-    {children}
-  </div>
-})
+// Brand / App name
+NavBar.App = memo(({ disabled = false }) => {
+  const { mode } = useSelector((state) => state.theme);
+  const textColor = mode === "Dark" ? "text-white" : "text-gray-900";
 
-NavBar.Relate = memo(({ gap = 2, children }) => {
-  return <div className={`flex items-center gap-${gap}`}>
-    {children}
-  </div>
-})
+  return (
+    <p
+      className={`font-bold text-xl tracking-tight select-none 
+        transition-colors ${textColor} 
+        ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+    >
+      Inquestia<span className="text-blue-600">.ask</span>
+    </p>
+  );
+});
 
-NavBar.App = memo(({color = "white", disabled = false}) => {
-  return ( <p className = {`font-bold text-lg text-${color} `}>
-    Inquestia.ask
-    </p>)
-})
+// Sidebar toggler (mobile menu)
+NavBar.SideBarToggler = memo(({ onToggleSidebar = () => {}, size = 24 }) => {
+  const { mode } = useSelector((state) => state.theme);
+  const iconColor = mode === "Dark" ? "white" : "black";
 
-NavBar.SideBarToggler = memo(({onToggleSidebar = () => {}, size = "20", color = "white"}) => {
-  return <button onClick = {onToggleSidebar} className = "backdrop-blur-md p-2 rounded">
-    <IoReorderThreeOutline color = {color} size = {size} />
-  </button>
-})
+  return (
+    <button
+      onClick={onToggleSidebar}
+      aria-label="Toggle Sidebar"
+      className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+    >
+      <IoReorderThreeOutline color={iconColor} size={size} />
+    </button>
+  );
+});
 
-NavBar.SignUp = () => {
-  return <NavLink className="px-6 py-2 font-bold text-white text-lg rounded-xl" to="/login">Login</NavLink>
-}
+// Auth button (login/signup)
+NavBar.SignUp = memo(() => {
+  return (
+    <a
+      href="/login"
+      aria-label="Login"
+      className="px-5 py-2 font-medium text-white 
+        bg-blue-600 rounded-xl shadow-md 
+        hover:bg-blue-700 active:scale-95 
+        transition-transform transition-colors"
+    >
+      Login
+    </a>
+  );
+});
 
-
-export default NavBar
+export default NavBar;

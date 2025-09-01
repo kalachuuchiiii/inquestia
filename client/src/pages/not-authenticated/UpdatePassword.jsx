@@ -40,11 +40,11 @@ return <div className = "h-96 w-full flex justify-center items-center">
     <h1 className = "text-lg lato">Update your password</h1>
     <div className = "flex flex-col gap-1">
       <label className = "text-xs">New Password</label>
-      <input onChange = {handleChange} name = "password" value = {passForm.password} placeholder = "Password" className = "outline-none p-2 rounded-lg bg-zinc-800" />
+      <input onChange = {handleChange} name = "password" value = {passForm.password} placeholder = "Password" className = "outline-none p-2 rounded-lg bg-zinc-700" />
     </div>
     <div className = "flex flex-col gap-1">
       <label className = "text-xs">Confirm Password</label>
-      <input onChange = {handleChange} name = "confirmPassword" value = {passForm.confirmPassword} placeholder = "Confirm password" className = "outline-none p-2 rounded-lg bg-zinc-800" />
+      <input onChange = {handleChange} name = "confirmPassword" value = {passForm.confirmPassword} placeholder = "Confirm password" className = "outline-none p-2 rounded-lg bg-zinc-700" />
       { isSuccess ? <p className="text-red-400 text-xs">Successfully updated your password</p> : error && <p className = "text-red-400 text-xs">{error}</p>}
     </div>
     <div className = "w-full flex justify-end">

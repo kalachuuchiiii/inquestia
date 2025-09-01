@@ -1,39 +1,25 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+
 
 textarea {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
 }
 
-/* Reset Chrome / Safari / Edge */
-::-webkit-scrollbar,
-::-webkit-scrollbar-thumb,
-::-webkit-scrollbar-track {
-  all: unset;
-}
-
-/* Reset Firefox */
-* {
-  scrollbar-width: auto !important;
-  scrollbar-color: auto !important;
-}
-
-
 html, body {
+  /* Allow scrolling but hide scrollbars */
   overflow: auto; 
+  -ms-overflow-style: none;  /* IE and old Edge */
+  scrollbar-width: none;     /* Firefox */
 }
 
-::-webkit-scrollbar {
+/* WebKit-based browsers (Chrome, Safari, Opera) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
   display: none;
 }
-
-html {
-  scrollbar-width: none; /* hides scrollbar but keeps scrolling */
-}
-
-html {
-  -ms-overflow-style: none;
-}
-
 
 
 .my-button {
@@ -76,41 +62,8 @@ html {
   font-style: normal;
 }
 
-html, body {
-  overflow: hidden; /* disables scrollbars */
-}
-
-/* Hide scrollbar but keep scroll enabled */
-html, body {
-  overflow: auto; /* scrolling still works */
-}
-
-/* Chrome, Edge, Safari */
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* Firefox */
-html {
-  scrollbar-width: none; /* hides scrollbar but keeps scrolling */
-}
-
-/* IE/Edge Legacy */
-html {
-  -ms-overflow-style: none;
-}
 
 
-
-
-::-webkit-scrollbar,
-::-webkit-scrollbar-thumb,
-::-webkit-scrollbar-track {
-  all: unset;
-}
-
-
-.scrollbar-none {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; 
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

@@ -1,20 +1,22 @@
 import { memo } from "react";
 
-const FeatureCard = ({feature}) => {
+const FeatureCard = ({ feature }) => {
+  return (
+    <div className="p-6 rounded-2xl bg-white shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+      <main className="flex flex-col gap-4">
+        {/* Icon + Title */}
+        <div className="flex items-center gap-4">
+          <div className="text-blue-600 text-3xl">{feature.icon}</div>
+          <h3 className="text-xl font-semibold text-gray-900">{feature.feature}</h3>
+        </div>
 
-
-return <div className = "p-3 py-6 w-full max-w-100 shrink-0 rounded-2xl active:scale-103 transition-transform duration-200 shadow-md space-y-6">
-  <main className = "flex flex-col gap-2">
-      <div className = "grid grid-cols-12  gap-10 overflow-hidden items-center">
-    <div className = "col-span-1 text-3xl col-start-1">
-            {feature.icon}
+        {/* Description */}
+        <p className="text-gray-600 text-base leading-relaxed">
+          {feature.description}
+        </p>
+      </main>
     </div>
-      <h1 className = "text-lg w-fit col-span-8 col-start-2 ">{feature.feature}</h1>
-  </div>
-  <p className = "text-2xl sm:text-xl font-bold w-10/12">{feature.description}</p>
-  </main>
+  );
+};
 
-</div>
-}
-
-export default memo(FeatureCard)
+export default memo(FeatureCard);

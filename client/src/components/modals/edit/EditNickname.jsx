@@ -33,20 +33,27 @@ const EditNickname = ({onClose = () => {}, previousNickname = ''}) => {
   }
   
 
-return <ModalStyle label = "Update your nickname" onClose = {onClose}>
-  <div className = "space-y-1">
-      <input value = {nickname} onChange = {handleChange} placeholder = "Nickname" className = "p-2 w-full outline-none rounded-lg bg-zinc-800"/>
-  <p className = "opacity-50 text-sm">A nickname for everyone to identify you as</p>
-  {
-    error && <p className = "text-xs text-red-400">{error}</p>
-  }
-  </div>
-  <div className = "my-1 w-full flex justify-end">
-    <Button loadingState = {isLoading} onClick = {saveNickname}>
-      Save
-    </Button>
-  </div>
-</ModalStyle>
+return (
+  <ModalStyle label="Update your nickname" onClose={onClose}>
+    <div className="space-y-1">
+      <input
+        value={nickname}
+        onChange={handleChange}
+        placeholder="Nickname"
+        className="p-2 w-full outline-none rounded-lg bg-neutral-100 dark:bg-zinc-700"
+      />
+      <p className="opacity-50 text-sm">
+        A nickname for everyone to identify you as
+      </p>
+      {error && <p className="text-xs text-red-400">{error}</p>}
+    </div>
+    <div className="my-1 w-full flex justify-end">
+      <Button loadingState={isLoading} onClick={saveNickname}>
+        Save
+      </Button>
+    </div>
+  </ModalStyle>
+);
 }
 
 export default EditNickname

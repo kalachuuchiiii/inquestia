@@ -20,7 +20,7 @@ const HomePage = () => {
   const nav = useNavigate();
   const { isLoading: isSessionLoading, user, isAuthenticated, isProcessOK } = useSelector(state => state.user);
 
-  const [getSurveyList, { isLoading, error }] = useAsync(async (page = 1) => {
+  const [getSurveyList, { isLoading, error }] = useAsync(async ({ page = 1, rewrite = true} = {}) => {
     const seenSurveys = [...surveys];
     const res = await fetchApi('get', '/surveys', {
       seenSurveys,
@@ -28,24 +28,29 @@ const HomePage = () => {
     })
     const uniqueSurveys = res.surveys.filter(s => !seenSurveys.some(survey => survey._id === s._id));
     setNextPage(res.nextPage);
-    setSurveys(prev => [...prev, ...uniqueSurveys]);
+    setSurveys(prev => rewrite ? res.surveys : [...prev, ...uniqueSurveys]);
   })
 
   const { inView, ref } = useInView();
 
   useEffect(() => {
-  
     if (surveys.length > 0) return;
     getSurveyList();
   }, [isAuthenticated, user, isSessionLoading, isProcessOK])
 
   useEffect(() => {
-    if ( surveys.length === 0 || nextPage === null || nextPage === 1 || isLoading || !inView) return;
-    getSurveyList(nextPage);
-  }, [nextPage, isLoading, inView]);
+    if (
+      surveys.length === 0 ||
+      nextPage === null ||
+      nextPage === 1 ||
+      isLoading ||
+      !inView
+    ) return;
+    getSurveyList({ page: nextPage, rewrite: false });
+  }, [nextPage, inView]);
 
   useEffect(() => {
-    if (!isProcessOK || isSessionLoading) return;
+    if (!isProcessOK || isSessionLoading || !isAuthenticated) return;
     if (!user.isFinishedOnboarding) {
       nav('/interests');
     }
@@ -66,7 +71,7 @@ const HomePage = () => {
         <ArrowButton to="/browse" >Search </ArrowButton>
       </div>
     </div>
-    <div className="space-y-2 min-h-screen">
+    <div className="space-y-3 min-h-screen">
       {
         surveys?.length > 0 && surveys.map(survey => <SurveyCard survey={survey} key={survey._id} >
           <SurveyCard.Preview />

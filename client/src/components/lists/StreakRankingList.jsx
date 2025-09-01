@@ -10,7 +10,7 @@ const StreakRankingList = ({ rankedUsers = [], switchToPointList }) => {
       <p>Consistent performance reflected in their active streaks.</p>
     </div>
     <button onClick={switchToPointList} className="text-sm underline w-full text-center underline">Points</button>
-    <div className="backdrop-brightness-50">
+    <div className="">
       <div className="grid place-items-center grid-cols-10 p-3">
         <p className="col-span-1 col-start-1">Rank</p>
         <p className="col-span-7 col-start-2">User</p>

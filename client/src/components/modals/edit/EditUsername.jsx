@@ -23,16 +23,30 @@ const EditUsername = ({onClose = () => {}, previousUsername = ''}) => {
     setUsername(e.target.value);
   }
 
-return <ModalStyle label = "Update your username" onClose = {onClose}>
-  <div className = "space-y-1">
-      <input onChange = {handleChange} placeholder = {previousUsername} className = "p-2 outline-none rounded-lg bg-zinc-800"/>
-  <p className = "opacity-50 text-sm">You can change your username only once every 14 days.</p>
-  </div>
-  <div className = "my-1 space-y-1">
-      { error && <p className = "text-xs text-red-400">{error}</p>}
-    <Button onClick = {saveUsername} loadingState = {isLoading} className = "px-5 py-1 rounded-lg bg-neutral-100 text-zinc-900 ">Save</Button>
-  </div>
-</ModalStyle>
+return (
+  <ModalStyle label="Update your username" onClose={onClose}>
+    <div className="space-y-1">
+      <input
+        onChange={handleChange}
+        placeholder={previousUsername}
+        className="p-2 outline-none rounded-lg w-full bg-neutral-100 dark:bg-zinc-700"
+      />
+      <p className="opacity-50 text-sm">
+        You can change your username only once every 14 days.
+      </p>
+    </div>
+    <div className="my-1 space-y-1">
+      {error && <p className="text-xs text-red-400">{error}</p>}
+      <Button
+        onClick={saveUsername}
+        loadingState={isLoading}
+
+      >
+        Save
+      </Button>
+    </div>
+  </ModalStyle>
+);
 }
 
 export default EditUsername

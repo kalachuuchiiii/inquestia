@@ -7,14 +7,14 @@ const ModalStyle = ({label = "Verify your email.", displayCloseButton = true, on
   useScroll({freeze: true})
 
 
-return <AnimationWrapper className = "z-100 overflow-hidden fixed inset-0 bg-black/85" variants = "fade">
+return <AnimationWrapper className = "z-100 overflow-hidden fixed inset-0 backdrop-blur-xs" variants = "fade">
   <div className = "w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 mx-auto h-full flex justify-center items-center ">
-     <main className = "bg-zinc-900 w-full p-3 rounded-lg space-y-7">
-       <div className = "w-full text-center border-b-1 border-b-white">
+     <main className = "bg-white shadow-xl dark:bg-zinc-900 w-full p-3 rounded-2xl space-y-7">
+       <div className = "w-full text-center">
          <div className = "w-full text-right text-sm">
            { displayCloseButton && <button form = "none" className = "z-100" onClick = {onClose}><IoMdClose /></button>}
          </div>
-       <h1 className = "text-xl p-2 pb-5 lato">{label}</h1> 
+       <h1 className = "text-xl font-bold">{label}</h1> 
        </div>
        {children}
        </main>

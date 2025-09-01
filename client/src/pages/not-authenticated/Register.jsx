@@ -5,14 +5,23 @@ import { AnimatePresence } from 'framer-motion';
 import Button from '../../components/html/Button.jsx';
 
 const Hero = () => {
-
   return (
-    <div className="space-y-1 sm:mx-12 pr-10">
-      <h1 className="text-5xl lato">Getting Started</h1>
-      <p>Sign up before your pet does!</p>
+    <div className="space-y-4 flex flex-col justify-center h-full sm:mx-12 mb-auto pr-10 max-w-md">
+      <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-zinc-900 dark:text-neutral-100">
+        Getting Started
+      </h1>
+      <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300">
+        Sign up before your pet does!
+      </p>
+      <p className="text-sm sm:text-base text-zinc-500 dark:text-neutral-100/60 leading-relaxed">
+        Create your free account today and explore tools designed to make pet care 
+        easier. Manage appointments, track health, and stay connected — all in one place.
+      </p>
     </div>
   );
-}
+};
+
+
 
 const Register = () => {
   const {
@@ -30,7 +39,7 @@ const Register = () => {
   } = useRegister();
 
   return (
-    <div className="space-y-10 flex flex-col  items-start sm:flex-row w-full pl-6 justify-start pt-8">
+    <div className="space-y-10 grid grid-rows-2 sm:grid-cols sm:grid-cols-2  w-full pl-6 pt-8">
       <AnimatePresence>
         {isCodeSent && (
           <VerifyEmailModal

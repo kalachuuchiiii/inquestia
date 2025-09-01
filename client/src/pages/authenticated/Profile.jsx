@@ -19,27 +19,47 @@ const Profile = () => {
 
   const { isInThisPath } = usePath();
 
-  return <>
-    <div className="p-3">
-      <div className="backdrop-brightness-50 p-3 space-y-3 rounded-lg">
-        <div className = "space-y-4">
-                  <UserProfile user = {user} />
+  return (
+    <>
+      <div className="p-3 space-y-3 mx-auto">
+        <div className=" p-6 shadow-lg space-y-3 rounded-lg">
+          <div className="space-y-4">
+            <UserProfile user={user} />
+          </div>
+          <div className="space-y-6 mt-5">
+            <ArrowButton
+              className="dark:bg-neutral-100 bg-zinc-900 text-neutral-100 text-xs rounded w-fit dark:text-zinc-900 px-6 py-2 text-center"
+              to="/profile/edit"
+            >
+              View Account
+            </ArrowButton>
+          </div>
         </div>
-        <div className="space-y-6 mt-5">
-          <ArrowButton className = "bg-neutral-100 text-xs rounded w-fit text-zinc-900 px-6 py-2 text-center" to="/profile/edit" >
-            View Account
-          </ArrowButton>
+        <div className="flex gap-1 w-full justify-center items-center">
+          <NavLink
+            to="/profile"
+            className={` text-center w-full  p-2 ${
+              isInThisPath("/profile") && " border-b-zinc-900 dark:border-b-neutral-100  border-b-1"
+            }`}
+          >
+            Posts
+          </NavLink>
+          <NavLink
+            to="/profile/drafts"
+            className={`  text-center w-full p-2 ${
+              isInThisPath("/profile/drafts") &&
+              " border-b-zinc-900 border-b-1 dark:border-b-neutral-100"
+            }`}
+          >
+            Drafts
+          </NavLink>
+        </div>
+        <div className="min-h-50 space-y-2">
+          <Outlet />
         </div>
       </div>
-      <div className="flex gap-1 w-full justify-center items-center">
-        <NavLink to="/profile" className={` text-center w-full  p-2 ${isInThisPath("/profile") && " border-b-neutral-100 border-b-1"}`}>Posts</NavLink>
-        <NavLink to="/profile/drafts" className={`  text-center w-full p-2 ${isInThisPath("/profile/drafts") && "border-b-1 border-b-neutral-100"}`}>Drafts</NavLink>
-      </div>
-      <div className="min-h-50 space-y-2">
-        <Outlet />
-      </div>
-    </div>
-  </>
+    </>
+  );
 }
 
 export default Profile

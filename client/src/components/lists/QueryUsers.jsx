@@ -32,22 +32,22 @@ const QueryUsers = () => {
   useEffect(() => {
     if (isSearchInactive) return;
     getUsers();
-  }, [isSearchInactive])
+  }, [isSearchInactive, query])
   
   useEffect(() => {
     if (isSearchInactive || isLoading || nextPage === null || !inView ) return;
     getUsers({page: nextPage, rewrite: false})
-  }, [nextPage, isSearchInactive, isLoading, inView, ref])
+  }, [nextPage, isSearchInactive, isLoading, inView, query, ref])
 
   return <div className = "space-y-1"  >
     {
      (!isLoading && isNoResultsFound) ? <div className = "flex opacity-70 justify-center items-center h-96 ">
        No results found
-     </div> : users?.length > 0 && users.map((user) => <div className="bg-zinc-900 rounded-lg p-2  w-full flex flex-col gap-2" key={user._id}>
+     </div> : users?.length > 0 && users.map((user) => <div className="dark:bg-zinc-900 bg-neutral-100 rounded-lg p-2  w-full flex flex-col gap-2" key={user._id}>
         <User className="text-sm p-2" user={user}>
           <User.Card size="8" />
         </User>
-        <NavLink className="w-full p-2 bg-zinc-800 text-sm rounded-lg text-neutral-100" to = {sessionUser._id === user._id ? "/profile" : `/users/${user.username}`}>
+        <NavLink className="w-full p-2 bg-neutral-200 text-zinc-900 dark:text-neutral-100 dark:bg-zinc-700 text-sm rounded-lg text-neutral-100" to = {sessionUser._id === user._id ? "/profile" : `/users/${user.username}`}>
           View Profile
         </NavLink>
       </div>)

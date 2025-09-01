@@ -18,7 +18,7 @@ const ResendButton = ({ requestToken = () => {}, isLoading = false, timer = 60, 
   }
   
   return <>
-        <Button className = "w-full p-2 bg-zinc-800 rounded-lg text-neutral-100" disabled = {!isSuccess || isLoading || timer > 0} onClick = {handleResend}>Resend {timer}</Button>
+        <Button className = "w-full p-2 bg-zinc-700 rounded-lg text-neutral-100" disabled = {!isSuccess || isLoading || timer > 0} onClick = {handleResend}>Resend {timer}</Button>
   </>
 }
 
@@ -41,7 +41,7 @@ const ForgotPasswordRequestModal = ({ onClose = () => { } }) => {
       <div className="space-y-2">
         <h1>Enter your email to verify.</h1>
         <p className="text-xs opacity-70">You're requesting a secure token to update your password.</p>
-        <input value = {email} onChange = {(e) => setEmail(e.target.value)} type = "email" form = "none"  className="outline-none w-full p-2 rounded-lg bg-zinc-800" placeholder="Email" />
+        <input value = {email} onChange = {(e) => setEmail(e.target.value)} type = "email" form = "none"  className="outline-none w-full p-2 rounded-lg bg-zinc-700" placeholder="Email" />
       </div>
       <div className="flex flex-col items-end justify-center gap-1">
         {isSuccess ? <p className="text-xs text-blue-400">Successfully sent!</p> : error && <p className="text-red-400 text-xs">{error}</p>}

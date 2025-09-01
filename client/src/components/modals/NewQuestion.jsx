@@ -27,14 +27,27 @@ const NewQuestion = ({onClose = () => {}, addQuestion = () => {}}) => {
     onClose();
   }
 
-const buttonStyle = 'w-full p-2 '
-return <ModalStyle onClose = {onClose} label = "Add a new question">
-  <p>In which way you want the respondents to answer?</p>
-  <div className = "flex divide-y-1 flex-col items-start gap-2 ">
-    <button onClick = {handleAddQuestion} value = "text" className = {buttonStyle}>By typing their answer</button>
-    <button onClick = {handleAddQuestion} value = "select" className = {buttonStyle}>By selecting custom options</button>
-  </div>
-</ModalStyle>
+const buttonStyle = 'w-full p-2 rounded-lg text-zinc-900 dark:text-neutral-100 hover:bg-neutral-200 hover:dark:bg-zinc-700 transition-all';
+return (
+  <ModalStyle onClose={onClose} label="Add a new question">
+         <p className="w-full text-sm text-center">
+        In which way you want the respondents to answer?
+      </p>
+    <div className=" flex-col items-start gap-2 ">
+ 
+      <button onClick={handleAddQuestion} value="text" className={buttonStyle}>
+        By text answer
+      </button>
+      <button
+        onClick={handleAddQuestion}
+        value="select"
+        className={buttonStyle}
+      >
+       By selecting an option
+      </button>
+    </div>
+  </ModalStyle>
+);
 }
 
 export default NewQuestion

@@ -23,15 +23,15 @@ const LogoutModal = ({onClose = () => {}}) => {
 
 
 return <ModalStyle label = "Logging Out" onClose = {onClose}>
-  <div className = "flex  flex-col gap-6">
+  <div className = "flex  flex-col items-center gap-6">
 
-          <Notice className = "text-sm">Are you sure you want to log out?</Notice>
+          <Notice className = "text-sm ">Are you sure you want to log out?</Notice>
           
           <div>
             {error && <p className = "text-xs text-red-400 text-left">{error}</p>}
                 <div className = "flex justify-end gap-2">
       <button onClick = {onClose} className = "px-5 py-2">Cancel</button>
-      <Button onClick = {logout} loadingState = {isLoading} disabled = {isLoading}  ><p className = "text-red-500">Yes, Log me out</p></Button>
+      <Button className='' onClick = {logout} loadingState = {isLoading} disabled = {isLoading}  ><p className = "text-red-500">Yes, Log me out</p></Button>
     </div>
           </div>
   </div>

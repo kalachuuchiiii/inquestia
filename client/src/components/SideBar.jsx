@@ -23,17 +23,7 @@ const Sidebar = ({ onClose = () => {}, isLargeScreen = false }) => {
         </div>
 
         {/* User Info */}
-        <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-200 dark:border-gray-800">
-          <div className="shrink-0">
-            <UserIcon user={user}>
-              <UserIcon.Avatar size="12" />
-            </UserIcon>
-          </div>
-          <div className="flex flex-col truncate">
-            <p className="font-semibold truncate">{user?.username}</p>
-            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-          </div>
-        </div>
+       
 
         {/* Navigation Links */}
         <nav className="flex-1 px-2 py-6 overflow-y-auto scrollbar-none">

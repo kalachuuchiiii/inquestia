@@ -102,5 +102,5 @@ const indexes = async() => {
 }
 
 //deleteAll();
-mongoose.model("Question", questionSchema)
+mongoose.model("Question", questionSchema);
 module.exports = Survey;

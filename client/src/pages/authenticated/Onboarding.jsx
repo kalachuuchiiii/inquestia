@@ -1,65 +1,85 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import Button from '../../components/html/Button.jsx';
-import useAsync from '../../hooks/useAsync.js';
-import { fetchApi } from '../../utils/fetchApi.js';
-import { useDispatch } from 'react-redux';
-import { updateUser } from '../../state/slice/user.js';
-import InterestTagList from '../../components/lists/InterestTagList.jsx';
-import AnimationWrapper from '../../components/AnimationWrapper.jsx';
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import Button from "../../components/html/Button.jsx";
+import useAsync from "../../hooks/useAsync.js";
+import { fetchApi } from "../../utils/fetchApi.js";
+import { updateUser } from "../../state/slice/user.js";
+import InterestTagList from "../../components/lists/InterestTagList.jsx";
+import AnimationWrapper from "../../components/AnimationWrapper.jsx";
 
 const Onboarding = () => {
-  const { user = {
-    interests: []
-  }} = useSelector(state => state.user);
-  const [selectedInterests, setSelectedInterests] = useState(user?.interests || []);
+  const { user = { interests: [] } } = useSelector((state) => state.user);
+  const [selectedInterests, setSelectedInterests] = useState(
+    user?.interests || []
+  );
   const dispatch = useDispatch();
-  
-  const [saveInterests, { isLoading, error }] = useAsync(async() => {
+
+  const [saveInterests, { isLoading, error }] = useAsync(async () => {
     const res = await fetchApi("patch", "/user/interests", {
-      selectedInterests
-    })
-    if(res?.success && res?.user){
-      dispatch(updateUser({ user: res.user }))
+      selectedInterests,
+    });
+    if (res?.success && res?.user) {
+      dispatch(updateUser({ user: res.user }));
     }
-  })
-  
+  });
+
   useEffect(() => {
     setSelectedInterests(user?.interests);
-  }, [user])
-  
+  }, [user]);
+
   const deselectInterest = (value) => {
-    const remainingInterests = selectedInterests.filter(val => val !== value);
-    setSelectedInterests(remainingInterests);
-  }
-  
+    setSelectedInterests((prev) => prev.filter((val) => val !== value));
+  };
+
   const selectInterest = (value) => {
-    if(selectedInterests.includes(value)){
+    if (selectedInterests.includes(value)) {
       deselectInterest(value);
-      return;
+    } else {
+      setSelectedInterests((prev) => [...prev, value]);
     }
-    setSelectedInterests(prev => ([...prev, value]));
-  }
-  
-  
-return <AnimationWrapper variants = "fromBottom" className = "rounded-lg w-full sm:w-11/12 mx-auto min-h-screen space-y-3 ">
-  <div className = "p-2">
-      <h1 className = "text-4xl lato">Your interests</h1>
-  <p className = "text-sm">Choosing your interests helps us pick the right questions for you, making your experience more relevant and engaging.
-</p>
-  </div>
+  };
 
-    <InterestTagList select = {selectInterest} selected = {selectedInterests} />
+  return (
+    <AnimationWrapper
+      variants="fromBottom"
+      className="w-full sm:w-11/12 mx-auto min-h-screen flex flex-col items-center py-10 px-4 space-y-6"
+    >
+      {/* 🔹 Header Section */}
+      <div className="max-w-2xl text-center space-y-3">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
+          Tell us about your interests ✨
+        </h1>
+        <p className="text-base text-gray-600 dark:text-gray-400">
+          Choosing your interests helps us suggest the right questions for you,
+          making your experience more relevant and engaging.
+        </p>
+      </div>
 
-  <div className = "w-full flex justify-end my-10 p-2 ">
-    <div className = "space-y-1 w-6/12 flex flex-col items-end">
-          { error && <p className = "text-xs text-red-400">{error}</p>}
-          <div className = "w-full" >
-                <Button disabled = {isLoading} onClick = {saveInterests} loadingState = {isLoading}>Save</Button>
-          </div>
-    </div>
-  </div>
-</AnimationWrapper>
-}
+      {/* 🔹 Interest Selection */}
+      <div className="w-full max-w-3xl">
+        <InterestTagList
+          select={selectInterest}
+          selected={selectedInterests}
+        />
+      </div>
 
-export default Onboarding
+      {/* 🔹 Save Button */}
+      <div className="w-full max-w-3xl flex justify-end pt-6">
+        <div className="w-full sm:w-1/2 space-y-2 flex flex-col items-end">
+          {error && <p className="text-xs text-red-400">{error}</p>}
+          <Button
+            disabled={isLoading}
+            onClick={saveInterests}
+            loadingState={isLoading}
+            className="w-full sm:w-auto"
+          >
+            Save Interests
+          </Button>
+        </div>
+      </div>
+    </AnimationWrapper>
+  );
+};
+
+export default Onboarding;

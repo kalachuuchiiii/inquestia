@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import { fetchApi } from '../../utils/fetchApi.js';
 import AnswerCard from '../../components/card/AnswerCard.jsx';
 import ArrowButton from '../../components/html/ArrowButton.jsx';
-
+import SurveyStatistics from '../../components/SurveyStatistics.jsx';
 import { NavLink } from "react-router-dom";
 
 const AnswerListPage = () => {
@@ -13,6 +13,7 @@ const AnswerListPage = () => {
   const [answers, setAnswers] = useState([])
   const [survey, setSurvey] = useState({})
   const [totalAnswers, setTotalAnswers] = useState(0);
+  const [statistics, setStatistics] = useState([]);
   const { ref, inView } = useInView();
   const { id } = useParams();
   
@@ -20,15 +21,21 @@ const AnswerListPage = () => {
     const res = await fetchApi("get", `/answer/s/${id}`, {
       page
     }); 
-
     setSurvey(res.survey)
     setTotalAnswers(res.totalAnswers);
     setNextpage(res.nextPage);
     setAnswers(prev => !overwrite ? [...prev, ...res.answers] : [...res.answers]);
   });
+  const [getStatistics, { isLoading: isLoadingStats, error: statsError }] = useAsync(async() => {
+    const res = await fetchApi("get", `/survey/${id}/statistics`); 
+    console.log(res);
+    if(!res.success)return;
+    setStatistics(res.statistics);
+  })
   
   useEffect(() => {
     getAnswers();
+    getStatistics();
   }, [id])
   
   useEffect(() => {
@@ -38,6 +45,9 @@ const AnswerListPage = () => {
   
 
 return <div>
+  {
+    statistics.length > 0 && <SurveyStatistics data = {statistics} />
+  }
   {
     totalAnswers > 0 ? <><div className = "p-2">
       <p className = "text-xs">These are the answers for survey: </p>
@@ -57,6 +67,7 @@ return <div>
     There are no responses yet for this survey.
   </div>
   }
+  <div ref={ref} className = "h-2"/>
 </div>
 }
 

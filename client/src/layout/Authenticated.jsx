@@ -7,6 +7,7 @@ import useWindow from '../hooks/useWindow.js'
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import UnauthorizedModal from '../components/modals/UnauthorizedModal.jsx';
+import UsersWithSameInterests from "../components/lists/usersWithSameInterests.jsx";
 
 const AuthenticatedLayout = () => {
   const [isSidebarOpen, setIsSideBarOpen] = useState(window.innerWidth >= 720);
@@ -51,8 +52,11 @@ setIsUnauthorizedModalOpen(true)
               <UserIcon.Avatar className="ml-4" size="8" />
             </UserIcon>
           </NavBar>
-          <div className="w-full sm:w-11/12 min-h-screen mx-auto md:w-10/12">
-            <Outlet />
+          <div className="w-full justify-evenly  flex min-h-screen ">
+            <div className="w-full">
+              <Outlet />
+            </div>
+            { isLargeScreen && <UsersWithSameInterests /> }
           </div>
         </div>
       </div>

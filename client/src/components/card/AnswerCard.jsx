@@ -63,11 +63,13 @@ const AnswerCard = ({
   };
 
   return (
-    <div className="p-6 shadow-xl dark:bg-zinc-900 rounded-xl outline outline-1 outline-neutral-200/20 dark:outline-neutral-800/40 m-2">
+    <div className="p-6 w-full shadow-xl dark:bg-zinc-900 rounded-xl outline outline-1 outline-neutral-200/20 dark:outline-neutral-800/40 m-2">
       {/* User */}
       <UserIcon className="flex items-center gap-2 text-sm" user={answer.user}>
         <UserIcon.Card size="8" />
-        <p className="text-xs opacity-50">{formatIsoString(answer.createdAt)}</p>
+        <p className="text-xs opacity-50">
+          {formatIsoString(answer.createdAt)}
+        </p>
       </UserIcon>
 
       {/* Answers */}

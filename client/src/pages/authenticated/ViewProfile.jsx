@@ -60,8 +60,8 @@ const ViewProfilePage = () => {
   }
 
 
-  return <div className="p-3">
-    <div className="space-y-4 p-3">
+  return <div className="p-3 w-full">
+    <div className="space-y-4 p-3 w-full">
       {
         userProfile && <UserCard user={userProfile} />
       }

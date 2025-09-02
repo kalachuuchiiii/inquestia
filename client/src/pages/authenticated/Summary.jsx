@@ -52,7 +52,7 @@ const SurveySummary = () => {
         </div>
       )}
       {summary ? (
-        <div className="prose max-w-none text-neutral-100 p-3 sm:p-6 text-zinc-900 dark:bg-zinc-900 rounded-lg shadow-xl">
+        <div className="prose max-w-none dark:text-neutral-100 p-3 sm:p-6 text-zinc-900 dark:bg-zinc-900 rounded-lg shadow-xl">
           <div className = "flex flex-col justify-center my-3 items-center">
                       <div className = "w-full flex justify-center items-center gap-2"> 
           <BsStars size = "20" />

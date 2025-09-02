@@ -31,10 +31,10 @@ const ResponseHistory = () => {
   
   
 return (
-  <div className="p-1">
+  <div className="p-1 w-full">
     {answerList?.length > 0 && (
       <div>
-        <div className="p-1 flex justify-center">
+        <div className="p-1 flex w-full justify-center">
           <p className="">Your response records: </p>
         </div>
         {answerList.map((ans) => (

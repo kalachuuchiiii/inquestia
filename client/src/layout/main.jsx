@@ -23,7 +23,7 @@ const MainTheme = () => {
 
 return (
   <div className={` flex flex-col transition-colors duration-200 min-h-screen w-full`}>
-    <div className="dark:bg-zinc-950 text-zinc-900 dark:text-neutral-100  bg-neutral-50 w-full h-full">
+    <div>
       <App />
 
     </div>

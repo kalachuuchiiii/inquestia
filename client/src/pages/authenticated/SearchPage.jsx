@@ -27,7 +27,7 @@ const SearchPage = () => {
 
 
   return (
-    <div className="space-y-3 w-full p-1">
+    <div className="space-y-3 w-11/12 p-1">
       <SearchBar />
       <div className="w-full flex justify-center">
         <NavLink

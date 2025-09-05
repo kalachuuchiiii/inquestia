@@ -29,9 +29,9 @@ const AnswerCard = ({
     // Open-ended answer
     if (typeof ans === "string") {
       return (
-        <p className="p-2 rounded-lg w-full bg-neutral-200 dark:bg-zinc-900 text-zinc-900 dark:text-neutral-100">
-          {ans}
-        </p>
+        <div className="p-2 rounded-lg w-full bg-neutral-200 dark:bg-zinc-900 text-zinc-900 dark:text-neutral-100">
+          {ans? <p>{ans}</p> : <p className="opacity-50">No answer provided</p>}
+        </div>
       );
     }
 

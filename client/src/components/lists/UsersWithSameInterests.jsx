@@ -23,7 +23,7 @@ const UsersWithSameInterests = () => {
 
 
   return (
-    <div className='w-2/4 top-0 sticky right-0 h-screen p-4 hidden lg:block'>
+    <div className='w-2/4 top-0 sticky right-0 h-screen p-6 hidden lg:block'>
         <div className='h-14'>
 
         </div>

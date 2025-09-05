@@ -3,7 +3,7 @@ import SurveyCard from "../card/SurveyCard";
 import SurveyCardPlaceholder from "../card/placeholders/surveyCardPlaceholder";
 const NearlyCompletedSurveys = ({ nearlyCompletedSurveys = [] }) => {
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full">
       <div className="text-neutral-100">
         <h2 className="text-lg lato">Nearly Completed Surveys</h2>
         <p className="text-sm opacity-80">

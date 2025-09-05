@@ -29,9 +29,9 @@ return <ModalStyle label = "Logging Out" onClose = {onClose}>
           
           <div>
             {error && <p className = "text-xs text-red-400 text-left">{error}</p>}
-                <div className = "flex justify-end gap-2">
+                <div className = "flex items-center justify-end gap-2">
       <button onClick = {onClose} className = "px-5 py-2">Cancel</button>
-      <Button className='' onClick = {logout} loadingState = {isLoading} disabled = {isLoading}  ><p className = "text-red-500">Yes, Log me out</p></Button>
+      <Button className='p-2' onClick = {logout} loadingState = {isLoading} disabled = {isLoading}  ><p className = "text-red-500">Yes, Log me out</p></Button>
     </div>
           </div>
   </div>

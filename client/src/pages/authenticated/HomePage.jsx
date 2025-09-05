@@ -67,9 +67,6 @@ const HomePage = () => {
   return <div className="p-2" >
     <div className="my-6 space-y-6">
       <Dashboard user={user} />
-      <div className="w-full flex justify-start px-6">
-        <ArrowButton to="/browse" >Search </ArrowButton>
-      </div>
     </div>
     <div className="space-y-3 min-h-screen">
       {

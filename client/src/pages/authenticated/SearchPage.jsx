@@ -14,6 +14,7 @@ const SearchPage = () => {
   const [getNearlyCompleteSurveys, { isLoading, error }] = useAsync(async () => {
     const res = await fetchApi("get", "/survey/nearly-complete");
     if (!res?.success) return;
+
     setNearlyCompletedSurveys(res?.surveys)
   })
   const { isInThisPath } = usePath();
@@ -27,7 +28,7 @@ const SearchPage = () => {
 
 
   return (
-    <div className="space-y-3 w-11/12 p-1">
+    <div className="space-y-3 w-11/12 mx-auto p-1">
       <SearchBar />
       <div className="w-full flex justify-center">
         <NavLink
@@ -51,7 +52,7 @@ const SearchPage = () => {
           Users
         </NavLink>
       </div>
-      <div className="min-h-100 flex justify-center items-start w-full ">
+      <div className="min-h-100 flex flex-col justify-center items-start w-full ">
         {isSearchActive ? (
           <div className="w-full sm:w-11/12 mx-auto flex flex-col justify-start p-1  ">
             <Outlet />
@@ -64,6 +65,7 @@ const SearchPage = () => {
             </div>
           )
         )}
+  
       </div>
     </div>
   );

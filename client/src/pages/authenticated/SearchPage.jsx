@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom"
 import { useEffect, useState, useMemo } from 'react';
 import useAsync from '../../hooks/useAsync.js';
 import { fetchApi } from '../../utils/fetchApi.js';
-import NearlyCompletedSurveys from '../../components/lists/NearlyCompletedSurveys.jsx';
 import { Outlet, NavLink } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 

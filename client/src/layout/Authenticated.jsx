@@ -7,7 +7,7 @@ import useWindow from '../hooks/useWindow.js'
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import UnauthorizedModal from '../components/modals/UnauthorizedModal.jsx';
-import UsersWithSameInterests from "../components/lists/usersWithSameInterests.jsx";
+import UsersWithSameInterests from "../components/lists/UsersWithSameInterests.jsx";
 
 const AuthenticatedLayout = () => {
   const [isSidebarOpen, setIsSideBarOpen] = useState(window.innerWidth >= 720);

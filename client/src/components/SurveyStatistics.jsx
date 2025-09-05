@@ -1,20 +1,19 @@
 import React from "react";
 
-const SurveyStatistics = ({ data }) => {
+const SurveyStatistics = ({ data = null }) => {
   return (
     <div className="shadow-lg rounded-2xl p-6 bg-neutral-50  dark:bg-gray-800 my-6">
-      {/* 🔹 Header */}
-      <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-          📊 Survey Statistics
-        </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Overview of responses for each question with selectable options.
-        </p>
-      </div>
-
-      {/* 🔹 Stats */}
-      {data?.length > 0 ? (
+    {/* 🔹 Header */}
+    <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+      <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+        📊 Survey Statistics
+      </h2>
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        Overview of responses for each question with selectable options.
+      </p>
+    </div>
+    {data ? (
+      data.length > 0 ? (
         data.map((stat, index) => (
           <div key={index} className="mb-8">
             <p className="font-semibold text-gray-800 dark:text-gray-200 mb-3">
@@ -46,7 +45,12 @@ const SurveyStatistics = ({ data }) => {
         <p className="text-gray-500 dark:text-gray-400 italic">
           No statistics available for this survey.
         </p>
-      )}
+      )
+    ) : (
+      <p className="text-gray-500 dark:text-gray-400 italic">
+        Loading statistics...
+      </p>
+    )}
     </div>
   );
 };

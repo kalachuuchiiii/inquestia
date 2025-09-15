@@ -17,6 +17,7 @@ import ArrowButton from '../html/ArrowButton.jsx';
 import { GoReport } from 'react-icons/go';
 import ReportSurveyModal from '../modals/ReportSurveyModal.jsx';
 import { useState } from "react";
+import { capitalizeFirstLetter } from '../../utils/formatTopicQuery.js';
 
 const SurveyCard = ({ survey = {}, Context = null, children = null, className = "grid grid-cols-1 grid-rows-1 place-content-center relative dark:bg-zinc-900 bg-neutral-50 rounded-lg shadow-xl overflow-hidden" }) => {
   const [isOptionOpen, o, closeOptionWidget, toggle] = useToggler(false);
@@ -119,13 +120,20 @@ SurveyCard.Preview = () => {
   );
 };
 
-SurveyCard.AgeGroup = () => {
-  const { ageGroup = {} } = useCTX(SurveyCardContext);
+SurveyCard.Demographics = () => {
+  const { ageGroup = {}, genderGroup = [] } = useCTX(SurveyCardContext);
 
   const { minAge = 8, maxAge = 120 } = ageGroup;
+  const genders = genderGroup.map((g) => capitalizeFirstLetter(g))
 
-  return <p className='text-xs py-1 px-6 backdrop-brightness-90 rounded-xl w-fit ' >
-    For ages {minAge} to {maxAge}
+
+  return <p className='text-sm opacity-40 p-2 backdrop-brightness-90 rounded-xl w-fit ' >
+    <p>
+      For ages {minAge} to {maxAge}
+    </p>
+<p>
+  { genders.join(', ')}
+</p>
   </p>
 }
 

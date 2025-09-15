@@ -77,9 +77,9 @@ const HomePage = () => {
             <SurveyCard.Report />
           </div>
           <SurveyCard.Author />
-         
+           <SurveyCard.Demographics />
           <SurveyCard.Redirect />
-           <SurveyCard.AgeGroup />
+         
           <SurveyCard.Bar />
         </SurveyCard  >
         )

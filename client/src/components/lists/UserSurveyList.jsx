@@ -56,6 +56,7 @@ const UserSurveyList = () => {
               <div className="grid grid-cols-12 items-start ">
                 <div className="col-span-11 col-start-1">
                   <SurveyCard.Preview />
+                  
                 </div>
                 {!survey.closed && (
                   <div className="col-span-1 col-start-12 w-full flex justify-center h-full items-center z-40">
@@ -64,8 +65,11 @@ const UserSurveyList = () => {
                 )}
               </div>
               <SurveyCard.Author />
+                <SurveyCard.Demographics />
               <SurveyCard.Redirect />
+              
               <SurveyCard.Bar />
+              
             </SurveyCard>
           ))
         : !isLoading && (

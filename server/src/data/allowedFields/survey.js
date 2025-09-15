@@ -7,6 +7,8 @@ exports.allowedSurveyFields = {
   questions: 1,
   isDraft: 1,
   tags: 1,
+  genderGroup: 1, 
+  ageGroup: 1,
   closed: 1,
   user: {
     username: 1, 

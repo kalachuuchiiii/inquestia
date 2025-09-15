@@ -24,7 +24,7 @@ const getLimiter = rateLimit({
 
 const writeLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 100,
+  max: 20,
   message: "Too many write requests, please try again later.",
 });
 

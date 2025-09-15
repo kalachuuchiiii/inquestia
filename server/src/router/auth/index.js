@@ -1,11 +1,13 @@
 const { readOneFile } = require("../../utils/directoryReader.js");
-const authRouter = require("express").Router();
+const coreRouter = require("express").Router();
 
 const userRouter = readOneFile([__dirname, "../..", "controllers", "core", "auth", "index.js"]);  
+const adminRouter = readOneFile([__dirname, "../..", "controllers", "core", "admin", "index.js"]);  
 
-authRouter.use(userRouter);
+coreRouter.use(userRouter);
+coreRouter.use(adminRouter);
 
-module.exports = authRouter;
+module.exports = coreRouter;
 
 
 

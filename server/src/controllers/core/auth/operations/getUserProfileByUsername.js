@@ -1,6 +1,7 @@
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
 const User = require("../../../../models/user.js");
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
+const { getBadgeByPoint } = require("../../../../utils/getBadgeByPoint.js");
 
 const getUserProfileByUsername = async(req, res) => {
   const { username } = req.query; 
@@ -21,7 +22,9 @@ const getUserProfileByUsername = async(req, res) => {
     })
   }
   
-  const userProfile = await User.findOne({ username: username.trim().toLowerCase() }).select("-password").lean();
+  const userProfile = await User.findOne({ username: username.trim().toLowerCase() }).select("-password -email -gender -birthdate ").lean();
+
+  userProfile.badge = getBadgeByPoint(userProfile.point.current)
   
   if(!userProfile){
     return res.status(400).json({

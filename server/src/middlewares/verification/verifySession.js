@@ -1,6 +1,8 @@
 const { decodeToken } = require("../../utils/auth/jwt.methods.js")
 const User = require("../../models/user.js");
 const { catchError } = require("../../utils/errorHandlers/catchError.js");
+const { calculateAge } = require("../../utils/calculateAge.js");
+const { getBadgeByPoint } = require("../../utils/getBadgeByPoint.js");
 
 exports.verifySession = catchError(async(req, res, next) => {
   const token = req?.cookies?.token || null;
@@ -22,8 +24,10 @@ exports.verifySession = catchError(async(req, res, next) => {
       authenticated: false
     })
   }
+
   
-  req.verifiedUser = await User.findById(decoded.user).populate("streak");
+  
+  req.verifiedUser = await User.findById(decoded.user).select('-password').populate("streak");
   if(!req.verifiedUser){
     return res.status(400).json({
       success: false, 
@@ -31,5 +35,8 @@ exports.verifySession = catchError(async(req, res, next) => {
       authenticated: false
     })
   }
+
+  req.userAge = calculateAge(req.verifiedUser.birthdate);
+  req.userBadge =  getBadgeByPoint(req.verifiedUser.point.current)
   next();
 });

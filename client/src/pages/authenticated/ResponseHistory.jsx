@@ -5,6 +5,8 @@ import { fetchApi } from '../../utils/fetchApi.js';
 import AnswerCard from '../../components/card/AnswerCard.jsx';
 import { useInView } from 'react-intersection-observer';
 import LoadingDisplay from '../../components/html/LoadingDisplay.jsx';
+import { NavLink } from 'react-router-dom';
+import ArrowButton from '../../components/html/ArrowButton.jsx';
 
 const ResponseHistory = () => {
   const [answerList, setAnswerList] = useState([]); 
@@ -47,7 +49,10 @@ return (
       <LoadingDisplay>Loading more responses...</LoadingDisplay>
     ) : (
       answerList?.length === 0 && (
-        <LoadingDisplay>You have not answered any surveys yet.</LoadingDisplay>
+        <div className="w-full h-40 text-center flex gap-2 flex-col items-center justify-center">
+          <p>You have not answered any surveys yet.</p>
+          <ArrowButton className='text-lg gap-4' to='/home'>Start Answering</ArrowButton>
+        </div>
       )
     )}
   </div>

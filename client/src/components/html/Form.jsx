@@ -1,11 +1,13 @@
+/* eslint-disable react/prop-types */
 import useCTX from '../../hooks/useCTX.js';
 import { createContext, useState } from 'react';
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
-
-import { PiStarFour } from "react-icons/pi";
 import ForgotPasswordRequestModal from '../modals/edit/ForgotPasswordRequestModal.jsx';
 import { AnimatePresence } from 'framer-motion';
 import { NavLink } from "react-router-dom"
+import { genders } from '../../data/genders.js';
+import { capitalizeFirstLetter } from '../../utils/formatTopicQuery.js';
+
 
 const FormContext = createContext(null); 
 
@@ -35,6 +37,47 @@ Form.Label = ({defaultLabel = "Register"}) => {
   return <h1 className = "text-lg sm:text-base font-bold ">
     {label || defaultLabel}
   </h1>
+}
+
+Form.Birthdate = () => {
+  const { handleChange = () => {}, formField = {}} = useCTX(FormContext);
+
+  return (
+    <div className="flex flex-col ">
+      <label className="text-xs sm:text-[10px]">Birthdate</label>
+      <input
+        required
+        type="date"
+        color='neutral-200'
+        className="p-1 text-base text-zinc-900 sm:text-[14px] bg-neutral-50 rounded-xl outline-none"
+        name="birthdate"
+        onChange={handleChange}
+        value={formField?.birthdate}
+      />
+      <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+        Make sure to enter your correct birthdate, as it can only be changed once.
+      </p>
+    </div>
+  );
+}
+
+Form.Gender = () => {
+
+   const { handleChange = () => {}, formField = {}} = useCTX(FormContext);
+   
+  return (
+    <div className="w-full">
+      <select onChange = {handleChange} name = 'gender' className="w-full outline-none">
+        {
+          genders.map((g) => {
+             return <option value = {g}>
+              {capitalizeFirstLetter(g)}
+             </option>
+          })
+        }
+      </select>
+    </div>
+  );
 }
 
 Form.Username = ({placeholder = "Username"}) => {
@@ -87,12 +130,12 @@ Form.Password = ({placeholder = "Password"}) => {
   const { handleChange = () => {}, formField = {}} = useCTX(FormContext);
   const [isShowPassword, setIsShowPassword] = useState(false);
   
-  return <div className = "flex flex-col">
+  return <div className = "flex w-full flex-col">
     <label className = "text-xs sm:text-[10px]">
       Password
     </label> 
-    <div className = "p-1 rounded flex text-base sm:text-[14px] text- items-center">
-          <input required type = { isShowPassword ? "text" : "password"} placeholder = {placeholder} className = " outline-none p-1 rounded" name = "password" onChange = {handleChange} value = {formField?.password} /> 
+    <div className = "p-1 rounded flex w-full justify-between text-base  sm:text-[14px] text- items-center">
+          <input required type = { isShowPassword ? "text" : "password"} placeholder = {placeholder} className = "w-full outline-none p-1 rounded" name = "password" onChange = {handleChange} value = {formField?.password} /> 
           <button type = "button" onClick = {() => setIsShowPassword(prev => !prev)} className = "p-3">
              {
                isShowPassword ? <IoEyeOutline  /> : <IoEyeOffOutline  />
@@ -117,7 +160,7 @@ Form.Email = ({placeholder = "Email"}) => {
 Form.Submit = ({label = "Submit", disabled = false}) => {
   
   return <button type = "submit" disabled = {disabled}>
-    <p className = "w-fit px-6 py-1 bg-zinc-900/80 rounded text-white font-bold">
+    <p className = "w-fit px-6 py-1  bg-zinc-900/80 rounded text-white font-bold">
     {label}
   </p>
   </button>

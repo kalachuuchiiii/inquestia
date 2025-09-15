@@ -1,6 +1,4 @@
 const User = require("../../../../models/user.js");
-const redis = require("../../../../config/redis/index.js");
-const { signToken } = require("../../../../utils/auth/jwt.methods.js");
 const { validateUserFields } = require("../../../../middlewares/validation/user/validateUserFields.js");
 const { checkUserPresence } = require("../../../../middlewares/validation/user/checkUserPresence.js");
 const { preventUserDuplication } = require("../../../../middlewares/validation/user/preventUserDuplication.js")

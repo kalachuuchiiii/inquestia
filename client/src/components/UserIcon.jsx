@@ -27,12 +27,27 @@ UserIcon.Username = memo(({className = "", username = "", showAt = false}) => {
   return <NavLink to = {navigateTo} className = {className}>{showAt && '@'}{user?.username || username}</NavLink>
 })
 
-UserIcon.Nickname = memo(({nickname = "", className = ""}) => {
+UserIcon.Nickname = memo(({nickname = "", className = ''}) => {
   const { user = {
     nickname: '' , 
-    username: ''
+    username: '',
+    badge: {
+      badge: ''
+    }
   } }= useCtx(UserContext);
-  return <p className = {className}>{user.nickname || user.username}</p>
+  return (
+    <div className={`${className} flex gap-2 items-center`}>
+      <p>{user.nickname || user.username}</p>
+      {user?.badge?.badge && (
+       <>
+       <p>//</p>
+        <p className="bg-gradient-to-br italic font-semibold from-blue-500 to-cyan-200 bg-clip-text text-transparent text-sm">
+          {user.badge.badge}
+        </p>
+       </>
+      )}
+    </div>
+  );
 })
 
 UserIcon.Avatar = memo(({size = 20, className = ''}) => {
@@ -47,11 +62,11 @@ UserIcon.Avatar = memo(({size = 20, className = ''}) => {
 
 
 UserIcon.Card = ({children, className = '' ,size = "8"}) => {
-  
+
   return <div className = "flex gap-3 items-center ">
     <UserIcon.Avatar size = {size} /> 
     <div className = "flex flex-col ">
-       <UserIcon.Nickname />
+       <UserIcon.Nickname /> 
           <UserIcon.Username showAt className = "text-xs opacity-50" />
           {children}
     </div>

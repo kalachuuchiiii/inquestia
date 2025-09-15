@@ -36,10 +36,9 @@ const Answer = mongoose.model("Answer", answerSchema);
 
 const del = async () => {
   const s = await Answer.deleteMany();
-
 }
 
-//del();
+del();
 
 
 module.exports = Answer;

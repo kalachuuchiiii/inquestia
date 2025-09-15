@@ -4,15 +4,15 @@ import { NavLink } from "react-router-dom";
 
 const WelcomeGreet = () => {
   return (
-    <div className="px-6 sm:px-12 py-12 bg-gradient-to-b from-white to-gray-50">
+    <div className="px-6 sm:px-12 py-12  dark:bg-zinc-950 bg-gray-50">
       <div className="max-w-3xl mx-auto text-center">
         {/* Privacy Tag */}
-        <div className="inline-block px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium shadow-sm">
+        <div className="inline-block px-4 py-1 bg-gray-100 dark:bg-zinc-950 dark:text-neutral-100 text-gray-700 rounded-full text-xs font-medium shadow-sm">
           Terms of Privacy
         </div>
 
         {/* Main Heading */}
-        <h1 className="mt-6 text-4xl sm:text-5xl font-bold leading-tight text-gray-900">
+        <h1 className="mt-6 text-4xl sm:text-5xl font-bold leading-tight dark:text-neutral-100 text-gray-900">
           Surveys that <span className="text-blue-600">Reach</span>
           <span className="block">More Possibilities</span>
         </h1>

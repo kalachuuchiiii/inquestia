@@ -56,14 +56,20 @@ const QueryUsers = () => {
           >
             <User className="text-sm space-y-2 p-2" user={user}>
               <User.Card size="8" />
-              {user.hasSimilarInterest && (
-                <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-600">
-                  Has similar Interests
-                </span>
+              {sessionUser._id === user._id ? (
+                <p className="text-xs px-2 w-fit py-1 bg-zinc-200 rounded-full dark:bg-zinc-800">
+                  You
+                </p>
+              ) : (
+                user.hasSimilarInterest && (
+                  <p className="text-xs px-2 py-1 bg-zinc-200 w-fit rounded-full dark:bg-zinc-800">
+                    Has similar Interests
+                  </p>
+                )
               )}
             </User>
             <NavLink
-              className="w-full p-2 bg-neutral-200 text-zinc-900 dark:text-neutral-100 dark:bg-zinc-700 text-sm rounded-lg text-neutral-100"
+              className="w-full p-2 bg-neutral-200 text-zinc-900 dark:text-neutral-100 dark:bg-zinc-700 text-sm rounded-lg "
               to={
                 sessionUser._id === user._id
                   ? "/profile"

@@ -7,10 +7,11 @@ import NewQuestionModal from '../../components/modals/NewQuestion.jsx';
 import Notice from '../../components/html/Notice.jsx';
 import useCreateSurvey from '../../hooks/useCreateSurvey.js';
 import Button from '../../components/html/Button.jsx';
-import { useParams } from "react-router-dom"
 
 import { useSelector } from 'react-redux';
 import TagsList from '../../components/lists/InterestTagList.jsx';
+import React from 'react';
+import GenderOptions from '../../components/genderOptions.jsx';
 
 const CreateSurvey = () => {
   const { user = {
@@ -27,12 +28,14 @@ const CreateSurvey = () => {
   selectTag,
   setQuestions,
   questions,
+  handleChangeAgeGroup,
   error,
   isPublishingPending,
   toggleModal, 
   publishSurvey,
   saveSurveyAsDraft, 
   isSavingAsDraft,
+  handleChangeGender,
   draftError,
   isPublishSuccess,
   isDraftSuccess,
@@ -40,7 +43,7 @@ const CreateSurvey = () => {
 
 
   return (
-    <>
+    <React.Fragment>
       <AnimatePresence>
         {isModalOpen && (
           <NewQuestionModal onClose={closeModal} addQuestion={addQuestion} />
@@ -108,6 +111,38 @@ const CreateSurvey = () => {
               be visible in the survey feed.
             </Notice>
           </div>
+          <div>
+            <div className="flex items-center gap-2 justify-start">
+              <input
+                name="minAge"
+                onChange={handleChangeAgeGroup}
+                value={surveyTagline.ageGroup.minAge}
+                className="w-12 outline-none dark:bg-zinc-700 dark:text-neutral-100 bg-neutral-200  text-zinc-900 text-center rounded"
+                type="number"
+                min={8}
+                max={120}
+                placeholder="Min"
+              />
+              <span className="text-xs">to</span>
+              <input
+                name="maxAge"
+                onChange={handleChangeAgeGroup}
+                value={surveyTagline.ageGroup.maxAge}
+                className="w-12 outline-none dark:bg-zinc-700 dark:text-neutral-100 bg-neutral-200  text-zinc-900 text-center rounded"
+                type="number"
+                min={8}
+                max={120}
+                placeholder="Max"
+              />
+              <label className="text-xs">Target Age Group</label>
+            </div>
+            <div className='p-2 mt-10'>
+              <p className='text-xs text-zinc-950 dark:text-neutral-100'>
+                Genders 
+              </p>
+              <GenderOptions  onClick = {handleChangeGender} selectedGenders = {surveyTagline.genderGroup} />
+            </div>
+          </div>
           <div className="space-y-4 py-4 px-1 my-10">
             <div>
               <h1 className="lato mb-2">Tags</h1>
@@ -157,7 +192,7 @@ const CreateSurvey = () => {
           </div>
         </main>
       </div>
-    </>
+    </React.Fragment>
   );
 }
 

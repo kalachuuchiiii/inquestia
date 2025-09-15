@@ -12,7 +12,7 @@ const UserProfileCard = ({ user = {} }) => {
       <UserProfile user={user} className="flex gap-4 items-center">
         <UserProfile.Avatar size="40" className="text-20" />
         <div className="text-left">
-          <UserProfile.Nickname className="text-lg font-semibold" />
+          <UserProfile.Nickname className="text-xl " />
           <UserProfile.Username showAt className="text-xs opacity-70" />
           <p className="mt-2 text-xs text-gray-600 dark:text-gray-300 max-w-xs line-clamp-3">
             {bio}

@@ -14,8 +14,11 @@ import { useSelector } from 'react-redux';
 import { fetchApi } from '../../utils/fetchApi.js';
 import useAsync from '../../hooks/useAsync.js';
 import ArrowButton from '../html/ArrowButton.jsx';
+import { GoReport } from 'react-icons/go';
+import ReportSurveyModal from '../modals/ReportSurveyModal.jsx';
+import { useState } from "react";
 
-const SurveyCard = ({ survey = {}, Context = null, children = null }) => {
+const SurveyCard = ({ survey = {}, Context = null, children = null, className = "grid grid-cols-1 grid-rows-1 place-content-center relative dark:bg-zinc-900 bg-neutral-50 rounded-lg shadow-xl overflow-hidden" }) => {
   const [isOptionOpen, o, closeOptionWidget, toggle] = useToggler(false);
   const { user = { _id: null } } = useSelector((state) => state.user);
   const { modifyFieldById = () => {} } = useCTX(Context);
@@ -42,7 +45,7 @@ const SurveyCard = ({ survey = {}, Context = null, children = null }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 grid-rows-1 place-content-center relative dark:bg-zinc-900 bg-neutral-50 rounded-lg shadow-xl overflow-hidden">
+    <div className={className}>
       <AnimatePresence>
         {isOptionOpen &&
           (survey?.isDraft ? (
@@ -100,7 +103,7 @@ SurveyCard.Preview = () => {
   const { title = null, description = null, questions = [] } = useCTX(SurveyCardContext);
 
   return (
-    <div className="text-sm overflow-y-auto scrollbar-none w-full shrink-0 bg-neutral-100 p-4 dark:bg-zinc-950 rounded-lg">
+    <div className="text-sm overflow-y-auto scrollbar-none w-full  bg-neutral-100 p-4 dark:bg-zinc-950 rounded-lg">
       <div>
         <h1 className="text-xl leading-5 lato truncate">{title}</h1>
         <p className="text-sm opacity-80 line-clamp-2">{description}</p>
@@ -116,12 +119,22 @@ SurveyCard.Preview = () => {
   );
 };
 
-SurveyCard.Author = () => {
+SurveyCard.AgeGroup = () => {
+  const { ageGroup = {} } = useCTX(SurveyCardContext);
+
+  const { minAge = 8, maxAge = 120 } = ageGroup;
+
+  return <p className='text-xs py-1 px-6 backdrop-brightness-90 rounded-xl w-fit ' >
+    For ages {minAge} to {maxAge}
+  </p>
+}
+
+SurveyCard.Author = ({ tempUser = null}) => {
   const { user = null, createdAt = new Date().toISOString(), questions = [] } = useCTX(SurveyCardContext);
 
   return (
     <div className="text-xs p-2 border-t border-gray-200 dark:border-gray-800">
-      <UserIcon user={user}>
+      <UserIcon user={tempUser || user}>
         <UserIcon.Card />
       </UserIcon>
       <div className="opacity-80 flex items-center text-sm gap-2 py-1">
@@ -137,13 +150,30 @@ SurveyCard.Redirect = () => {
   const { _id = null, tags = [] } = useCTX(SurveyCardContext);
   return (
     <div className="flex items-center justify-between p-2 rounded border-t border-gray-200 dark:border-gray-800">
-      <SurveyTagList tags={tags} />
-      <ArrowButton className="gap-6 p-2 m-2 text-xs shrink-0 w-fit" to={`/survey/${_id}`}>
+      <div className='text-sm w-full opacity-80'>
+        <SurveyTagList tags={tags} />
+      </div>
+      <ArrowButton className="gap-6 p-2 m-2 text-sm shrink-0 w-fit" to={`/survey/${_id}`}>
         View Survey
       </ArrowButton>
     </div>
   );
 };
+
+SurveyCard.Report = () => {
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const { _id = null, title = null } = useCTX(SurveyCardContext);
+
+  return <>
+  <AnimatePresence >
+    { isReportModalOpen && <ReportSurveyModal onClose = {() => setIsReportModalOpen(false)} surveyTitle={title} surveyId={_id}/>}
+  </AnimatePresence>
+  <button onClick = {()=> setIsReportModalOpen(prev => !prev)} className='p-2'>
+    <GoReport size = {26} />
+  </button>
+  </>
+
+}
 
 SurveyCard.Redirect.Draft = () => {
   const { _id = null, tags = [] } = useCTX(SurveyCardContext);

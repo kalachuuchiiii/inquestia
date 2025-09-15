@@ -1,185 +1,113 @@
+const { z } = require("zod");
 const { catchError } = require("../../../utils/errorHandlers/catchError.js");
-const { bodyValidator } = require("../../../utils/schema/bodyValidator.js");
-const { getValidInterestTags } = require('../../../utils/schema/getValidInterestTags.js');
-exports.validateSurveyFields = catchError(async(req, res, next) => {
-  const { survey = {} } = req.body; 
-  if(!survey){
-    return res.status(400).json({
-      success: false, 
-      message: 'Survey is undefined.'
-    })
-  }
-  const fields = {
-    title: survey?.title || '', 
-    description: survey?.description || '', 
-    targetRespondents: parseInt(survey?.targetRespondents) || 8, 
-    tags: survey?.tags || [], 
-    questions: survey?.questions || []
-  }
-  const tagMinMsg = 'You must select at least 1 tag.';
-  const tagMaxMsg = 'You can select up to 5 tags.';
-  
-  const options = {
-    title: {
-      min: [6, "Survey title must be at least 6 characters long."], 
-      max: [80, "Survey title cannot exceed 80 characters."], 
-    }, 
-    description: {
-    min: [10, "Survey description must be at least 10 characters long."], 
-    max: [150, "Survey description cannot exceed 150 characters."], 
-    }, 
-    targetRespondents: {
-      type: 'number', 
-      min: [8, "Target respondents must be at least 8."], 
-      max: [1000, "Target respondents cannot exceed 1000."]
-    }, 
-    tags: {
-      type: 'array', 
-      min: [1, tagMinMsg], 
-      max: [5, tagMaxMsg]
-    }, 
-    questions: {
-      type: 'array', 
-      min: [1, 'A survey must contain at least 1 question'], 
-      max: [8, 'A survey can only contain 8 questions at most.']
-    }
-  }
-  
-  
-  const { error, title, description, tags, targetRespondents, questions } = bodyValidator(fields, options);
-  
-  if(error){
-    return res.status(400).json({
-      success: false, 
-      message: error
-    })
-  }
-  
+const { interests } = require("../../../data/interests.js");
 
-  const { error: tagError, validTags } = bodyValidator({
-    validTags: getValidInterestTags(tags)
-  }, {
-    validTags: {
-      type: 'array', 
-      min: [1, tagMinMsg], 
-      max: [5, tagMaxMsg]
-    }
-  });
-  
-  if(tagError){
-    return res.status(400).json({
-      success: false, 
-      message: tagError
-    })
-  }
-  
-  
+const textQuestionSchema = z.object({
+  type: z.literal("text"),
+  question: z
+    .string()
+    .min(6, "Question must be at least 6 characters long.")
+    .max(100, "Question cannot exceed 100 characters."),
+  isRequired: z.boolean().default(false),
+});
 
-const validQuestions = [];
-for(const q of questions){
-  if(typeof q?.type !== 'string' || !q?.type){
-    return res.status(400).json({
-      success: false, 
-      message: 'Invalid type'
-    })
-  }
-  const invalTypeMsg = `${q?.type || ''} is an invalid type`
-  const type = q?.type?.trim()?.toLowerCase();
-  let { error: questionError, question } = bodyValidator({
-    question: q?.question || '',
-  }, {
-    question: {
-      min: [6, 'Question must be at least 6 characters long.'], 
-      max: [100, 'Question cannot exceed 100 characters.'],
-    }
-  })
-  if(questionError){
-    return res.status(400).json({
-      success: false, 
-      message: questionError
-    })
-  }
-  
-  let { isRequired = false } = q;
-  if(typeof isRequired !== 'boolean'){
-    return res.status(400).json({
-      success: false, 
-      message: 'isRequired must be a boolean.'
-    })
-  }
-  const validTypes = ['select', 'text'];
-  
-  if(!validTypes.includes(type)){
-    return res.status(400).json({
-      success: false, 
-      message: 'Invalid type'
-    })
-  } 
-  
-  if(type === 'text'){
-    validQuestions.push({ ...q, type, isRequired });
-    continue;
-  };
-  
-  const { choices, error:choicesError } = bodyValidator({
-    choices: q?.choices || []
-  }, {
-    choices: {
-      type: 'array',
-      min: [2, 'You must at least 2 choices.'], 
-      max: [8, 'You can only add up to 8 choices.']
-    }
-  })
-  
-  if(choicesError){
-    return res.status(400).json({
-      success: false, 
-      message: choicesError
-    })
-  }
-  
-  for(const c of choices){
-    const { choice, error: choiceError } = bodyValidator({
-      choice: c || ''
-    }, {
-      choice: {
-        min: [1, 'Each choice must contain at least 1 character.'],
-      max: [30, 'Each choice cannot exceed 30 characters.']
-      }
-    });
-    
-    if(choiceError){
+const selectQuestionSchema = z.object({
+  type: z.literal("select"),
+  question: z
+    .string()
+    .min(6, "Question must be at least 6 characters long.")
+    .max(100, "Question cannot exceed 100 characters."),
+  isRequired: z.boolean().default(false),
+  multipleChoice: z.boolean().default(false),
+  choices: z
+    .array(
+      z
+        .string()
+        .min(1, "Each choice must contain at least 1 character.")
+        .max(30, "Each choice cannot exceed 30 characters.")
+    )
+    .min(2, "You must provide at least 2 choices.")
+    .max(8, "You can only add up to 8 choices."),
+});
+
+
+const questionSchema = z.union([textQuestionSchema, selectQuestionSchema]);
+
+
+const surveySchema = z.object({
+  title: z
+    .string()
+    .min(6, "Survey title must be at least 6 characters long.")
+    .max(80, "Survey title cannot exceed 80 characters."),
+  description: z
+    .string()
+    .min(10, "Survey description must be at least 10 characters long.")
+    .max(150, "Survey description cannot exceed 150 characters."),
+  targetRespondents: z
+    .number()
+    .min(8, "Target respondents must be at least 8.")
+    .max(1000, "Target respondents cannot exceed 1000."),
+  tags: z
+    .array(z.enum(interests, { message: "One or more tags are invalid." }))
+    .min(1, "You must select at least 1 tag.")
+    .max(5, "You can select up to 5 tags."),
+  questions: z
+    .array(questionSchema)
+    .min(1, "A survey must contain at least 1 question.")
+    .max(8, "A survey can only contain 8 questions at most."),
+  ageGroup: z.object({
+    minAge: z
+      .number()
+      .min(8, "Minimum age must be at least 8.")
+      .max(120, "Minimum age cannot exceed 120.")
+      .default(8),
+    maxAge: z
+      .number()
+      .min(8, "Maximum age must be at least 8.")
+      .max(120, "Maximum age cannot exceed 120.")
+      .default(120),
+  }).refine(
+    (data) => data.maxAge >= data.minAge,
+    { message: "maxAge must be greater than or equal to minAge." }
+  ),
+  genderGroup: z
+    .array(
+      z.enum(["male", "female", "non-binary", "transgender", "other"], {
+        message: "Invalid gender option.",
+      })
+    )
+    .min(1, "You must select at least 1 gender.")
+    .default(["male", "female", "non-binary", "transgender", "other"]),
+});
+
+
+exports.validateSurveyFields = catchError(async (req, res, next) => {
+
+    const { survey } = req.body;
+    if (!survey) {
       return res.status(400).json({
-      success: false, 
-      message: choiceError
-    })
+        success: false,
+        message: "Survey is undefined.",
+      });
     }
-  }
-  
-  
-  
-  const { multipleChoice = false } = q;
-  
-  validQuestions.push({ question, type, multipleChoice, choices, isRequired });
-  continue;
-};
+    const { minAge, maxAge } = survey.ageGroup;
 
-const verifiedSurvey = {
-    title, 
-    description, 
-    targetRespondents, 
-    tags: validTags, 
-    questions: validQuestions
-}
+    const parsed = surveySchema.parse({
+      ...survey, 
+      ageGroup: {
+        minAge: parseInt(minAge),
+         maxAge: parseInt(maxAge)
+      }, 
+      targetRespondents: parseInt(survey.targetRespondents)
+    });
 
-if(verifiedSurvey.questions.every(q => !q.isRequired)){
-  return res.status(400).json({
-    success: false, 
-    message: "You must have at least 1 required question."
-  })
-}
-  
-  req.verifiedSurvey = verifiedSurvey;
+    if (parsed.questions.every((q) => !q.isRequired)) {
+      return res.status(400).json({
+        success: false,
+        message: "You must have at least 1 required question.",
+      });
+    }
 
-next();
-})
+    req.verifiedSurvey = parsed;
+    next();
+});

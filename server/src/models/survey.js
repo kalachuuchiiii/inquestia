@@ -22,82 +22,106 @@ const selectTypeQuestionSchema = new mongoose.Schema({
   }
 }, { _id: false });
 
-const surveySchema = new mongoose.Schema({
-  title: {
-    type: String,
-    minlength: [6, "Survey title must be at least 6 characters long."],
-    maxlength: [80, "Survey title cannot exceed 80 characters."],
-    required: [true, "Survey title is required."]
-  },
-  description: {
-    type: String,
-    minlength: [6, "Survey description must be at least 10 characters long."],
-    maxlength: [150, "Survey description cannot exceed 150 characters."],
-    required: [true, "Survey description is required."]
-  },
-  summary: {
-    type: String, 
-    default: null
-  },
-  targetRespondents: {
-    type: Number,
-    min: [3, "Target respondents must be at least 3."],
-    max: [1000, "Target respondents cannot exceed 1000."]
-  },
-  totalRespondents: {
-    type: Number,
-    default: 0,
-    max: [1000, "Total respondents cannot exceed 1000."]
-  },
-  hasReachedTargetRespondents: {
-    type: Boolean,
-    default: false
-  },
-  closed: {
-    type: Boolean,
-    default: false
-  },
-  tags: {
-    type: [String],
-    enum: {
-      values: interests,
-      message: 'One or more tags are invalid.'
+const surveySchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      minlength: [6, "Survey title must be at least 6 characters long."],
+      maxlength: [80, "Survey title cannot exceed 80 characters."],
+      required: [true, "Survey title is required."],
     },
-    validate: {
-      validator: function (val) {
-        return val.length >= 1 && val.length <= 5;
+    description: {
+      type: String,
+      minlength: [6, "Survey description must be at least 10 characters long."],
+      maxlength: [150, "Survey description cannot exceed 150 characters."],
+      required: [true, "Survey description is required."],
+    },
+    ageGroup: {
+      minAge: {
+        type: Number,
+        min: 8,
+        max: 120,
+        default: 8
       },
-      message: 'You must select between 1 and 5 tags.'
-    }
+      maxAge: {
+        type: Number,
+        min: 8,
+        max: 120,
+        default: 120
+      },
+    },
+    genderGroup: [
+        {
+          type: String, 
+          enum: ['male', 'female', 'non-binary', 'transgender', 'other'],
+          default: ['male', 'female', 'non-binary', 'transgender', 'other']
+        }
+    ],
+
+    targetRespondents: {
+      type: Number,
+      min: [3, "Target respondents must be at least 3."],
+      max: [1000, "Target respondents cannot exceed 1000."],
+    },
+    totalRespondents: {
+      type: Number,
+      default: 0,
+      max: [1000, "Total respondents cannot exceed 1000."],
+    },
+    hasReachedTargetRespondents: {
+      type: Boolean,
+      default: false,
+    },
+    closed: {
+      type: Boolean,
+      default: false,
+    },
+    tags: {
+      type: [String],
+      enum: {
+        values: interests,
+        message: "One or more tags are invalid.",
+      },
+      validate: {
+        validator: function (val) {
+          return val.length >= 1 && val.length <= 5;
+        },
+        message: "You must select between 1 and 5 tags.",
+      },
+    },
+    questions: [questionSchema],
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      index: true,
+      required: true,
+    },
+    respondents: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    isDraft: {
+      type: Boolean,
+      default: false,
+    },
   },
-  questions: [questionSchema],
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    index: true,
-    required: true
-  },
-  respondents: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }], 
-  isDraft: {
-    type: Boolean, 
-    default: false
-  }
-}, { timestamps: true });
+
+  { timestamps: true }
+);
 
 const Survey = mongoose.model('Survey', surveySchema);
 
 Survey.schema.path('questions').discriminator('select', selectTypeQuestionSchema);
 
 const deleteAll = async () => {
-  const res = await Survey.deleteMany();
+   await Survey.deleteMany()
 
 }
 
 const indexes = async() => {
-  const d = await Survey.collection.dropIndex("respondents_1");
+  await Survey.collection.dropIndex("respondents_1");
 
 }
 

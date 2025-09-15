@@ -9,7 +9,7 @@ const { allowedSurveyFields } = require("../../../../data/allowedFields/survey.j
 const getSurveyList = async (req, res) => {
   const { skip, limit, page } = req.paginationParams;
   const { interests } = req.verifiedUser;
-const { verifiedUser } = req;
+const { verifiedUser, userAge } = req;
   const seenSurveys = JSON.parse(req?.query?.seenSurveys || "[]");
 
 
@@ -21,13 +21,15 @@ const { verifiedUser } = req;
     Survey.countDocuments({
       hasReachedTargetRespondents: false,
       tags: {
-        $in: interests
+        $in: interests,
       },
       respondents: {
-        $nin: [verifiedUser._id]
+        $nin: [verifiedUser._id],
       },
       closed: false,
-      isDraft: false
+      isDraft: false,
+      "ageGroup.minAge": { $lte: userAge },
+      "ageGroup.maxAge": { $gte: userAge },
     }),
     Survey.aggregate([
       {
@@ -35,45 +37,47 @@ const { verifiedUser } = req;
           hasReachedTargetRespondents: false,
           tags: { $in: interests },
           _id: { $nin: alreadySeenSurveysIds },
+          "ageGroup.minAge": { $lte: userAge },
+          "ageGroup.maxAge": { $gte: userAge },
           respondents: {
-            $nin: [verifiedUser._id]
+            $nin: [verifiedUser._id],
           },
           closed: false,
-          isDraft: false
-        }
+          isDraft: false,
+        },
       },
       {
-        $skip: skip
+        $skip: skip,
       },
       {
-        $limit: limit
+        $limit: limit,
       },
       {
         $addFields: {
-          randomSeed: { $rand: {} }
-        }
+          randomSeed: { $rand: {} },
+        },
       },
       {
         $sort: {
-          randomSeed: 1
-        }
+          randomSeed: 1,
+        },
       },
       {
         $lookup: {
-          from: 'users',
-          localField: 'user',
-          foreignField: '_id',
-          as: 'user'
-        }
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
       },
       {
-        $unwind: '$user'
+        $unwind: "$user",
       },
       {
-        $project: { ...allowedSurveyFields }
-      }
-    ])
-  ])
+        $project: { ...allowedSurveyFields },
+      },
+    ]),
+  ]);
   const nextPage = getNextPage(totalSurveys, page, limit);
 
   return res.status(200).json({

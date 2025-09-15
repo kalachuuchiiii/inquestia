@@ -13,6 +13,12 @@ import SearchPage from './pages/authenticated/SearchPage.jsx';
 import QuerySurvey from './components/lists/QuerySurvey.jsx';
 import QueryUsers from './components/lists/QueryUsers.jsx';
 import AuthenticatedLayout from './layout/Authenticated.jsx';
+import AdminPage from './pages/admin/index.jsx';
+import RequestAnalyticsTable from './pages/admin/RequestAnalyticsTable.jsx';
+import ReportedSurveys from './pages/admin/ReportedSurveys.jsx';
+import ReportedUsers from './pages/admin/ReportedUsers.jsx';
+import ResolvedUserReports from './pages/admin/ResolvedUserReports.jsx';
+import ResolvedSurveyReports from './pages/admin/ResolvedSurveyReports.jsx';
 
 function App() {
   
@@ -52,7 +58,7 @@ const { user = {}, isAuthenticated } = useSelector(state => state.user);
         </Route>
       </Route>
 
-      <Route element={<div className="w-full ">
+      <Route element={<div className="w-full min-h-screen ">
         <NavBar>
           <NavBar.App />
         </NavBar>
@@ -69,8 +75,14 @@ const { user = {}, isAuthenticated } = useSelector(state => state.user);
             </div>} />
           })
         }
+        <Route path = '/adm' element = {<AdminPage />}  >
+        <Route path = '/adm' element = {<RequestAnalyticsTable />} />
+          <Route path = "/adm/reports/surveys" element = {<ReportedSurveys />}/>
+           <Route path = "/adm/reports/users" element = {<ReportedUsers />}/>
+           <Route path = "/adm/reports/resolved/users" element = {<ResolvedUserReports /> } />
+           <Route path = "/adm/reports/resolved/surveys" element = {<ResolvedSurveyReports /> } />
+        </Route>
       </Route>
-
     </Routes>
 
   </div>

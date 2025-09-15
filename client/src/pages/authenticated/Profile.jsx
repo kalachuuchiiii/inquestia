@@ -21,7 +21,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className="p-3 space-y-3">
+      <div className=" space-y-3">
         <div className=" p-6 shadow-lg space-y-3 rounded-lg">
           <div className="space-y-4">
             <UserProfile user={user} />

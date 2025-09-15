@@ -19,9 +19,9 @@ import useAsync from "../../hooks/useAsync.js";
 import { fetchApi } from "../../utils/fetchApi.js";
 import { updateUser } from "../../state/slice/user.js";
 import { capitalize } from "../../utils/capitalize.js";
+import { capitalizeFirstLetter } from "../../utils/formatTopicQuery.js";
+import UpdateGender from "../../components/modals/edit/updateGender.jsx";
 
-
-// 🔹 Reusable input field with label + value + edit button
 const ProfileInput = ({ label, value, placeholder, onEditClick, readOnly = true }) => {
   const inputStyle = "outline-none w-full p-2";
   const wrapperStyle =
@@ -60,6 +60,8 @@ const ModalManager = ({ activeModal, close, user }) => {
     bio: <EditBio previousBio={user.bio} onClose={close} />,
     password: <ChangePasswordModal onClose={close} />,
     avatar: <ChangeAvatarModal onClose={close} />,
+    gender: <UpdateGender onClose={close} />
+    
   };
 
   return <AnimatePresence>{activeModal && modals[activeModal]}</AnimatePresence>;
@@ -85,11 +87,9 @@ const EditProfile = () => {
 
   return (
     <>
-      {/* 🔹 Modal manager */}
       <ModalManager activeModal={activeModal} close={() => setActiveModal(null)} user={user} />
 
       <div className="w-full sm:w-[95%] mx-auto rounded-lg p-4">
-        {/* Avatar */}
         <div className="pt-4">
           <UserIcon className="w-full flex justify-center items-center" user={user}>
             <UserIcon.Avatar size="40" />
@@ -100,8 +100,6 @@ const EditProfile = () => {
             </button>
           </div>
         </div>
-
-        {/* Nickname, Username, Bio */}
         <div className="space-y-4">
           <ProfileInput
             label="Nickname"
@@ -137,14 +135,20 @@ const EditProfile = () => {
             </div>
           </div>
         </div>
-
-        {/* Email + Password */}
+        <div className="mt-2 flex  justify-between">
+           <div>
+            <label className="text-xs">Gender</label>
+            <p className="outline-none w-full p-2" >{capitalizeFirstLetter(user.gender)}</p>
+           </div>
+           <button onClick={() => setActiveModal("gender")} className="p-5">
+              <HiMiniPencil />
+           </button>
+        </div>
         <div className="space-y-3 mt-4">
           <div>
             <label className="text-xs">Email</label>
             <input readOnly value={user.email} className="outline-none w-full p-2" />
           </div>
-
           <div>
             <label className="text-xs">Password</label>
             <div className="flex gap-1">
@@ -157,8 +161,6 @@ const EditProfile = () => {
               </button>
             </div>
           </div>
-
-          {/* Interests */}
           <div className="p-2">
             <NavLink to="/interests" className="flex items-center justify-between">
               <label>Your interests</label>
@@ -173,7 +175,6 @@ const EditProfile = () => {
           </div>
         </div>
 
-        {/* External Links */}
         <div className="flex border-l-1 border-l-white px-3 py-1 flex-col my-8 gap-4">
           <ExternalLinksList externalLinks={user.externalLinks} />
           <div className="flex flex-col">

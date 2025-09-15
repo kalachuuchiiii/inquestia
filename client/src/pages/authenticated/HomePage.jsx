@@ -26,6 +26,7 @@ const HomePage = () => {
       seenSurveys,
       page
     })
+    console.log(res, 'homepage')
     const uniqueSurveys = res.surveys.filter(s => !seenSurveys.some(survey => survey._id === s._id));
     setNextPage(res.nextPage);
     setSurveys(prev => overwrite ? res.surveys : [...prev, ...uniqueSurveys]);
@@ -34,9 +35,9 @@ const HomePage = () => {
   const { inView, ref } = useInView();
 
   useEffect(() => {
-    if (surveys.length > 0) return;
+    if (surveys.length > 0 || isLoading) return;
     getSurveyList();
-  }, [isAuthenticated, user, isSessionLoading, isProcessOK])
+  }, [])
 
   useEffect(() => {
     if (
@@ -71,9 +72,14 @@ const HomePage = () => {
     <div className="space-y-3 min-h-screen">
       {
         surveys?.length > 0 && surveys.map(survey => <SurveyCard survey={survey} key={survey._id} >
-          <SurveyCard.Preview />
+          <div className='flex items-start gap-2'>
+            <SurveyCard.Preview />
+            <SurveyCard.Report />
+          </div>
           <SurveyCard.Author />
+         
           <SurveyCard.Redirect />
+           <SurveyCard.AgeGroup />
           <SurveyCard.Bar />
         </SurveyCard  >
         )

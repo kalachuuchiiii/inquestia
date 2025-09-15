@@ -1,16 +1,7 @@
-const mongoose = require("mongoose");
-const { create } = require("./create.js");
-const { read } = require("./read.js");
-const { update } = require("./update.js");
-const { deleteDoc } = require("./delete.js");
-const { verifyModel } = require("../../../utils/schema/schema.methods.js");
-const { routeBuilder } = require("./routeBuilder.js");
-const { capitalize } = require("../../../utils/capitalize.js");
 
-const Controller = (modelName, {
-  defaultCRUD = false
-} = {}) => {
-  const Model = verifyModel(capitalize(modelName));
+const { routeBuilder } = require("./routeBuilder.js");
+
+const Controller = (modelName) => {
   const entity = modelName.toLowerCase().trim();
   const router = require("express").Router();
   const controller = {};

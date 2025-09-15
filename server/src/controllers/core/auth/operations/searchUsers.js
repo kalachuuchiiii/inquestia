@@ -4,6 +4,7 @@ const User = require("../../../../models/user.js");
 const { allowedUserFields } = require("../../../../data/allowedFields/user.js");
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
 const { getNextPage } = require("../../../../utils/getNextPage.js");
+const { getBadgeByPoint } = require("../../../../utils/getBadgeByPoint.js");
 
 const searchUsers = async (req, res) => {
   const { q = null } = req.params;
@@ -75,9 +76,7 @@ const searchUsers = async (req, res) => {
       {
         $project: {
           ...allowedUserFields, 
-          bio: 1, 
-          hasSimilarInterest: 1, 
-          interests: 1
+          hasSimilarInterest: 1
         }
       }
     ]),
@@ -97,12 +96,19 @@ const searchUsers = async (req, res) => {
       { $count: "totalUsers" }
     ])
   ])
+
+  const usersWithBadges = users.map((user) => {
+    return {
+      badge: getBadgeByPoint(user.point.current),
+      ...user
+    }
+  })
   
   const nextPage = getNextPage(totalUsers.length, page, limit);
   
   return res.status(200).json({
    success: true, 
-   users, 
+   users: usersWithBadges, 
    nextPage,
    totalUsers: totalUsers.length,
    isNoResultsFound: users.length === 0 && totalUsers.length === 0

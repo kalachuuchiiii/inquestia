@@ -4,9 +4,9 @@ const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 const redis = require("./src/config/redis/index.js");
-const cloudinary = require("./src/config/cloudinary/index.js");
 const { connectDB } = require("./src/config/mongodb/index.js");
 const mainRouter = require("./src/router/index.js");
+const { requestTracker } = require("./src/middlewares/tracker/requestTracker.js");
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
@@ -42,7 +42,9 @@ app.use(methodLimiter);
 
 app.get("/", (req, res) => {
   res.send("Server is running")
-})
+});
+
+app.use(requestTracker)
 
 
 app.use("/api", mainRouter);

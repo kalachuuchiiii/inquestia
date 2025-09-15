@@ -3,8 +3,11 @@ const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 
 const getSession = async(req, res) => {
   
-  const user = req.verifiedUser.toObject();
-  delete user.password;
+  const user = {
+    ...req.verifiedUser.toObject(),
+    age: req.userAge, 
+    badge: req.userBadge
+  }
   
  return res.status(200).json({
    success: true, 

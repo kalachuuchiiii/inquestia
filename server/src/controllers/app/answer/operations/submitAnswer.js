@@ -24,7 +24,31 @@ const submitAnswer = async(req, res, _, commit) => {
       message: "Survey is already closed and/or over."
     })
   }
-  
+
+if (verifiedUser.interests.every(i => !surveyData.tags.includes(i))) {
+  return res.status(400).json({
+    success: false,
+    message: `This survey requires interests in: ${surveyData.tags.join(", ")}.`,
+  });
+}
+
+if (!surveyData.genderGroup.includes(verifiedUser.gender)) {
+  return res.status(400).json({
+    success: false,
+    message: `This survey is only open to: ${surveyData.genderGroup.join(", ")}.`,
+  });
+}
+
+const { userAge: age } = req;
+
+const { minAge, maxAge } = surveyData.ageGroup
+
+if (age < minAge || age > maxAge) {
+  return res.status(400).json({
+    success: false,
+    message: `This survey is only open to users between ${minAge} and ${maxAge} years old. Your age is ${age}.`,
+  });
+} 
   const plainRespondentIds = surveyData.respondents.map(r => r.toString());
   
   if(plainRespondentIds.includes(verifiedUser._id.toString())){

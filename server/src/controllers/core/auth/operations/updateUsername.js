@@ -2,24 +2,11 @@ const { verifySession } = require("../../../../middlewares/verification/verifySe
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 const { textValidator } = require("../../../../utils/string.validators.js");
 const { bodyValidator } = require("../../../../utils/schema/bodyValidator.js");
+const { executeAfterCooldown } = require("../../../../utils/executeAfterCooldown.js");
 
 const updateUsername = async (req, res) => {
 
-  const { verifiedUser } = req;
-  const now = Date.now();
-  const oneDay = 1000 * 60 * 60 * 24;
-  const fourteenDays = oneDay * 14;
-  const gap = now - verifiedUser.lastUsernameUpdate.getTime();
-
-  if (gap < fourteenDays) {
-    const remainingDays = Math.ceil((fourteenDays - gap) / oneDay);
-    return res.status(400).json({
-      success: false,
-      message: `You can change your username again in ${remainingDays} day(s).`
-    });
-  }
-
-  const { error, username } = bodyValidator({
+    const { error, username } = bodyValidator({
     username: req?.body?.username,
   }, {
     username: {
@@ -43,8 +30,26 @@ const updateUsername = async (req, res) => {
     });
   }
 
-  verifiedUser.username = username;
-  verifiedUser.lastUsernameUpdate = new Date();
+
+  const { verifiedUser } = req;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const fourteenDays = oneDay * 14;
+
+  const { remainingTime, executed } = executeAfterCooldown(() => {
+    verifiedUser.username = username;
+    verifiedUser.lastUsernameUpdate = new Date();
+  }, {
+    lastChange: verifiedUser.lastUsernameUpdate, 
+    cooldownInMs: fourteenDays
+  })
+
+  if (!executed) {
+    const remainingDays = Math.ceil((remainingTime) / oneDay);
+    return res.status(400).json({
+      success: false,
+      message: `You can change your username again in ${remainingDays} day(s).`
+    });
+  }
 
   const savedUser = await verifiedUser.save();
   const userData = savedUser.toObject();

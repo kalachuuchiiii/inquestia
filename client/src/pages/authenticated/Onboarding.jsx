@@ -33,9 +33,11 @@ const Onboarding = () => {
   };
 
   const selectInterest = (value) => {
+
     if (selectedInterests.includes(value)) {
       deselectInterest(value);
     } else {
+          if (selectedInterests.length >= 10) return;
       setSelectedInterests((prev) => [...prev, value]);
     }
   };
@@ -72,7 +74,6 @@ const Onboarding = () => {
             disabled={isLoading}
             onClick={saveInterests}
             loadingState={isLoading}
-            className="w-full sm:w-auto"
           >
             Save Interests
           </Button>

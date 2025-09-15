@@ -1,25 +1,49 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import useAsync from './useAsync.js';
-import { useSelector } from 'react-redux';
 import useToggler from './useToggler.js';
 import { fetchApi } from '../utils/fetchApi.js';
 
 import { useParams, useNavigate } from "react-router-dom";
+import { genders } from '../data/genders.js';
+
+
+const surveyInitialState = {
+   title: '',
+    description: '',
+    targetRespondents: 8,
+    tags: [], 
+    ageGroup: {
+      minAge: 8, 
+      maxAge: 120
+    },
+    genderGroup: genders
+}
 
 const useCreateSurvey = () => {
   const [questions, setQuestions] = useState([]);
   const nav = useNavigate();
-  const [surveyTagline, setSurveyTagline] = useState({
-    title: '',
-    description: '',
-    targetRespondents: 8,
-    tags: []
-  });
+  const [surveyTagline, setSurveyTagline] = useState(surveyInitialState);
+
+  const handleChangeAgeGroup = (e) => {
+    const { name, value } = e.target;
+    setSurveyTagline((prev) => ({
+      ...prev, ageGroup: {
+        ...prev.ageGroup, 
+        [name]: value
+      }
+    }))
+
+  
+    } 
+
+
   const { id } = useParams();
 
 
 
-  const [isModalOpen, _, closeModal, toggleModal] = useToggler();
+
+
+  const [isModalOpen, openModal, closeModal, toggleModal] = useToggler();
   const addQuestion = (preset) => {
     setQuestions(prev => [...prev, { ...preset }]);
   }
@@ -27,6 +51,11 @@ const useCreateSurvey = () => {
     const res = await fetchApi('post', '/survey/create', {
       survey: {
         ...surveyTagline,
+        targetRespondents: parseInt(surveyTagline.targetRespondents),
+        ageGroup: {
+          minAge: parseInt(surveyTagline?.ageGroup?.minAge || '8'),
+           maxAge: parseInt(surveyTagline?.ageGroup?.maxAge || '120')
+        },
         questions,
       },
       _id: id,
@@ -39,7 +68,7 @@ const useCreateSurvey = () => {
   })
 
   const [saveSurveyAsDraft, { isLoading: isSavingAsDraft, isDraftSuccess, error: draftError }] = useAsync(async () => {
-    const res = await fetchApi('post', '/survey/create', {
+    await fetchApi('post', '/survey/create', {
       survey: {
         ...surveyTagline,
         questions,
@@ -52,14 +81,12 @@ const useCreateSurvey = () => {
 
   const [getDraft, { isLoading: isDraftLoading }] = useAsync(async () => {
     const res = await fetchApi("get", `/survey/${id}`);
+    console.log(res.survey)
     if (res?.survey) {
-      const { questions = [], title = '', tags = [], description = '', targetRespondents = 8 } = res.survey;
+      const { questions = [],...surveyInitialState   } = res.survey;
       setQuestions(questions);
       setSurveyTagline({
-        title,
-        description,
-        targetRespondents,
-        tags
+       ...surveyInitialState
       })
     }
   })
@@ -68,11 +95,24 @@ const useCreateSurvey = () => {
     getDraft();
   }, [id])
 
+
   const handleChangeTagline = (e) => {
     const { name, value } = e.target;
     setSurveyTagline(prev => ({
       ...prev,
       [name]: value
+    }))
+  }
+
+  const handleChangeGender = (e) => {
+    const { value } = e.target;
+    const isAlreadySelected = surveyTagline.genderGroup.includes(value);
+    const newGenders = isAlreadySelected
+      ? surveyTagline.genderGroup.filter((g) => g !== value)
+      : [...surveyTagline.genderGroup, value];
+
+    setSurveyTagline(prev => ({
+      ...prev, genderGroup: newGenders
     }))
   }
 
@@ -101,6 +141,8 @@ const useCreateSurvey = () => {
 
 
 
+
+
   return {
     surveyTagline,
     closeModal,
@@ -116,9 +158,13 @@ const useCreateSurvey = () => {
     error,
     toggleModal,
     draftError,
+    openModal,
+    handleChangeGender,
     isPublishSuccess,
     isDraftSuccess,
-    publishSurvey
+    publishSurvey,
+    handleChangeAgeGroup,
+    isDraftLoading
   }
 }
 

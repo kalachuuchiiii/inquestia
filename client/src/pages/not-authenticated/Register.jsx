@@ -65,6 +65,8 @@ const Register = () => {
         <Form.Label defaultLabel="Register" />
         <Form.Username />
         <Form.Email />
+        <Form.Gender />
+        <Form.Birthdate />
         <div className="">
           <Form.Password />
           <div className="space-y-2">

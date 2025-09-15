@@ -1,10 +1,18 @@
 const mongoose = require("mongoose");
+const { default: z } = require("zod");
+
 exports.catchError = (fn = () => { }) => {
   return async (req, res, next) => {
     try {
       await fn(req, res, next); 
     } catch (e) {
-
+      if(e instanceof z.ZodError){
+        const parsed = JSON.parse(e); 
+          return res.status(500).json({
+          success: false,
+          message: parsed[0].message || "Internal Server Error."
+      })
+      }
       return res.status(500).json({
         success: false,
         message: e.message || "Internal Server Error."

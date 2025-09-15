@@ -6,8 +6,10 @@ const useRegister = () => {
   const [form, setForm] = useState({
     email: '', 
     username: '', 
-    password: ''
-  })
+    password: '', 
+    birthdate: new Date().toISOString(), 
+    gender: 'male'
+  });
   const [code, setCode] = useState(0);
   
   const [register, {
@@ -30,6 +32,8 @@ const useRegister = () => {
     error: otpError, 
     resetState: resetSendCodeState
   }] = useAsync(async() => {
+    console.log(form);
+    
     const res = await axios.post(
       `${import.meta.env.VITE_SERVER_URL}/api/user/register/otp`,
       {

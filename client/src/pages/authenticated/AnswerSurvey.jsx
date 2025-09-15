@@ -5,6 +5,7 @@ import { AnswerQuestionContext } from "../../context/answerQuestionContext.js";
 import useAnswerSurvey from "../../hooks/AnswerSurvey/index.js";
 import SurveyTagList from "../../components/lists/SurveyTagList.jsx";
 import SubmissionButton from "../../components/html/Button.jsx";
+import SurveyCard from "../../components/card/SurveyCard.jsx";
 
 const AnswerSurvey = () => {
   const {
@@ -45,10 +46,13 @@ const AnswerSurvey = () => {
     >
       <main className="min-h-screen dark:bg-zinc-950">
         {/* Header */}
-        <div className="p-3 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="p-3 border-b flex items-center justify-between border-neutral-200 dark:border-neutral-800">
           <UserIcon user={survey.user || {}}>
             <UserIcon.Card />
           </UserIcon>
+          <SurveyCard className = '' survey = {survey}>
+            <SurveyCard.Report />
+          </SurveyCard>
         </div>
 
         {/* Survey Info */}

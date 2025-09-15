@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import Form from '../../html/Form.jsx';
+import { useState } from 'react';
 import ModalStyle from '../ModalStyle.jsx';
 import useAsync from '../../../hooks/useAsync.js';
 import Button from '../../html/Button.jsx';
 import { fetchApi } from '../../../utils/fetchApi.js';
 import { useDispatch } from 'react-redux';
+import { updateUser } from '../../../state/slice/user.js';
 
 const EditUsername = ({onClose = () => {}, previousUsername = ''}) => {
   const [username, setUsername] = useState('');

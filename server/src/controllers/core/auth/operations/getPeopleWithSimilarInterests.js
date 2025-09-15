@@ -1,7 +1,8 @@
 const { allowedUserFields } = require("../../../../data/allowedFields/user");
 const { verifySession } = require("../../../../middlewares/verification/verifySession");
 const User = require("../../../../models/user");
-const { catchError } = require("../../../../utils/errorHandlers/catchError")
+const { catchError } = require("../../../../utils/errorHandlers/catchError");
+const { getBadgeByPoint } = require("../../../../utils/getBadgeByPoint");
 
 
 const getPeopleWithSimilarInterests = async (req, res) => {
@@ -9,7 +10,7 @@ const getPeopleWithSimilarInterests = async (req, res) => {
     const users = await User.aggregate([
         { $match: { _id: { $ne: verifiedUser._id } } },
         { $addFields: {
-            commonInterests: { $setIntersection: ["$interests", verifiedUser.interests] },
+            commonInterests: { $setIntersection: ["$interests", verifiedUser.interests] }
         }}, {
             $match: { commonInterests: { $ne: [] } }
         }, 
@@ -17,11 +18,17 @@ const getPeopleWithSimilarInterests = async (req, res) => {
             $limit: 10
         },  {
             $project: {
-             ...allowedUserFields, commonInterests: 1,   }
+             ...allowedUserFields, commonInterests: 1   }
 
-        }]);
+        }])
+        const usersWithBadges = users.map((user) => {
+            return {
+                ...user, 
+                badge: getBadgeByPoint(user.point.current)
+            }
+        })
 
-    return res.status(200).json({ success: true, users } );
+    return res.status(200).json({ success: true, users: usersWithBadges } );
 }
 
 

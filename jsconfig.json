@@ -5,6 +5,7 @@
   },
   "include": [
     "client/src",
+    "server/server.js",
     "server/src"
   ]
 }

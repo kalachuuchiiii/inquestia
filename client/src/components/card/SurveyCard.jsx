@@ -127,7 +127,7 @@ SurveyCard.Demographics = () => {
   const genders = genderGroup.map((g) => capitalizeFirstLetter(g))
 
 
-  return <p className='text-sm opacity-40 p-2 backdrop-brightness-90 rounded-xl w-fit ' >
+  return <p className='text-sm opacity-40 p-2 rounded-xl w-full ' >
     <p>
       For ages {minAge} to {maxAge}
     </p>

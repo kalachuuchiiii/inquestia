@@ -20,7 +20,7 @@ const EditNickname = ({onClose = () => {}, previousNickname = ''}) => {
   }] = useAsync(async() => {
 
       const res = await fetchApi("patch", "/user/nickname", {
-        nickname: nickname.toString() || ''
+        nickname: typeof nickname === 'string' ? nickname?.toString() : ''
       });
       if(res?.success && res?.user){
         dispatch(updateUser({user: res.user}));

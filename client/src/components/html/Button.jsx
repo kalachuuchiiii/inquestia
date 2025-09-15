@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { MoonLoader } from 'react-spinners';
 
 const Button = ({
@@ -8,8 +9,9 @@ const Button = ({
   size = 20,
   disabled = false,
   type = "button",
-  color = "black",
 }) => {
+
+  const { mode } = useSelector(state => state.theme)
   return (
     <button
       disabled={disabled}
@@ -22,7 +24,7 @@ const Button = ({
       } w-full flex text-center justify-center h-10 items-center overflow-y-hidden truncate `}
     >
       {loadingState ? (
-        <MoonLoader color={color} size={size} />
+        <MoonLoader color='white' size={size} />
       ) : (
         <p className="w-full text-center flex justify-center items-center h-full">{children}</p>
       )}

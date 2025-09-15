@@ -36,16 +36,16 @@ const UpdatePasswordPage = () => {
   }
 
 return <div className = "h-96 w-full flex justify-center items-center">
-  <form onSubmit = {updatePassword} className = "pt-3 pb-8 px-3 w-11/12 sm:w-6/12 lg:w-4/12 rounded-lg gap-4 bg-zinc-900 space-y-2 flex flex-col">
+  <form onSubmit = {updatePassword} className = "pt-3 pb-8 px-3 w-11/12 sm:w-6/12 lg:w-4/12 rounded-lg gap-4 bg-neutral-100  shadow-md dark:bg-zinc-900 space-y-2 flex flex-col">
     <h1 className = "text-lg lato">Update your password</h1>
     <div className = "flex flex-col gap-1">
       <label className = "text-xs">New Password</label>
-      <input onChange = {handleChange} name = "password" value = {passForm.password} placeholder = "Password" className = "outline-none p-2 rounded-lg bg-zinc-700" />
+      <input onChange = {handleChange} name = "password" value = {passForm.password} placeholder = "Password" className = "outline-none p-2 rounded-lg dakr:bg-zinc-700" />
     </div>
     <div className = "flex flex-col gap-1">
       <label className = "text-xs">Confirm Password</label>
-      <input onChange = {handleChange} name = "confirmPassword" value = {passForm.confirmPassword} placeholder = "Confirm password" className = "outline-none p-2 rounded-lg bg-zinc-700" />
-      { isSuccess ? <p className="text-red-400 text-xs">Successfully updated your password</p> : error && <p className = "text-red-400 text-xs">{error}</p>}
+      <input onChange = {handleChange} name = "confirmPassword" value = {passForm.confirmPassword} placeholder = "Confirm password" className = "outline-none p-2 rounded-lg dark:bg-zinc-700" />
+      { isSuccess ? <p className="text-blue-600 text-xs">Successfully updated your password</p> : error && <p className = "text-red-400 text-xs">{error}</p>}
     </div>
     <div className = "w-full flex justify-end">
       <div className = "w-6/12">

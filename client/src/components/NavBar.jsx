@@ -1,6 +1,7 @@
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { memo } from "react";
+import { NavLink } from "react-router-dom";
 
 // Base NavBar wrapper
 const NavBar = memo(
@@ -33,13 +34,13 @@ NavBar.App = memo(({ disabled = false }) => {
   const textColor = mode === "Dark" ? "text-white" : "text-gray-900";
 
   return (
-    <p
+    <NavLink to = '/home'
       className={`font-bold text-xl tracking-tight select-none 
         transition-colors ${textColor} 
         ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
       Inquestia<span className="text-blue-600">.ask</span>
-    </p>
+    </NavLink>
   );
 });
 

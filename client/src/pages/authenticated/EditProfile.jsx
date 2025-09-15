@@ -20,7 +20,7 @@ import { fetchApi } from "../../utils/fetchApi.js";
 import { updateUser } from "../../state/slice/user.js";
 import { capitalize } from "../../utils/capitalize.js";
 import { capitalizeFirstLetter } from "../../utils/formatTopicQuery.js";
-import UpdateGender from "../../components/modals/edit/updateGender.jsx";
+import UpdateGender from "../../components/modals/edit/UpdateGender.jsx";
 
 const ProfileInput = ({ label, value, placeholder, onEditClick, readOnly = true }) => {
   const inputStyle = "outline-none w-full p-2";

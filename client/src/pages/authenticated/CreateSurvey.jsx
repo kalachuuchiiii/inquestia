@@ -11,7 +11,9 @@ import Button from '../../components/html/Button.jsx';
 import { useSelector } from 'react-redux';
 import TagsList from '../../components/lists/InterestTagList.jsx';
 import React from 'react';
-import GenderOptions from '../../components/genderOptions.jsx';
+import GenderOptions from '../../components/GenderOptions.jsx';
+
+//fixed
 
 const CreateSurvey = () => {
   const { user = {

@@ -27,7 +27,7 @@ const surveySchema = new mongoose.Schema(
     title: {
       type: String,
       minlength: [6, "Survey title must be at least 6 characters long."],
-      maxlength: [80, "Survey title cannot exceed 80 characters."],
+      maxlength: [150, "Survey title cannot exceed 150 characters."],
       required: [true, "Survey title is required."],
     },
     description: {
@@ -78,10 +78,6 @@ const surveySchema = new mongoose.Schema(
     },
     tags: {
       type: [String],
-      enum: {
-        values: interests,
-        message: "One or more tags are invalid.",
-      },
       validate: {
         validator: function (val) {
           return val.length >= 1 && val.length <= 5;
@@ -117,7 +113,6 @@ Survey.schema.path('questions').discriminator('select', selectTypeQuestionSchema
 
 const deleteAll = async () => {
    await Survey.deleteMany()
-
 }
 
 const indexes = async() => {
@@ -126,5 +121,6 @@ const indexes = async() => {
 }
 
 //deleteAll();
+
 mongoose.model("Question", questionSchema);
 module.exports = Survey;

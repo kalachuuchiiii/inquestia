@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchApi } from '../../utils/fetchApi.js';
 import useAsync from '../useAsync.js';
 import useFieldArray from '../useFieldArray.js';
@@ -8,6 +8,7 @@ import useFieldArray from '../useFieldArray.js';
 const useAnswerSurvey = () => {
   const { id } = useParams();
 const [survey, setSurvey] = useState(null)
+const nav = useNavigate();
   const [questionFields, setQuestionFields] = useState([]);
 
   const [getSurveyById, { isLoading, error, isSuccess}] = useAsync(async () => {
@@ -55,7 +56,7 @@ const [survey, setSurvey] = useState(null)
     });
     
     if(!res?.success)return; 
-    window.location.reload();
+    nav('/response-history')
     
   })
 

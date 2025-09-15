@@ -39,10 +39,6 @@ const useCreateSurvey = () => {
 
   const { id } = useParams();
 
-
-
-
-
   const [isModalOpen, openModal, closeModal, toggleModal] = useToggler();
   const addQuestion = (preset) => {
     setQuestions(prev => [...prev, { ...preset }]);
@@ -54,7 +50,7 @@ const useCreateSurvey = () => {
         targetRespondents: parseInt(surveyTagline.targetRespondents),
         ageGroup: {
           minAge: parseInt(surveyTagline?.ageGroup?.minAge || '8'),
-           maxAge: parseInt(surveyTagline?.ageGroup?.maxAge || '120')
+              maxAge: parseInt(surveyTagline?.ageGroup?.maxAge || '120')
         },
         questions,
       },
@@ -66,6 +62,8 @@ const useCreateSurvey = () => {
     nav("/profile");
     
   })
+
+
 
   const [saveSurveyAsDraft, { isLoading: isSavingAsDraft, isDraftSuccess, error: draftError }] = useAsync(async () => {
     await fetchApi('post', '/survey/create', {

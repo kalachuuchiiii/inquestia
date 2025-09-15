@@ -5,11 +5,13 @@ const mongoose = require("mongoose");
 const Survey = require("../../../../models/survey.js");
 const Answer = require("../../../../models/answer.js");
 const { monitorStreak } = require("../../../utils/survey/monitorStreak.js");
+const User = require("../../../../models/user.js");
 
 const submitAnswer = async(req, res, _, commit) => {
   const { verifiedUser } = req;
   const { answers, survey } = req.body;
-  const surveyData = await Survey.findById(survey._id); 
+  const surveyData = (await Survey.findById(survey._id))
+
   
   if(!surveyData){
     return res.status(400).json({
@@ -17,6 +19,14 @@ const submitAnswer = async(req, res, _, commit) => {
         message: "Survey not found."
       })
   }
+
+   const author = await User.findById(surveyData.user);
+   if(author._id.toString() === verifiedUser._id.toString()){
+    return res.status(400).json({
+      success: false, 
+      message: 'You cannot answer your own survey.'
+    })
+   }
   
   if(surveyData.closed || surveyData.hasReachedTargetRespondents || surveyData.respondents.length >= surveyData.targetRespondents){
     return res.status(400).json({
@@ -87,7 +97,7 @@ if (age < minAge || age > maxAge) {
       if(qst.isRequired && answer.length === 0){
         return res.status(400).json({
           success: false, 
-          message: "Oops! You missed a required question.4444444"
+          message: "Oops! You missed a required question."
         })
       }
       
@@ -99,7 +109,7 @@ if (age < minAge || age > maxAge) {
       }
       
     }
-     .2  
+    
       if(type === "select" && qst.type === "select"){
        if(!Array.isArray(answer)){
          return res.status(400).json({
@@ -154,16 +164,21 @@ if (age < minAge || age > maxAge) {
   surveyData.respondents.push(new mongoose.Types.ObjectId(verifiedUser._id));
   surveyData.totalRespondents += 1;
   surveyData.hasReachedTargetRespondents = surveyData.totalRespondents >= targetRespondents;
+   
+ 
+   author.point.current += 10;
+   author.point.highest = Math.max(author.point.current, author.point.highest)
   
   const newAns = new Answer(properFormat);
   const { session } = req;
-  
    const { modified } = monitorStreak({ user: verifiedUser });
   if(modified){
     await verifiedUser.save({session});
-  }
+  } 
+  await author.save({session})
   await surveyData.save({session});
   const data = await newAns.save({session});
+
   await commit();
   
   

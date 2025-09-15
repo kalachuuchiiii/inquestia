@@ -37,6 +37,7 @@ const createSurvey = async (req, res, _, commit) => {
   
   if (!surv) {
     const data = await new Survey({ ...survey, user: verifiedUser._id, isDraft, respondents: [] }).save({ session })
+    console.log(data)
     await commit();
     return res.status(200).json({
       success: true,

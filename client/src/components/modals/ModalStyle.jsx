@@ -7,7 +7,7 @@ const ModalStyle = ({label = "Verify your email.", displayCloseButton = true, on
   useScroll({freeze: true})
 
 
-return <AnimationWrapper className = "z-100 overflow-hidden fixed inset-0 backdrop-blur-xs" variants = "fade">
+return <AnimationWrapper className = "z-50 overflow-hidden fixed inset-0 backdrop-blur-xs" variants = "fade">
   <div className = "w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 mx-auto h-full flex justify-center items-center ">
      <main className = "bg-white shadow-xl dark:bg-zinc-900  w-full p-3 rounded-2xl space-y-7">
        <div className = "w-full text-center">

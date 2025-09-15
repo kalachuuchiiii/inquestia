@@ -38,7 +38,7 @@ const surveySchema = z.object({
   title: z
     .string()
     .min(6, "Survey title must be at least 6 characters long.")
-    .max(80, "Survey title cannot exceed 80 characters."),
+    .max(150, "Survey title cannot exceed 150 characters."),
   description: z
     .string()
     .min(10, "Survey description must be at least 10 characters long.")

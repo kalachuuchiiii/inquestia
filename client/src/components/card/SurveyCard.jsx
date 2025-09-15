@@ -203,10 +203,10 @@ SurveyCard.OptionButton = ({ size = 20 }) => {
   return (
     <button
       onClick={toggle}
-      className="shrink-0 z-30 flex justify-center items-center p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition"
+      className="shrink-0  flex justify-center items-center p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition"
     >
       {isOptionOpen ? (
-        <IoCloseOutline size={size} className="text-white" />
+        <IoCloseOutline size={size} className=" text-white" />
       ) : (
         <BsThreeDotsVertical
           size={size}

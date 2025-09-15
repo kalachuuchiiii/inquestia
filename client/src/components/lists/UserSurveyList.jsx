@@ -58,7 +58,7 @@ const UserSurveyList = () => {
                   <SurveyCard.Preview />
                 </div>
                 {!survey.closed && (
-                  <div className="col-span-1 col-start-12 w-full flex justify-center h-full items-center z-100">
+                  <div className="col-span-1 col-start-12 w-full flex justify-center h-full items-center z-40">
                     <SurveyCard.OptionButton />
                   </div>
                 )}

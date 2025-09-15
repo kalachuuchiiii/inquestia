@@ -55,16 +55,24 @@ const ProfileInput = ({ label, value, placeholder, onEditClick, readOnly = true 
 // 🔹 Manage which modal is active
 const ModalManager = ({ activeModal, close, user }) => {
   const modals = {
-    nickname: <EditNickname previousNickname={user.nickname || user.username} onClose={close} />,
-    username: <EditUsername previousUsername={user.username} onClose={close} />,
+    nickname: (
+      <EditNickname
+        previousNickname={user?.nickname || user?.username || ""}
+        onClose={close}
+      />
+    ),
+    username: (
+      <EditUsername previousUsername={user?.username || ""} onClose={close} />
+    ),
     bio: <EditBio previousBio={user.bio} onClose={close} />,
     password: <ChangePasswordModal onClose={close} />,
     avatar: <ChangeAvatarModal onClose={close} />,
-    gender: <UpdateGender onClose={close} />
-    
+    gender: <UpdateGender onClose={close} />,
   };
 
-  return <AnimatePresence>{activeModal && modals[activeModal]}</AnimatePresence>;
+  return (
+    <AnimatePresence>{activeModal && modals[activeModal]}</AnimatePresence>
+  );
 };
 
 
@@ -138,7 +146,7 @@ const EditProfile = () => {
         <div className="mt-2 flex  justify-between">
            <div>
             <label className="text-xs">Gender</label>
-            <p className="outline-none w-full p-2" >{capitalizeFirstLetter(user.gender)}</p>
+            <p className="outline-none w-full p-2" >{capitalizeFirstLetter(user?.gender || '')}</p>
            </div>
            <button onClick={() => setActiveModal("gender")} className="p-5">
               <HiMiniPencil />
@@ -169,7 +177,7 @@ const EditProfile = () => {
             <div className="text-xs grid grid-cols-2 opacity-50">
               {user?.interests?.length > 0 &&
                 user.interests.map((interest, idx) => (
-                  <p key={idx}>{capitalize(interest)}</p>
+                  <p key={idx}>{capitalizeFirstLetter(interest)}</p>
                 ))}
             </div>
           </div>

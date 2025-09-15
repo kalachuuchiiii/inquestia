@@ -13,7 +13,7 @@ import SearchPage from './pages/authenticated/SearchPage.jsx';
 import QuerySurvey from './components/lists/QuerySurvey.jsx';
 import QueryUsers from './components/lists/QueryUsers.jsx';
 import AuthenticatedLayout from './layout/Authenticated.jsx';
-import AdminPage from './pages/admin/index.jsx';
+import AdminPage from './pages/admin/Index.jsx';
 import RequestAnalyticsTable from './pages/admin/RequestAnalyticsTable.jsx';
 import ReportedSurveys from './pages/admin/ReportedSurveys.jsx';
 import ReportedUsers from './pages/admin/ReportedUsers.jsx';

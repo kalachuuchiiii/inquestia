@@ -13,6 +13,8 @@ const Onboarding = () => {
   const [selectedInterests, setSelectedInterests] = useState(
     user?.interests || []
   );
+
+  //int
   const dispatch = useDispatch();
 
   const [saveInterests, { isLoading, error }] = useAsync(async () => {

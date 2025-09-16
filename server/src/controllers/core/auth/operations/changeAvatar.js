@@ -14,10 +14,11 @@ const changeAvatar = async (req, res) => {
   const { verifiedUser } = req;
   const { avatar_public_id = null } = verifiedUser;
 
-  const { url, public_id } = await uploadImage(req.file.path);
-  if (avatar_public_id) {
-    await deleteImage(avatar_public_id);
-  }
+  const [ {url, public_id } ] = await Promise.all([
+     uploadImage(req.file.path), 
+     avatar_public_id ? deleteImage(avatar_public_id) : null
+  ])
+  
   verifiedUser.avatar = url;
   verifiedUser.avatar_public_id = public_id;
 

@@ -1,5 +1,5 @@
 export const capitalizeFirstLetter = (word) => {
-  const firstLetter = typeof word === 'string' ? word.toString().toUpperCase() : ''
+  const firstLetter = word.toString()[0].toUpperCase();
   const lettersAfterTheFirst = word.substring(1);
   
   return `${firstLetter}${lettersAfterTheFirst}`;

@@ -7,12 +7,14 @@ import { fetchApi } from "../../utils/fetchApi.js";
 import { updateUser } from "../../state/slice/user.js";
 import InterestTagList from "../../components/lists/InterestTagList.jsx";
 import AnimationWrapper from "../../components/AnimationWrapper.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Onboarding = () => {
   const { user = { interests: [] } } = useSelector((state) => state.user);
   const [selectedInterests, setSelectedInterests] = useState(
     user?.interests || []
   );
+  const nav = useNavigate()
 
   //int
   const dispatch = useDispatch();
@@ -23,6 +25,8 @@ const Onboarding = () => {
     });
     if (res?.success && res?.user) {
       dispatch(updateUser({ user: res.user }));
+      nav('/home')
+
     }
   });
 

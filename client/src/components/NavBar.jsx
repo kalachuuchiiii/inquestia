@@ -46,7 +46,7 @@ NavBar.App = memo(({ disabled = false }) => {
 });
 
 import { useState, useRef, useEffect } from "react";
-import NotificationDropdown from "./dropdown/notificationDropdown";
+import NotificationDropdown from "./dropdown/NotificationDropdown";
 
 
 import { FaBolt } from "react-icons/fa6";

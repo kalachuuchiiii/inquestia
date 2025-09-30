@@ -2,6 +2,7 @@ const transporter = require("../../config/nodemailer/index.js");
 
 exports.sendEmail = async ({ to, subject, html }) => {
   try {
+    console.log(to, subject, html);
    
     const info = await transporter.sendMail({
       from: `parissrowlet@gmail.com`, 

@@ -14,6 +14,7 @@ exports.sendEmail = async ({ to, subject, html }) => {
 
     return { success: true, data: info };
   } catch (error) {
+    console.log(error)
     return { success: false, error: error.message };
   }
 };

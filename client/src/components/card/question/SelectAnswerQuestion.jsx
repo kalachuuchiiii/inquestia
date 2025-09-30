@@ -12,7 +12,7 @@ const SelectAnswerQue = ({ question = {
   question: '',
   multipleChoice: false,
   answers: [],
-}, id = 1, setQuestions = () => { }, className = '', children = null }) => {
+}, id = 1, setQuestions = () => { }, className = 'w-full', children = null }) => {
   const [choice, setChoice] = useState('');
   const [error, setError] = useState('');
 
@@ -187,12 +187,5 @@ SelectAnswerQue.AddOption = () => {
         </div>
 }
 
-SelectAnswerQue.ErrorDisplay = () => {
-  const { error = '' } = useCTX(SelectAnswerContext)
-  
-  return <>
-    { error && <p className = "text-xs text-red-400">{error}</p>}
-  </>
-}
 
 export default SelectAnswerQue

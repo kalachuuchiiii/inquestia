@@ -63,11 +63,10 @@ const ReportSurveyModal = ({surveyTitle = null, surveyId = null, onClose = () =>
           value={reportForm.specificReason}
         />
       </div>
-      {isSuccess ? <p className="text-xs text-blue-400">
+      {isSuccess && <p className="text-xs text-blue-400">
           Successfully reported!
-      </p> : error && <p className="text-xs text-red-400">
-        {error}
-        </p>}
+      </p>}
+        
       <Button onClick={handleReport} loadingState = {isLoading} disabled = {isLoading}>Report</Button>
     </ModalStyle>
   );

@@ -10,9 +10,9 @@ import UnauthorizedModal from '../components/modals/UnauthorizedModal.jsx';
 import UsersWithSameInterests from "../components/lists/UsersWithSameInterests.jsx";
 
 const AuthenticatedLayout = () => {
-  const [isSidebarOpen, setIsSideBarOpen] = useState(window.innerWidth >= 720);
+  const [isSidebarOpen, setIsSideBarOpen] = useState(window.screenSize >= 1024);
   const { user = {}, isAuthenticated, isProcessOK } = useSelector(state => state.user);
-  const [isLargeScreen] = useWindow({ screenSize: 720 });
+  const [isLargeScreen] = useWindow({ screenSize: 1024});
   const [isUnauthorizedModalOpen, setIsUnauthorizedModalOpen] = useState(false);
 
   useEffect(() => {
@@ -22,41 +22,33 @@ setIsUnauthorizedModalOpen(true)
 
   return (
     <div className="h-screen w-full  ">
-      <AnimatePresence>
-        {isUnauthorizedModalOpen && <UnauthorizedModal />}
-      </AnimatePresence>
-      <div className="w-full items-start flex">
-        <AnimatePresence>
-          {(isLargeScreen || isSidebarOpen) && (
-            <Sidebar
-              isLargeScreen={isLargeScreen}
-              onClose={() => setIsSideBarOpen(false)}
-            />
-          )}
-        </AnimatePresence>
+      <div className="w-full items-center justify-center h-full flex">
+        {isAuthenticated && (
+          <Sidebar
+            isLargeScreen={isLargeScreen}
+            onClose={() => setIsSideBarOpen(false)}
+          />
+        )}
 
-        <div className="w-full  transition-all duration-200">
-          <NavBar>
-            <div>
-              {!isSidebarOpen && !isLargeScreen && (
-                <NavBar.Relate>
-                  <NavBar.SideBarToggler
-                    onToggleSidebar={() => setIsSideBarOpen((prev) => !prev)}
-                    size="30"
-                  />
-                  <NavBar.App color="white" />
-                </NavBar.Relate>
-              )}
-            </div>
-            <UserIcon user={user}>
-              <UserIcon.Avatar className="ml-4" size="8" />
-            </UserIcon>
-          </NavBar>
-          <div className="w-full justify-evenly  flex min-h-screen ">
+        {isLargeScreen && isAuthenticated && <UsersWithSameInterests />}
+        <div className="w-full lg:w-9/12 mr-2 lg:mr-8 rounded-2xl bg-white dark:bg-[#101012] shadow-2xl dark:shadow-black/40">
+          <div className="w-full  transition-all duration-200">
+            <NavBar>
+              {isLargeScreen ? <NavBar.App /> : <div />}
+              <NavBar.Relate gap="gap-6">
+                <NavBar.Points />
+                <UserIcon user={user}>
+                  <UserIcon.Avatar size="8" />
+                </UserIcon>
+                <NavBar.NotificationBell></NavBar.NotificationBell>
+              </NavBar.Relate>
+            </NavBar>
+
             <div className="w-full">
-              <Outlet />
+              <div className="lg:w-10/12 lg:p-4   w-full p-2 overflow-x-hidden outline-none overflow-y-auto mx-auto h-170 ">
+                <Outlet />
+              </div>
             </div>
-            { isLargeScreen && <UsersWithSameInterests /> }
           </div>
         </div>
       </div>

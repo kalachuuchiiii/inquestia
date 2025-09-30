@@ -4,11 +4,14 @@ import ModalStyle from './ModalStyle';
 import Button from '../html/Button';
 import { fetchApi } from '../../utils/fetchApi';
 
-const PointDeductionModal = ({onClose = () => {}, userPoint, userId, username}) => {
+const PointDeductionModal = ({onClose = () => {}, userPoint = null, userId = null, reportId = null, username = null}) => {
     const [pointsToDeduct, setPointsToDeduct] = useState(0)
   const [deductUsersPoints, { isLoading, error, isSuccess }] = useAsync(
     async () => {
-      const res = await fetchApi("patch", `/admin/deduct/${userId}`);
+      const res = await fetchApi("patch", `/admin/deduct/${userId}/`, {
+       reportId, 
+       pointsToDeduct
+      });
       console.log(res);
     }
   );
@@ -36,10 +39,8 @@ const PointDeductionModal = ({onClose = () => {}, userPoint, userId, username}) 
           <p className="text-xs">To be</p>
           <p>{userPoint - pointsToDeduct}</p>
         </div>
-        {isSuccess ? (
+        {isSuccess && (
           <p className="text-xs text-blue-600">Deducted successfully</p>
-        ) : (
-          error && <p className="text-xs text-red-400">{error}</p>
         )}
         <Button onClick = {deductUsersPoints} disabled = {isLoading} loadingState={isLoading}>Deduct</Button>
       </main>

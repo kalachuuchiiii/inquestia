@@ -1,44 +1,39 @@
 const Survey = require('../../../../models/survey.js');
-const mongoose = require('mongoose');
-const { getNextPage } = require('../../../../utils/getNextPage.js');
+const mongoose = require('mongoose')
 const { verifySession } = require('../../../../middlewares/verification/verifySession.js');
 const { getPageParam } = require('../../../../middlewares/pagination/getPageParam.js');
 const { catchError } = require('../../../../utils/errorHandlers/catchError.js');
 const { allowedSurveyFields } = require("../../../../data/allowedFields/survey.js");
+const { default: z } = require('zod');
 
+
+const seenIdsSchema = z.array(z.string());
 const getSurveyList = async (req, res) => {
-  const { skip, limit, page } = req.paginationParams;
+  const { skip } = req.paginationParams;
+
   const { interests } = req.verifiedUser;
-const { verifiedUser, userAge } = req;
-  const seenSurveys = JSON.parse(req?.query?.seenSurveys || "[]");
+  const seenIds = seenIdsSchema.parse(
+    JSON.parse(req?.query?.seenIds || "[]")
+  );
+  const { verifiedUser } = req;
 
-
-  const alreadySeenSurveysIds = seenSurveys?.length > 0 ? seenSurveys.map(({ _id }) => mongoose.Types.ObjectId(_id)) : [];
 
 
 
   const [totalSurveys, surveys] = await Promise.all([
     Survey.countDocuments({
       hasReachedTargetRespondents: false,
-      tags: {
-        $in: interests,
-      },
       respondents: {
         $nin: [verifiedUser._id],
       },
       closed: false,
       isDraft: false,
-      "ageGroup.minAge": { $lte: userAge },
-      "ageGroup.maxAge": { $gte: userAge },
     }),
     Survey.aggregate([
       {
         $match: {
           hasReachedTargetRespondents: false,
-          tags: { $in: interests },
-          _id: { $nin: alreadySeenSurveysIds },
-          "ageGroup.minAge": { $lte: userAge },
-          "ageGroup.maxAge": { $gte: userAge },
+          _id: { $nin: seenIds.map((id) => new mongoose.Types.ObjectId(id)) },
           respondents: {
             $nin: [verifiedUser._id],
           },
@@ -47,20 +42,33 @@ const { verifiedUser, userAge } = req;
         },
       },
       {
-        $skip: skip,
-      },
-      {
-        $limit: limit,
-      },
-      {
         $addFields: {
-          randomSeed: { $rand: {} },
+          algoScore: {
+            $add: [
+              { $multiply: [{ $rand: {} }, { $add: ["$booster", 1] }] },
+              {
+                $multiply: [
+                  {
+                    $rand: {},
+                  },
+                  {
+                    $size: {
+                      $setIntersection: ["$tags", verifiedUser.interests],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
         },
       },
       {
         $sort: {
-          randomSeed: 1,
+          algoScore: -1,
         },
+      },
+      {
+        $limit: 4,
       },
       {
         $lookup: {
@@ -78,11 +86,12 @@ const { verifiedUser, userAge } = req;
       },
     ]),
   ]);
-  const nextPage = getNextPage(totalSurveys, page, limit);
+  const nextPage = req.getNextPage(totalSurveys);
 
   return res.status(200).json({
     success: true,
     surveys,
+    totalSurveys,
     nextPage
   })
 }

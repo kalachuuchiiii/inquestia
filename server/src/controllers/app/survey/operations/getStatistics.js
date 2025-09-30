@@ -47,15 +47,7 @@ const getStatistics = async (req, res) => {
    const statistics = await Promise.all(statisticsPromise);
 
 
-     
-   if (questionsWithOptions.length === 0) {
-     return res.status(400).json({ 
-        success: false, 
-        message: "No questions with selectable options found in this survey."
-      });
-   }
-
-   return res.status(200).json({ success: true, statistics });
+   return res.status(200).json({ success: true, statistics, survey });
 }
 
 module.exports = build => {

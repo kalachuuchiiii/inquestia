@@ -7,8 +7,6 @@ const useRegister = () => {
     email: '', 
     username: '', 
     password: '', 
-    birthdate: new Date().toISOString(), 
-    gender: 'male'
   });
   const [code, setCode] = useState(0);
   

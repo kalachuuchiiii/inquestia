@@ -1,6 +1,7 @@
 const Survey = require('../../../../models/survey.js');
 const { verifyObjectId } = require('../../../../middlewares/verification/verifyObjectId.js');
 const { catchError } = require('../../../../utils/errorHandlers/catchError.js');
+const { getBadgeByPoint } = require('../../../../utils/getBadgeByPoint.js');
 
 const getSurveyById = async(req, res) => {
   const { verifiedId } = req; 
@@ -12,6 +13,8 @@ const getSurveyById = async(req, res) => {
       message: 'Survey not found.'
     })
   }
+
+  survey.user.badge = getBadgeByPoint(survey.user.core.current);
   
   return res.status(200).json({
    success: true, 

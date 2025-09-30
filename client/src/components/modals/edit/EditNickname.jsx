@@ -45,7 +45,7 @@ return (
       <p className="opacity-50 text-sm">
         A nickname for everyone to identify you as
       </p>
-      {error && <p className="text-xs text-red-400">{error}</p>}
+     
     </div>
     <div className="my-1 w-full flex justify-end">
       <Button loadingState={isLoading} onClick={saveNickname}>

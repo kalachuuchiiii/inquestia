@@ -70,24 +70,28 @@ const ViewProfilePage = () => {
         {isReporting && (
           <ReportUserModal
             username={userProfile.username}
-            userId = {userProfile._id}
+            userId={userProfile._id}
             onClose={() => setIsReporting(false)}
           />
         )}
       </AnimatePresence>
       <div className="p-3 w-full">
         <div className="space-y-4 flex justify-between p-3 gap-2 items-start w-full">
-          {userProfile && <div className="w-full">
-            <UserCard user={userProfile} />
+          {userProfile && (
+            <div className="w-full">
+              <UserCard user={userProfile} />
             </div>
-            }
-          <button className="shrink-0 p-2" onClick = {() => setIsReporting((prev) => !prev)}>
-            <GoReport size = {26} />
+          )}
+          <button
+            className="shrink-0 p-2"
+            onClick={() => setIsReporting((prev) => !prev)}
+          >
+            <GoReport size={26} />
           </button>
         </div>
-        {userSurveys?.length > 0 && (
+        {userSurveys?.length > 0 ? (
           <>
-            <div className="p-3 my-2 w-full border-b-1 border-b-neutral-100 text-center">
+            <div className="p-3 my-2 w-full text-left">
               <p>Surveys ({totalUserSurvey})</p>
             </div>
             <div>
@@ -103,8 +107,16 @@ const ViewProfilePage = () => {
               })}
             </div>
           </>
+        ) : (
+          <p className="text-center w-full">No surveys yet.</p>
         )}
-        {isFetchingSurvey && <SurveyCardPlaceholder />}
+        {isFetchingSurvey ? (
+          <SurveyCardPlaceholder />
+        ) : (
+          nextPage === null && userSurveys.length > 0 && (
+            <div className="w-full text-center p-2">You've reached the end</div>
+          )
+        )}
         <div ref={ref} />
       </div>
     </>

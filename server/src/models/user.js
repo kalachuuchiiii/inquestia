@@ -55,7 +55,7 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
     nickname: {
-      maxlength: 20,
+      maxlength: [26, `Nickname must not exceed 26 characters.`],
       type: String,
       validate: {
         validator: nicknameValidator,
@@ -72,11 +72,6 @@ const userSchema = new mongoose.Schema(
       maxlength: [100, "Bio can only contain 100 characters"],
       default: "",
     },
-    gender: {
-      type: String,
-      enum: ["male", "female", "transgender", "non-binary", "other"],
-      required: true,
-    },
     interests: {
       type: [String],
       enum: interests,
@@ -92,7 +87,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: () => new Date(),
     },
-    point: {
+    core: {
       highest: {
         type: Number,
         default: 0,
@@ -129,31 +124,15 @@ const userSchema = new mongoose.Schema(
       },
       index: true,
     },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-    birthdate: {
-      type: Date,
-      required: true,
-    },
-    isBirthdayModified: {
-      type: Boolean,
-      default: false,
-    },
-    lastInterestChange: {
-      type: Date,
-      default: null,
-    },
-    lastGenderChange: {
-      type: Date,
-      default: () => new Date(),
-    },
     isFinishedOnboarding: {
       type: Boolean,
       default: false,
     },
-  },
+    boosterPoint:  {
+     type: Number, 
+     default: 0, 
+     max: 100
+    }  },
   { timestamps: true }
 );
 
@@ -163,8 +142,6 @@ const deleteAll = async () => {
   const inf = await User.deleteMany();
   console.log(inf);
 }
-
-console.log(Object.keys(User.schema.paths))
 
 //deleteAll();
 

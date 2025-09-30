@@ -5,6 +5,7 @@ import { generalReportReasons } from "../../data/generalReportReasons"
 import Button from "../html/Button"
 import useAsync from "../../hooks/useAsync"
 import { fetchApi } from "../../utils/fetchApi"
+import { createPortal } from "react-dom"
 
 
 
@@ -31,7 +32,7 @@ const ReportUserModal = ({username = null, userId = null, onClose = () => {}}) =
 
 
   return (
-    <ModalStyle onClose={onClose} label="Report a Survey">
+    <ModalStyle onClose={onClose} label="Report a User">
       <p>
         Please confirm the issue with user{" "}
         <span className="font-semibold text-blue-500">“{username}”</span>.
@@ -45,7 +46,7 @@ const ReportUserModal = ({username = null, userId = null, onClose = () => {}}) =
             className={` text-sm ${
               reportForm.generalReason === reason
                 ? " bg-blue-100 text-blue-400 dark:bg-blue-900/40"
-                : "bg-zinc-200 text-neutral-100 dark:bg-zinc-800"
+                : "bg-zinc-200 text-zinc-950 dark:text-neutral-100 dark:bg-zinc-800"
             }  rounded-lg p-2 w-full `}
             onClick={handleChange}
           >
@@ -54,7 +55,9 @@ const ReportUserModal = ({username = null, userId = null, onClose = () => {}}) =
         ))}
       </div>
       <div>
-        <p className="text-sm">Can you tell us more about the issue about {username}?</p>
+        <p className="text-sm">
+          Can you tell us more about the issue about {username}?
+        </p>
         <Textarea
           placeholder="e.g., This user uses offensive language targeting a group of people."
           className="dark:bg-zinc-800 bg-zinc-200 rounded-lg"
@@ -63,12 +66,16 @@ const ReportUserModal = ({username = null, userId = null, onClose = () => {}}) =
           value={reportForm.specificReason}
         />
       </div>
-      {isSuccess ? <p className="text-xs text-blue-400">
-          Successfully reported!
-      </p> : error && <p className="text-xs text-red-400">
-        {error}
-        </p>}
-      <Button onClick={handleReport} loadingState = {isLoading} disabled = {isLoading}>Report</Button>
+      {isSuccess && (
+        <p className="text-xs text-blue-400">Successfully reported!</p>
+      )}
+      <Button
+        onClick={handleReport}
+        loadingState={isLoading}
+        disabled={isLoading}
+      >
+        Report
+      </Button>
     </ModalStyle>
   );
 }

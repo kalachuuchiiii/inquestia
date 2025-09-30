@@ -24,7 +24,7 @@ const handleClick = (choice) => {
 }
 
 return (
-  <div className="px-3 py-6">
+  <div className="px-3 py-6 w-full">
     <div>
       <div className="flex gap-1 items-start">
         {question.isRequired && <p className="text-xs text-red-400 px-1">*</p>}

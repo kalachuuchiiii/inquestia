@@ -3,8 +3,8 @@ import ExternalLinkCard from "../card/ExternalLinkCard.jsx";
 
 const ExternalLinksList = ({ externalLinks = [], hideDeleteButton = false }) => {
   return (
-    <section className="space-y-3">
-      <div className="flex items-center gap-1 text-base font-medium">
+    <section className="space-y-3 w-full">
+      <div className="flex items-center w-full gap-1 text-base font-medium">
         <span>External Links</span>
         <PiShareNetworkThin />
       </div>
@@ -19,7 +19,7 @@ const ExternalLinksList = ({ externalLinks = [], hideDeleteButton = false }) => 
             />
           ))
         ) : (
-          <p className="w-full text-center opacity-50">
+          <p className="w-full text-left opacity-50">
             No external links added yet.
           </p>
         )}

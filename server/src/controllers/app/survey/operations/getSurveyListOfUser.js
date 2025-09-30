@@ -3,11 +3,9 @@ const { catchError } = require('../../../../utils/errorHandlers/catchError.js');
 const { getPageParam } = require('../../../../middlewares/pagination/getPageParam.js');
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
 const Survey = require("../../../../models/survey.js");
-const { getNextPage } = require('../../../../utils/getNextPage.js');
-
 
 const getSurveyListOfUser = async(req, res) => {
-  const { skip, limit, page } = req.paginationParams;
+  const { skip, limit } = req.paginationParams;
   const { verifiedUser } = req;
   const isDraft = JSON.parse(req?.query?.isDraft || "false")
 
@@ -23,7 +21,7 @@ const getSurveyListOfUser = async(req, res) => {
     Survey.find({ user: verifiedUser._id, isDraft }).sort({ createdAt: -1 }).skip(skip).limit(limit).populate("user", "-password").lean()
     ])
     
-    const nextPage = getNextPage(totalSurveys, page, limit);
+    const nextPage = req.getNextPage(totalSurveys);
   
   return res.status(200).json({
    success: true, 

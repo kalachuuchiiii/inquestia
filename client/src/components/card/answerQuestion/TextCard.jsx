@@ -3,7 +3,7 @@ import useCTX from '../../../hooks/useCTX.js';
 import { AnswerQuestionContext } from '../../../context/answerQuestionContext.js';
 const TextCard = ({question = {
 }, index = 1}) => {
-  const { type, _id } = question;
+  const { _id } = question;
   const {
     modifyFieldById = () => {}, 
     getFieldById = () => {}
@@ -19,9 +19,10 @@ const TextCard = ({question = {
       }
     },_id)
   }
+
   
 
-return <div className = " px-3 py-6">
+return <div className = " px-3 py-6 w-full">
   <div>
     <div className = "" >
       <div className = "flex gap-1 items-start">

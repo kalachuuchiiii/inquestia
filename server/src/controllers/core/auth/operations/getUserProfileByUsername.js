@@ -24,7 +24,7 @@ const getUserProfileByUsername = async(req, res) => {
   
   const userProfile = await User.findOne({ username: username.trim().toLowerCase() }).select("-password -email -gender -birthdate ").lean();
 
-  userProfile.badge = getBadgeByPoint(userProfile.point.current)
+  userProfile.badge = getBadgeByPoint(userProfile.core.current)
   
   if(!userProfile){
     return res.status(400).json({

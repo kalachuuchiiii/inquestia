@@ -1,8 +1,7 @@
 const { decodeToken } = require("../../utils/auth/jwt.methods.js")
 const User = require("../../models/user.js");
 const { catchError } = require("../../utils/errorHandlers/catchError.js");
-const { calculateAge } = require("../../utils/calculateAge.js");
-const { getBadgeByPoint } = require("../../utils/getBadgeByPoint.js");
+const { isStillBanned } = require("../../utils/isStillBanned.js");
 
 exports.verifySession = catchError(async(req, res, next) => {
   const token = req?.cookies?.token || null;
@@ -27,8 +26,9 @@ exports.verifySession = catchError(async(req, res, next) => {
 
   
   
-  req.verifiedUser = await User.findById(decoded.user).select('-password').populate("streak");
-  if(!req.verifiedUser){
+  const user = await User.findById(decoded.user).select('-password').populate("streak");
+  
+  if(!user){
     return res.status(400).json({
       success: false, 
       message: "User not found.", 
@@ -36,7 +36,18 @@ exports.verifySession = catchError(async(req, res, next) => {
     })
   }
 
-  req.userAge = calculateAge(req.verifiedUser.birthdate);
-  req.userBadge =  getBadgeByPoint(req.verifiedUser.point.current)
-  next();
+   const { isBanned, remainingBanDurationInDays, remainingBanDurationInMinutes, remainingBanDurationInHour } = isStillBanned(user?.bannedAt, user?.banDuration);
+
+     if(isBanned){
+
+      const format = `Your account has been banned. Remaining time: ${remainingBanDurationInDays} day(s) or ${remainingBanDurationInHour} hour(s) or ${remainingBanDurationInMinutes} minute(s)`;
+
+      return res.status(400).json({
+        success: false,
+        message: format,
+      });
+    }
+    req.verifiedUser = user;
+  
+  return next();
 });

@@ -2,7 +2,6 @@ const Survey = require("../../../../models/survey.js");
 const { getPageParam } = require("../../../../middlewares/pagination/getPageParam.js");
 const { allowedSurveyFields } = require("../../../../data/allowedFields/survey.js");
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
-const { getNextPage } = require("../../../../utils/getNextPage.js");
 
 const searchSurvey = async (req, res) => {
   const { q = '' } = req.params;
@@ -107,7 +106,7 @@ const searchSurvey = async (req, res) => {
     ])
   ]);
 
-  const nextPage = getNextPage(totalSurveys, page, limit);
+  const nextPage = req.getNextPage(totalSurveys);
 
   return res.status(200).json({
     success: true,

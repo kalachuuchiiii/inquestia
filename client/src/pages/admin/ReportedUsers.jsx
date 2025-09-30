@@ -36,7 +36,7 @@ const ReportedUsers = () => {
   }, [inView]);
 
   return (
-    <div className="p-6 w-full  mx-auto bg-neutral-100 dark:bg-zinc-950 min-h-screen">
+    <div className="p-6 w-full  mx-auto  min-h-screen">
       <div className="mb-6 w-full flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
           Reported Users
@@ -50,9 +50,9 @@ const ReportedUsers = () => {
         {reportedSurveys.length > 0 ? (
           reportedSurveys.map((report) => (
             <ReportedCard key={report._id} report={report}>
-              <div className="flex gap-2 shrink-0 ">
+              <div className="flex flex-col gap-2 w-full ">
                 <UserProfileCard  user = {report.reportedEntity.entityId} />
-                <div className="flex flex-col  gap-2 my-2">
+                <div className="flex flex-col shrink-1  gap-2 ">
                   <ReportedCard.BanButton />
                   <ReportedCard.DeductPointButton />
                 </div>

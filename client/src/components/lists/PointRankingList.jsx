@@ -8,7 +8,7 @@ const PointRankingList = () => {
   const [currentHighest, setCurrentHighest] = useState([]);
   const [allTimeHigh, setAllTimeHigh] = useState([]);
   const [userRank, setUserRank] = useState({
-    point: { highest: 0, current: 0 },
+    core: { highest: 0, current: 0 },
     rank: 1,
   });
 
@@ -44,7 +44,7 @@ const PointRankingList = () => {
       <div className="text-center w-full">
         <h1 className="text-3xl font-bold lato">Hall of Famers</h1>
         <p className="opacity-80">
-          These users racked up the most points — keep answering to rise in the
+          These users racked up the most cores — keep answering to rise in the
           leaderboard!
         </p>
       </div>
@@ -78,17 +78,13 @@ const PointRankingList = () => {
         <div className="grid place-items-center grid-cols-10 p-2 border-b border-neutral-200 dark:border-neutral-700 text-sm font-semibold">
           <p className="col-span-1 col-start-1">Rank</p>
           <p className="col-span-7 col-start-2">User</p>
-          <p className="col-span-2 col-start-9 text-right">Points</p>
+          <p className="col-span-2 col-start-9 text-right">Cores</p>
         </div>
 
         <div className="min-h-[24rem] p-4">
           {isLoading ? (
             <div className="w-full text-sm opacity-60 text-center">
               Preparing the leaderboard...
-            </div>
-          ) : error ? (
-            <div className="text-red-500 text-center text-sm">
-              Failed to load leaderboard.
             </div>
           ) : ranklist.length > 0 ? (
             ranklist.map((user, i) => (
@@ -113,13 +109,11 @@ const PointRankingList = () => {
               #{userRank.rank}
             </span>{" "}
             with{" "}
-            {userRank.point[isAllTimeHigh ? "highest" : "current"] ?? 0} points!
+            {userRank.core[isAllTimeHigh ? "highest" : "current"] ?? 0} cores!
           </h1>
         </div>
-
-        {/* Footer note */}
         <p className="text-center text-xs opacity-50 mt-1">
-          Each month, current points are recalculated to 30%, keeping momentum
+          Each month, current cores are recalculated to 30%, keeping momentum
           while refreshing progress.
         </p>
       </div>

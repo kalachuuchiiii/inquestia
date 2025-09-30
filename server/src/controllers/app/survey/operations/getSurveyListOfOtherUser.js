@@ -2,7 +2,6 @@ const { verifyObjectId } = require("../.././../../middlewares/verification/verif
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
 const { getPageParam } = require('../../../../middlewares/pagination/getPageParam.js');
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
-const { getNextPage } = require("../../../../utils/getNextPage.js");
 const Survey = require("../../../../models/survey.js");
 
 const getSurveyListOfOtherUser = async(req, res) => {
@@ -19,7 +18,7 @@ const getSurveyListOfOtherUser = async(req, res) => {
     })
     ])
     
-    const nextPage = getNextPage(totalSurveys, page, limit);
+    const nextPage = req.getNextPage(totalSurveys);
     
     return res.status(200).json({
      success: true, 

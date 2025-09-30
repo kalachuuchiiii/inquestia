@@ -57,11 +57,9 @@ const BanUserModal = ({onClose = () => {}, username = null, userId = null, repor
           </button>
         ))}
       </div>
-      {isSuccess ? (
+      {isSuccess && (
         <p className="text-xs text-blue-600">Banned successfully</p>
-      ) : (
-        error && <p className="text-xs text-red-400">{error}</p>
-      )}
+      ) }
       <Button onClick={banUser} disabled={isLoading} loadingState={isLoading}>
         Ban
       </Button>

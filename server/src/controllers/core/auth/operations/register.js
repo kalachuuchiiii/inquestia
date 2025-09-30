@@ -12,7 +12,7 @@ const register = async(req, res) => {
   const user = req.user; 
 
   const seed = Math.random().toString(36).substring(7);
-const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
+const avatarUrl = `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}`;
 
   const newUser = await new User({...user, avatar: avatarUrl}).save();
   

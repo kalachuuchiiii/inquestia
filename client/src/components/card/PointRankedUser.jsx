@@ -1,7 +1,7 @@
 import UserHeader from "../UserIcon.jsx";
 
 const PointRanked = ({ user = {}, sort = "current" }) => {
-  const points = user?.point?.[sort] ?? 0;
+  const cores = user?.core?.[sort] ?? 0;
 
   return (
     <UserHeader
@@ -19,9 +19,7 @@ const PointRanked = ({ user = {}, sort = "current" }) => {
           <UserHeader.Username showAt className="text-sm opacity-70" />
         </div>
       </div>
-
-      {/* Points */}
-      <p className="col-span-2 text-right font-medium">{points}</p>
+      <p className="col-span-2 text-right font-medium">{cores}</p>
     </UserHeader>
   );
 };

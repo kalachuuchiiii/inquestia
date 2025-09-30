@@ -1,6 +1,5 @@
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
-const { executeAfterCooldown } = require("../../../../utils/executeAfterCooldown.js");
 const { getValidInterestTags } = require('../../../../utils/schema/getValidInterestTags.js');
 
 
@@ -33,43 +32,10 @@ const updateInterests = async (req, res) => {
   if(validInterests.length > 10){
     return res.status(400).json({
       success: false,
-      message: 'Please select no more than 10 interests.'
-    })
-  }
-
-  if(verifiedUser.lastInterestChange === null){
-    verifiedUser.interests = validInterests;
-    verifiedUser.isFinishedOnboarding = true;
-    verifiedUser.lastInterestChange = new Date();
-
-    const data = await verifiedUser.save();
-    const user = data.toObject();
-    delete user.password;
-
-    return res.status(200).json({
-      success: true,
-      user,
+      message: "Please select no more than 10 interests.",
     });
   }
-
-  const { executed, remainingTime } = executeAfterCooldown(() => {
-     verifiedUser.interests = validInterests;
-     verifiedUser.isFinishedOnboarding = true;
-     verifiedUser.lastInterestChange = new Date();
-  }, {
-    lastChange: verifiedUser.lastInterestChange, 
-    cooldownInMs: 1000 * 60 * 60 * 24 * 30
-  })
-
-  if(!executed){
-    return res.status(400).json({
-      success: false, 
-      message: `You can change your interests again after ${Math.floor(remainingTime / (1000 * 60 * 60 * 24
-    ))} day(s)`
-    })
-  }
-
- 
+    verifiedUser.isFinishedOnboarding = true;
      const data = await verifiedUser.save();
     const user = data.toObject();
     delete user.password;

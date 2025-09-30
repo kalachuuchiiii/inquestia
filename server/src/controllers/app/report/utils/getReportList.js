@@ -14,6 +14,7 @@ exports.getReportList = (modelName, isResolved = false) => {
         }
                 const { skip } = req.paginationParams;
         const limit = 10;
+        console.log(modelName)
         const [totalReports, documents] = await Promise.all([
           Report.countDocuments({ "reportedEntity.entity": modelName, isResolved }),
           Report.find({ "reportedEntity.entity": modelName, isResolved })
@@ -22,8 +23,8 @@ exports.getReportList = (modelName, isResolved = false) => {
             .limit(limit)
             .populate([
               { path: "reportedBy", select: "nickname username avatar" },
-              { path: "reportedEntity.entityId", model: modelName, select: '-respondents' },
-              { path: 'entityOwner', select: 'username point nickname avatar '}
+              { path: "reportedEntity.entityId", model: modelName},
+              { path: 'entityOwner', select: 'username streak core nickname avatar '}
             ]),
         ]);
 

@@ -3,7 +3,6 @@ const { getPageParam } = require("../../../../middlewares/pagination/getPagePara
 const User = require("../../../../models/user.js");
 const { allowedUserFields } = require("../../../../data/allowedFields/user.js");
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
-const { getNextPage } = require("../../../../utils/getNextPage.js");
 const { getBadgeByPoint } = require("../../../../utils/getBadgeByPoint.js");
 
 const searchUsers = async (req, res) => {
@@ -99,12 +98,12 @@ const searchUsers = async (req, res) => {
 
   const usersWithBadges = users.map((user) => {
     return {
-      badge: getBadgeByPoint(user.point.current),
+      badge: getBadgeByPoint(user.core.current),
       ...user
     }
   })
   
-  const nextPage = getNextPage(totalUsers.length, page, limit);
+  const nextPage = req.getNextPage(totalUsers.length);
   
   return res.status(200).json({
    success: true, 

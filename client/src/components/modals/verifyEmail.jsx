@@ -30,14 +30,14 @@ const VerifyEmailModal = ({ email = "juandelacruz@___", resend = () => { }, regi
             placeholder="Code here"
             required
             type="number"
-            className="p-2 outline-none border-b-1 w-full border-b-1 white"
+            className="p-2 outline-none w-full border-b-1 white"
             minLength={6}
             maxLength={6}
           />
         </div>
         <div className="flex flex-col justify-start w-8/12 gap-3 items-start">
           <Button
-            disabled={code.toString().length !== 6 || isRegisterLoading}
+            disabled={code.toString()?.length !== 6 || isRegisterLoading}
             onClick={() => register(code)}
             loadingState={isRegisterLoading}
             className="dark:bg-neutral-100 dark:text-zinc-950  rounded-lg w-24 bg-zinc-950 text-neutral-100 px-6 py-1 active:bg-transparent active:text-white"

@@ -19,8 +19,6 @@ const createSurvey = async (req, res, _, commit) => {
   }
 
   const { verifiedUser } = req;
-  verifiedUser.point.highest += 25; 
-  verifiedUser.point.current += 25;
 
   const surv = await Survey.findById(_id).lean();
   
@@ -28,22 +26,38 @@ const createSurvey = async (req, res, _, commit) => {
   if(!isDraft && !surv){
      monitorStreak({ user: verifiedUser })
   }
+  const boosterPoint = verifiedUser?.boosterPoint || 0;
+  if(survey.booster > boosterPoint){
+    return res.status(400).json({
+      success: false, 
+      message: "You do not have enough boost points."
+    })
+  }
+
+  verifiedUser.boosterPoint -= survey.booster;
+  verifiedUser.core.current += 10;
+  verifiedUser.core.highest = Math.max(verifiedUser.core.highest, verifiedUser.core.current);
   
   const userData = await verifiedUser.save({ session });
   const user = userData.toObject();
   delete user.password
+
   
   
   
   if (!surv) {
-    const data = await new Survey({ ...survey, user: verifiedUser._id, isDraft, respondents: [] }).save({ session })
-    console.log(data)
+    const data = await new Survey({
+      ...survey,
+      user: verifiedUser._id,
+      isDraft,
+      respondents: [],
+    }).save({ session });
     await commit();
     return res.status(200).json({
       success: true,
       data,
-      user
-    })
+      user,
+    });
   }
 
   if (surv.isDraft) {

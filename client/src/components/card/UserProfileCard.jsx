@@ -10,7 +10,7 @@ const UserProfileCard = ({ user = {} }) => {
     <div className="space-y-6">
       {/* Header Section */}
       <UserProfile user={user} className="flex gap-4 items-center">
-        <UserProfile.Avatar size="40" className="text-20" />
+        <UserProfile.Avatar size="20" className="text-20" />
         <div className="text-left">
           <UserProfile.Nickname className="text-xl " />
           <UserProfile.Username showAt className="text-xs opacity-70" />
@@ -21,10 +21,9 @@ const UserProfileCard = ({ user = {} }) => {
       </UserProfile>
 
       {/* Dashboard */}
-      <div className="p-4 rounded-lg shadow-md bg-white dark:bg-zinc-900">
-        <h2 className="text-sm font-medium mb-2 opacity-80">Dashboard</h2>
+   
         <Dashboard user={user} />
-      </div>
+      
 
       {/* External Links */}
       {links.length > 0 && (

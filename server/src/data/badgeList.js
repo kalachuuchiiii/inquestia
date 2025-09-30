@@ -18,7 +18,7 @@ exports.badges = [
   { badge: "Feedback Fan", pointsRequired: 8800 },
   { badge: "Thought Sharer", pointsRequired: 10100 },
   { badge: "Idea Contributor", pointsRequired: 11500 },
-  { badge: "Data Point", pointsRequired: 13000 },
+  { badge: "Data core", pointsRequired: 13000 },
   { badge: "Survey Contributor", pointsRequired: 14600 },
   { badge: "Community Helper", pointsRequired: 16300 },
   { badge: "Opinion Miner", pointsRequired: 18100 },

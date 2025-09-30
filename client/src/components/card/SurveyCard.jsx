@@ -16,10 +16,9 @@ import useAsync from '../../hooks/useAsync.js';
 import ArrowButton from '../html/ArrowButton.jsx';
 import { GoReport } from 'react-icons/go';
 import ReportSurveyModal from '../modals/ReportSurveyModal.jsx';
-import { useState } from "react";
-import { capitalizeFirstLetter } from '../../utils/formatTopicQuery.js';
+import { memo, useState } from "react";
 
-const SurveyCard = ({ survey = {}, Context = null, children = null, className = "grid grid-cols-1 grid-rows-1 place-content-center relative dark:bg-zinc-900 bg-neutral-50 rounded-lg shadow-xl overflow-hidden" }) => {
+const SurveyCard = memo(({ survey = {}, Context = null, children = null, className = "grid grid-cols-1 grid-rows-1 place-content-center relative dark:bg-zinc-900 bg-neutral-50 rounded-lg shadow-xl overflow-hidden" }) => {
   const [isOptionOpen, o, closeOptionWidget, toggle] = useToggler(false);
   const { user = { _id: null } } = useSelector((state) => state.user);
   const { modifyFieldById = () => {} } = useCTX(Context);
@@ -66,7 +65,7 @@ const SurveyCard = ({ survey = {}, Context = null, children = null, className = 
         <div className="flex row-start-1 col-start-1 flex-col gap-2 p-2 relative">
           {children}
 
-          {(survey?.closed || survey.hasReachedTargetRespondents) && (
+          {(survey?.closed || survey?.hasReachedTargetRespondents) && (
             <div
               onClick={(e) => e.stopPropagation()}
               className="absolute inset-0 flex flex-col items-center justify-center gap-4 
@@ -98,13 +97,13 @@ const SurveyCard = ({ survey = {}, Context = null, children = null, className = 
       </SurveyCardContext.Provider>
     </div>
   );
-};
+});
 
 SurveyCard.Preview = () => {
   const { title = null, description = null, questions = [] } = useCTX(SurveyCardContext);
 
   return (
-    <div className="text-sm overflow-y-auto scrollbar-none w-full  bg-neutral-100 p-4 dark:bg-zinc-950 rounded-lg">
+    <div className="text-sm overflow-y-auto scrollbar-none w-full  bg-neutral-100 p-4 dark:bg-[#101012] rounded-lg">
       <div>
         <h1 className="text-xl leading-5 lato truncate">{title}</h1>
         <p className="text-sm opacity-80 line-clamp-2">{description}</p>
@@ -120,24 +119,7 @@ SurveyCard.Preview = () => {
   );
 };
 
-SurveyCard.Demographics = () => {
-  const { ageGroup = {}, genderGroup = [] } = useCTX(SurveyCardContext);
-
-  const { minAge = 8, maxAge = 120 } = ageGroup;
-  const genders = genderGroup.map((g) => capitalizeFirstLetter(g))
-
-
-  return <p className='text-sm opacity-40 p-2 rounded-xl w-full ' >
-    <p>
-      For ages {minAge} to {maxAge}
-    </p>
-<p>
-  { genders.join(', ')}
-</p>
-  </p>
-}
-
-SurveyCard.Author = ({ tempUser = null}) => {
+SurveyCard.Author = memo(({ tempUser = null}) => {
   const { user = null, createdAt = new Date().toISOString(), questions = [] } = useCTX(SurveyCardContext);
 
   return (
@@ -152,7 +134,7 @@ SurveyCard.Author = ({ tempUser = null}) => {
       </div>
     </div>
   );
-};
+});
 
 SurveyCard.Redirect = () => {
   const { _id = null, tags = [] } = useCTX(SurveyCardContext);
@@ -204,7 +186,7 @@ SurveyCard.Bar = () => {
   );
 };
 
-SurveyCard.OptionButton = ({ size = 20 }) => {
+SurveyCard.OptionButton = memo(({ size = 20 }) => {
   const { toggle = () => {}, isOptionOpen = false } = useCTX(SurveyCardContext);
   const { mode } = useSelector((state) => state.theme);
 
@@ -223,6 +205,6 @@ SurveyCard.OptionButton = ({ size = 20 }) => {
       )}
     </button>
   );
-};
+});
 
 export default SurveyCard;

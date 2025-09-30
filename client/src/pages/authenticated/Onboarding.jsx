@@ -23,10 +23,10 @@ const Onboarding = () => {
     const res = await fetchApi("patch", "/user/interests", {
       selectedInterests,
     });
+    console.log(res)
     if (res?.success && res?.user) {
       dispatch(updateUser({ user: res.user }));
       nav('/home')
-
     }
   });
 
@@ -75,7 +75,7 @@ const Onboarding = () => {
       {/* 🔹 Save Button */}
       <div className="w-full max-w-3xl flex justify-end pt-6">
         <div className="w-full sm:w-1/2 space-y-2 flex flex-col items-end">
-          {error && <p className="text-xs text-red-400">{error}</p>}
+         
           <Button
             disabled={isLoading}
             onClick={saveInterests}

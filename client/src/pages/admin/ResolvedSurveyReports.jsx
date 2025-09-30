@@ -14,9 +14,10 @@ const ResolvedSurveyReports = () => {
   const [getResolvedReportedSurveys, { isLoading }] = useAsync(
     async ({ page = 1, overwrite = true } = {}) => {
       if (page === null) return;
-      const res = await fetchApi("get", `/admin/resolved/user-reports`, {
+      const res = await fetchApi("get", `/admin/resolved/survey-reports`, {
         page,
       });
+      console.log(res)
       setResolvedReportedSurveys((prev) =>
         overwrite ? res.documents : [...prev, ...res.documents]
       );
@@ -36,10 +37,10 @@ const ResolvedSurveyReports = () => {
   }, [inView]);
 
   return (
-    <div className="p-6 w-full  mx-auto bg-neutral-100 dark:bg-zinc-950 min-h-screen">
+    <div className="p-6 w-full  mx-auto  min-h-screen">
       <div className="mb-6 w-full flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
-        Resolved Reported Surveys
+          Resolved Reported Surveys
         </h1>
         <span className="text-sm text-gray-500 dark:text-gray-400">
           Total: {totalResolvedReportedSurveys}
@@ -50,12 +51,9 @@ const ResolvedSurveyReports = () => {
         {resolvedReportedSurveys.length > 0 ? (
           resolvedReportedSurveys.map((report) => (
             <ReportedCard key={report._id} report={report}>
-              <div className="flex gap-2 shrink-0 ">
-                <UserProfileCard  user = {report.reportedEntity.entityId} />
-                <div className="flex flex-col  gap-2 my-2">
-                  <ReportedCard.BanButton />
-                  <ReportedCard.DeductPointButton />
-                </div>
+              <div className="flex flex-col gap-2 shrink-0 ">
+                <p>Resolved By: <span className="text-gradient">{report.resolveAction}</span></p>
+                <ReportedCard.Survey />
               </div>
             </ReportedCard>
           ))

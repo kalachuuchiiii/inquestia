@@ -17,6 +17,7 @@ const ResolvedUserReports = () => {
       const res = await fetchApi("get", `/admin/resolved/user-reports`, {
         page,
       });
+      console.log(res)
       setResolvedReportedUsers((prev) =>
         overwrite ? res.documents : [...prev, ...res.documents]
       );
@@ -36,7 +37,7 @@ const ResolvedUserReports = () => {
   }, [inView]);
 
   return (
-    <div className="p-6 w-full  mx-auto bg-neutral-100 dark:bg-zinc-950 min-h-screen">
+    <div className="p-6 w-full  mx-auto  min-h-screen">
       <div className="mb-6 w-full flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
         Resolved Reported Users

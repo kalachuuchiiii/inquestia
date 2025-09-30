@@ -14,6 +14,8 @@ import UpdatePasswordPage from '../pages/not-authenticated/UpdatePassword.jsx';
 import SurveySummary from '../pages/authenticated/Summary.jsx';
 import ViewProfilePage from '../pages/authenticated/ViewProfile.jsx';
 import ResponseHistory from '../pages/authenticated/ResponseHistory.jsx';
+import ViewAnswer from '../pages/authenticated/ViewAnswer.jsx';
+import ExchangeCenter from '../pages/authenticated/ExchangeCenter.jsx';
 
 export const publicPages = [
   {
@@ -66,6 +68,14 @@ export const pages = [
   {
     path: "/settings",
     element: <Settings />
+  },
+  { 
+    path: '/answer/:id', 
+    element: <ViewAnswer />
+  },
+  {
+    path: '/exchange-center', 
+    element: <ExchangeCenter />
   },
   {
     path: "/create/:id?",

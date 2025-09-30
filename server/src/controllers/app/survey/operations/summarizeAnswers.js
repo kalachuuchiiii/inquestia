@@ -1,50 +1,42 @@
-const Survey = require("../../../../models/survey.js");
-const Answer = require("../../../../models/answer.js")
+
 const { verifyObjectId } = require("../../../../middlewares/verification/verifyObjectId.js");
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
-const { generateSystemData } = require("../../../../data/systemData.js")
+const { generateSystemData } = require("../../../../data/systemData.js");
+const { filterSurveyList } = require("../../../../middlewares/validation/survey/filterSurveyList.js");
 
 const summarizeAnswers = async(req, res) => {
 
-  const { verifiedUser, verifiedId: surveyId } = req;
-  const survey = await Survey.findById(surveyId).lean();
-  if(!survey){
-    return res.status(400).json({
-      success: false, 
-      message: "Survey not found."
-    })
-  }
-  if(survey.user.toString() !== verifiedUser._id.toString()){
-    return res.status(400).json({
-      success: false, 
-      message: "You can't generate a summary of survey of others."
-    })
-  }
-  
-  if(survey?.isDraft){
-    return res.status(400).json({
-      success: false, 
-      message: "You can't generate a summary of a draft"
-    })
-  }
-  
-  const answers = await Answer.find({
-    survey: survey._id
-  }).populate({
-    path: 'answers.question', 
-    model: 'Question'
-  })
-  
+   const { filteredData = null } = req;
 
-  if(answers?.length < 1){
+   if(!filteredData){
     return res.status(400).json({
       success: false, 
-      message: "There aren’t enough responses to this survey to generate a summary."
+      message: 'No filtered data found.'
     })
-  }
-  
-  const sysData = generateSystemData(survey);
+   }
+
+   if (!filteredData.answers || filteredData.answers.length === 0) {
+     return res.status(200).json({
+       success: true,
+       survey: filteredData.survey,
+       response: `# No Data Available
+
+It looks like we couldn’t find any answers for this survey with the current filters applied.  
+This may happen because:
+
+- The survey has not received any responses yet.  
+- The selected filters are too restrictive and exclude all available answers.  
+- The data might still be in the process of being collected.  
+
+Before generating a summary, please make sure there are responses that match your chosen filters or try adjusting your filters to include more data.  
+
+👉 Once responses are available, a summary will be generated automatically here.
+`,
+     });
+   }
+
+   const sysData = generateSystemData(filteredData.survey);
   
    let response  = await fetch('https://api.groq.com/openai/v1/chat/completions', {
   method: 'POST',
@@ -56,7 +48,7 @@ const summarizeAnswers = async(req, res) => {
     model: 'openai/gpt-oss-120b',
     messages: [{ role: "system", content: sysData }, {
       role: "user", 
-      content: `Here are the survey responses: ${JSON.stringify([...answers])}`
+      content: `Here are the survey responses: ${JSON.stringify([...filteredData.plainAnswers])}`
     }]
   })
 })
@@ -69,12 +61,12 @@ if(!response || response?.error){
     message: "Summary Generation Failed. Please try again."
   })
 }
+console.log(response)
 
 return res.status(200).json({
  success: true, 
- survey,
- answers,
- response
+ survey: filteredData.survey,
+ response: response?.choices[0]?.message?.content
 })
 
 }
@@ -83,6 +75,6 @@ module.exports = build => build({
   name: 'survey_summary', 
   path: '/survey/summarize/:resourceId', 
   method: 'get', 
-  middlewares: [verifySession, verifyObjectId],
+  middlewares: [verifySession, verifyObjectId, catchError(filterSurveyList(false, 1000))],
   fn: catchError(summarizeAnswers),
 })

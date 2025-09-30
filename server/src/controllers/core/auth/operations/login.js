@@ -4,6 +4,7 @@ const { signToken } = require("../../../../utils/auth/jwt.methods.js");
 const { storeCookie } = require("../../../../utils/auth/cookies.methods.js");
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 const { z } = require("zod");
+const { isStillBanned } = require("../../../../utils/isStillBanned.js");
 
 const loginSchema = z.object({
   email: z
@@ -52,6 +53,7 @@ const login = async (req, res) => {
     });
   }
 
+
   const isPasswordCorrect = await comparePasswords(candidatePass, user.password);
   if (!isPasswordCorrect) {
     return res.status(400).json({
@@ -59,6 +61,19 @@ const login = async (req, res) => {
       message: "Incorrect username or password.",
     });
   }
+
+  
+  const { isBanned, remainingBanDurationInDays, remainingBanDurationInMinutes, remainingBanDurationInHour } = isStillBanned(user?.bannedAt, user?.banDuration);
+  
+       if(isBanned){
+  
+        const format = `Your account has been banned. Remaining time: ${remainingBanDurationInDays} day(s) or ${remainingBanDurationInHour} hour(s) or ${remainingBanDurationInMinutes} minute(s)`;
+  
+        return res.status(400).json({
+          success: false,
+          message: format,
+        });
+      }
   const token = await signToken({ user: user._id });
 
   storeCookie(res, {

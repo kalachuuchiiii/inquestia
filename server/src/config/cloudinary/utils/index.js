@@ -1,10 +1,20 @@
-const cloudinary = require("../index.js")
+const cloudinary = require("../index.js");
 
 exports.uploadImage = async (filePath) => {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
-      resource_type: "image", folder: "avatars"
-    })
+      resource_type: "image",
+      folder: "avatars",
+      transformation: [
+        {
+          width: 150,
+          height: 150,
+          crop: "fill", 
+          gravity: "auto" 
+        }
+      ]
+    });
+
     return {
       url: result?.secure_url,
       public_id: result?.public_id,
@@ -15,7 +25,6 @@ exports.uploadImage = async (filePath) => {
   }
 };
 
-// 🔹 Delete image by public_id
 exports.deleteImage = async (publicId) => {
   try {
     const result = await cloudinary.uploader.destroy(publicId);

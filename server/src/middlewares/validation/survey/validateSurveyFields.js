@@ -7,7 +7,7 @@ const textQuestionSchema = z.object({
   question: z
     .string()
     .min(6, "Question must be at least 6 characters long.")
-    .max(100, "Question cannot exceed 100 characters."),
+    .max(250, "Question cannot exceed 250 characters."),
   isRequired: z.boolean().default(false),
 });
 
@@ -16,15 +16,15 @@ const selectQuestionSchema = z.object({
   question: z
     .string()
     .min(6, "Question must be at least 6 characters long.")
-    .max(100, "Question cannot exceed 100 characters."),
+    .max(250, "Question cannot exceed 250 characters."),
   isRequired: z.boolean().default(false),
   multipleChoice: z.boolean().default(false),
   choices: z
     .array(
       z
         .string()
-        .min(1, "Each choice must contain at least 1 character.")
-        .max(30, "Each choice cannot exceed 30 characters.")
+        .min(1, 'Each choice must contain at least 1 character.')
+        .max(100,  'Each choice cannot exceed 100 characters.')
     )
     .min(2, "You must provide at least 2 choices.")
     .max(8, "You can only add up to 8 choices."),
@@ -37,12 +37,12 @@ const questionSchema = z.union([textQuestionSchema, selectQuestionSchema]);
 const surveySchema = z.object({
   title: z
     .string()
-    .min(6, "Survey title must be at least 6 characters long.")
-    .max(150, "Survey title cannot exceed 150 characters."),
+    .min(6, "Survey title must be at least 10 characters long.")
+    .max(250, "Survey title cannot exceed 250 characters."),
   description: z
     .string()
-    .min(10, "Survey description must be at least 10 characters long.")
-    .max(150, "Survey description cannot exceed 150 characters."),
+    .min(6, "Survey description must be at least 10 characters long.")
+    .max(500, "Survey description cannot exceed 500 characters."),
   targetRespondents: z
     .number()
     .min(8, "Target respondents must be at least 8.")
@@ -51,33 +51,14 @@ const surveySchema = z.object({
     .array(z.enum(interests, { message: "One or more tags are invalid." }))
     .min(1, "You must select at least 1 tag.")
     .max(5, "You can select up to 5 tags."),
+  booster: z
+    .number()
+    .min(0, "Boost points must be between 0 and 5.")
+    .max(5, "Boost points must be between 0 and 5."),
   questions: z
     .array(questionSchema)
     .min(1, "A survey must contain at least 1 question.")
-    .max(8, "A survey can only contain 8 questions at most."),
-  ageGroup: z.object({
-    minAge: z
-      .number()
-      .min(8, "Minimum age must be at least 8.")
-      .max(120, "Minimum age cannot exceed 120.")
-      .default(8),
-    maxAge: z
-      .number()
-      .min(8, "Maximum age must be at least 8.")
-      .max(120, "Maximum age cannot exceed 120.")
-      .default(120),
-  }).refine(
-    (data) => data.maxAge >= data.minAge,
-    { message: "maxAge must be greater than or equal to minAge." }
-  ),
-  genderGroup: z
-    .array(
-      z.enum(["male", "female", "non-binary", "transgender", "other"], {
-        message: "Invalid gender option.",
-      })
-    )
-    .min(1, "You must select at least 1 gender.")
-    .default(["male", "female", "non-binary", "transgender", "other"]),
+    .max(16, "A survey can only contain 16 questions at most."),
 });
 
 
@@ -90,15 +71,13 @@ exports.validateSurveyFields = catchError(async (req, res, next) => {
         message: "Survey is undefined.",
       });
     }
-    const { minAge, maxAge } = survey.ageGroup;
+    
 
     const parsed = surveySchema.parse({
       ...survey, 
-      ageGroup: {
-        minAge: parseInt(minAge),
-         maxAge: parseInt(maxAge)
-      }, 
-      targetRespondents: parseInt(survey.targetRespondents)
+      targetRespondents: parseInt(survey.targetRespondents), 
+      booster: parseInt(survey.booster) || 0
+
     });
 
     if (parsed.questions.every((q) => !q.isRequired)) {
@@ -107,6 +86,8 @@ exports.validateSurveyFields = catchError(async (req, res, next) => {
         message: "You must have at least 1 required question.",
       });
     }
+
+    
 
     req.verifiedSurvey = parsed;
     next();

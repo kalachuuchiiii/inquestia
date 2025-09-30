@@ -2,6 +2,41 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 
+/* Change scrollbar width */
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 1px;
+  padding: 2;
+  height: 1px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;    /* remove the gray background */
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #4f46e5, #3b82f6); /* nice gradient */
+  border-radius: 9999px;      /* pill-shaped thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #1b07f7, #2563eb); /* darker on hover */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #a9d1ff transparent; /* thumb color, track transparent */
+}
+
+
+.scrollbar-none { 
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+
+
 
 textarea {
   scrollbar-width: none; /* Firefox */
@@ -48,12 +83,19 @@ body::-webkit-scrollbar {
   font-weight: 900;
 }
 
-.text-gradient {
-  background: linear-gradient(to right, #9c27c0, #00e5ff); /* from purple-400 to pink-300 */
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* For Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
+
+/* For Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
 
 .lexend-deca {
   font-family: "Lexend Deca", sans-serif;
@@ -64,6 +106,10 @@ body::-webkit-scrollbar {
 
 
 
-.scrollbar-none::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+
+.text-gradient {
+  background: linear-gradient(to right, #06b6d4, #3b82f6); /* cyan-500 → blue-500 */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

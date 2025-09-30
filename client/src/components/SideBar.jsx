@@ -11,32 +11,28 @@ const Sidebar = ({ onClose = () => {}, isLargeScreen = false }) => {
   return (
     <AnimationWrapper
       variants="fromLeft"
-      className={`${
-        isLargeScreen ? "sticky min-h-screen" : "fixed h-screen"
-      } top-0 z-40 overflow-hidden`}
+      className={`sticky min-h-screen top-0 z-40  `}
     >
-      <aside className="flex flex-col w-68 h-screen bg-neutral-50 dark:bg-zinc-950 shadow-xl">
-        {/* Header / Brand */}
-        <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-200 dark:border-gray-800">
-          <NavBar.SideBarToggler onToggleSidebar={onClose} size="28" />
-          <NavBar.App />
-        </div>
-
-        {/* User Info */}
+      <aside className="flex justify-center flex-col  h-screen  ">
        
-
-        {/* Navigation Links */}
-        <nav className="flex-1 px-2 py-6 overflow-y-auto scrollbar-none">
+        
+    
+        <nav className="  w-fit overflow-y-auto scrollbar-none">
           {navRoutes?.length > 0 &&
             navRoutes.map((info) => (
-              <NavIcon key={info.path} info={info} />
+              <NavIcon
+                isLargeScreen={isLargeScreen}
+                key={info.path}
+                info={info}
+              />
             ))}
         </nav>
 
-        {/* Footer (optional for extra actions) */}
-        <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-500">
-          © 2025 Inquestia.ask
-        </div>
+        {isLargeScreen && (
+          <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-500">
+            © 2025 Inquestia.ask
+          </div>
+        )}
       </aside>
     </AnimationWrapper>
   );

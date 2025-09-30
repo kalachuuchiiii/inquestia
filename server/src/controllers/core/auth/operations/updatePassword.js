@@ -32,7 +32,7 @@ const updatePassword = async (req, res) => {
   }
 
   const { user: userId, error = null } = await decodeToken(token);
-
+  
   const user = await User.findById(userId);
 
   if (error || !user) {

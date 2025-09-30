@@ -1,27 +1,21 @@
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 const { textValidator } = require("../../../../utils/string.validators.js");
-const { bodyValidator } = require("../../../../utils/schema/bodyValidator.js");
+const { z } = require("zod");
 const { executeAfterCooldown } = require("../../../../utils/executeAfterCooldown.js");
+
+
+
+  const usernameSchema = z.string()
+    .min(6, "Username must be at least 6 characters long.")
+    .max(20, "Username must not exceed 20 characters.");
 
 const updateUsername = async (req, res) => {
 
-    const { error, username } = bodyValidator({
-    username: req?.body?.username,
-  }, {
-    username: {
-      type: 'string',
-      min: [6, "Username must be at least 6 characters long."],
-      max: [20, "Username must not exceed 20 characters."]
-    }
-  });
 
-  if (error) {
-    return res.status(400).json({
-      success: false,
-      message: error
-    });
-  }
+
+  const parseResult = usernameSchema.parse(req?.body?.username);
+  const username = parseResult;
 
   if (!textValidator(username)) {
     return res.status(400).json({

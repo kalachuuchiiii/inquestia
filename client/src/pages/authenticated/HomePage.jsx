@@ -18,18 +18,21 @@ const HomePage = () => {
   const [surveys, setSurveys] = useState([]);
   const [nextPage, setNextPage] = useState(1);
   const nav = useNavigate();
+  const [totalSurveys, setTotalSurveys] = useState(0);
   const { isLoading: isSessionLoading, user, isAuthenticated, isProcessOK } = useSelector(state => state.user);
 
   const [getSurveyList, { isLoading, error }] = useAsync(async ({ page = 1, overwrite = true} = {}) => {
-    const seenSurveys = [...surveys];
     const res = await fetchApi('get', '/surveys', {
-      seenSurveys,
-      page
+      page, 
+      seenIds: JSON.stringify(surveys.map(s => s._id))
     })
-    console.log(res, 'homepage')
-    const uniqueSurveys = res.surveys.filter(s => !seenSurveys.some(survey => survey._id === s._id));
-    setNextPage(res.nextPage);
-    setSurveys(prev => overwrite ? res.surveys : [...prev, ...uniqueSurveys]);
+    console.log(res)
+
+   if(!res?.success)return;
+    setSurveys(prev => overwrite ? res.surveys : [...prev, ...res.surveys])
+    setNextPage(res.nextPage)
+    setTotalSurveys(res.totalSurveys);
+    
   })
 
   const { inView, ref } = useInView();
@@ -65,32 +68,35 @@ const HomePage = () => {
   }
 
 
-  return <div className="p-2" >
-    <div className="my-6 space-y-6">
-      <Dashboard user={user} />
+  return (
+    <div className="p-2">
+      <div className="my-6 space-y-6">
+        <Dashboard user={user} />
+      </div>
+      <div className="space-y-3 min-h-screen">
+        {surveys?.length > 0 ? (
+          surveys.map((survey) => (
+            <SurveyCard survey={survey} key={survey._id}>
+              <div className="flex items-start gap-2">
+                <SurveyCard.Preview />
+                <SurveyCard.Report />
+              </div>
+              <SurveyCard.Author />
+              <SurveyCard.Redirect />
+
+              <SurveyCard.Bar />
+            </SurveyCard>
+          ))
+        ) : totalSurveys === 0 ? (
+          <p className=' text-center  opacity-50 w-full'>No surveys are published yet.</p>
+        ) : (
+          nextPage === null && <p className=' text-center  opacity-50 w-full'>You've reached end.</p>
+        )}
+        {isLoading && <SurveyCardPlaceholder number={8} />}
+      </div>
+      <div className="h-1 " ref={ref} />
     </div>
-    <div className="space-y-3 min-h-screen">
-      {
-        surveys?.length > 0 && surveys.map(survey => <SurveyCard survey={survey} key={survey._id} >
-          <div className='flex items-start gap-2'>
-            <SurveyCard.Preview />
-            <SurveyCard.Report />
-          </div>
-          <SurveyCard.Author />
-           <SurveyCard.Demographics />
-          <SurveyCard.Redirect />
-         
-          <SurveyCard.Bar />
-        </SurveyCard  >
-        )
-      }
-      {
-        isLoading &&
-        <SurveyCardPlaceholder />
-      }
-    </div>
-    <div className="h-1 " ref={ref} />
-  </div>
+  );
 }
 
 export default HomePage

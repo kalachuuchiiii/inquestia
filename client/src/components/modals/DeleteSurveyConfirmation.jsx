@@ -23,7 +23,6 @@ return <ModalStyle onClose = {onClose} label = "Confirm Deletion" >
   <Notice >
     This action cannot be undone!
   </Notice> 
-    { error && <p className = "text-xs text-red-400">{error}</p>}
   </div>
   <div className = "flex p-2 justify-end gap-4">
     <button onClick = {onClose}>Cancel</button>

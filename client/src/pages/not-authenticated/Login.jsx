@@ -33,7 +33,7 @@ const LoginPage = () => {
       <div>
         <Form.Password />
         <div className="space-y-2">
-          <Form.ErrorMessage error={loginError} />
+          
           <Form.NavigateToRegister /> <p className = "text-xs">or</p>
                     <Form.ForgotPassword />
         </div>

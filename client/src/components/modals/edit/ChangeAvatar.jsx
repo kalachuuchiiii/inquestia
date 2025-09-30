@@ -49,14 +49,14 @@ const ChangeAvatar = ({ onClose = () => { } }) => {
         <GoArrowSwitch size="40" />
       </div>
       <UserIcon className="flex gap-3 items-center justify-center flex-col" user={{ avatar: preview }}>
-        <UserIcon.Avatar size="40" />
+        <UserIcon.Avatar size="40" disableZoom/>
         <button className="" onClick={() => document.getElementById("avatar").click()}>
           <input onChange={handleChange} id="avatar" className="hidden " type="file" accept="image/*" />
-          <div className="flex gap-2 items-center"><LuImagePlus /> New Avatar</div>
+          <div title='Choose a photo.' className="flex gap-2 underline items-center"><LuImagePlus /> New Avatar</div>
         </button>
       </UserIcon>
     </div>
-    {isSuccess ? <p className="text-xs text-blue-400">Avatar successfully updated!</p> : error && <p className="text-xs text-red-400">{error}</p>}
+    {isSuccess &&  <p className="text-xs text-blue-400">Avatar successfully updated!</p>}
     <div className="space-y-1">
       <Button onClick={handleSave} loadingState={isLoading} disabled={isLoading}>
         Save

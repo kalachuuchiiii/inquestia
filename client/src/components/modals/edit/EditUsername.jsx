@@ -36,7 +36,7 @@ return (
       </p>
     </div>
     <div className="my-1 space-y-1">
-      {error && <p className="text-xs text-red-400">{error}</p>}
+     
       <Button
         onClick={saveUsername}
         loadingState={isLoading}

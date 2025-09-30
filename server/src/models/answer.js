@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const answerSchema = new mongoose.Schema({
   survey: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "survey",
+    ref: "Survey",
     required: true
   }, 
   answers: [{
@@ -38,7 +38,7 @@ const del = async () => {
   const s = await Answer.deleteMany();
 }
 
-del();
+//del();
 
 
 module.exports = Answer;

@@ -42,7 +42,7 @@ return (
         value={bio}
         displayLimit
       />
-      {error && <p className="text-xs text-red-400">{error}</p>}
+    
     </div>
 
     <div className="my-1 w-full flex justify-end">

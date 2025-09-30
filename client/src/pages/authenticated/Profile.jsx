@@ -1,19 +1,11 @@
 import UserProfile from '../../components/card/UserProfileCard.jsx';
 
-import SettingCard from '../../components/card/SettingCard.jsx';
+
 import { useSelector } from 'react-redux';
-import Textarea from '../../components/html/Textarea.jsx';
-import ExternalLinksList from '../../components/lists/ExternalLinksList.jsx';
-import { useEffect, useState } from 'react';
+
 import ArrowButton from '../../components/html/ArrowButton.jsx';
-import useAsync from '../../hooks/useAsync.js';
 import { Outlet, NavLink } from "react-router-dom"
-import { fetchApi } from '../../utils/fetchApi.js';
-import SurveyCard from '../../components/card/SurveyCard.jsx';
-import { useInView } from 'react-intersection-observer';
-import useFieldArray from '../../hooks/useFieldArray.js';
 import usePath from '../../hooks/usePath.js';
-import Dashboard from '../../components/Dashboard.jsx';
 const Profile = () => {
   const { user = {} } = useSelector(state => state.user);
 

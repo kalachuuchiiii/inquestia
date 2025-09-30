@@ -22,6 +22,7 @@ You are provided with survey responses for **"${survey.title}"**. Your task is t
 
 ## Survey Questions
 ${survey.questions.map((q, i) => {
+  delete q.respondents;
   return `### Q${i + 1}: ${q.question}  
 Choices: ${q.type === "select" ? q.choices.join(", ") : "_text answer_"}\n`;
 }).join("\n")}

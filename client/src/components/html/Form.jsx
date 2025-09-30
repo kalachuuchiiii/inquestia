@@ -39,46 +39,6 @@ Form.Label = ({defaultLabel = "Register"}) => {
   </h1>
 }
 
-Form.Birthdate = () => {
-  const { handleChange = () => {}, formField = {}} = useCTX(FormContext);
-
-  return (
-    <div className="flex flex-col ">
-      <label className="text-xs sm:text-[10px]">Birthdate</label>
-      <input
-        required
-        type="date"
-        color='neutral-200'
-        className="p-1 text-base text-zinc-900 sm:text-[14px] bg-neutral-50 rounded-xl outline-none"
-        name="birthdate"
-        onChange={handleChange}
-        value={formField?.birthdate}
-      />
-      <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
-        Make sure to enter your correct birthdate, as it can only be changed once.
-      </p>
-    </div>
-  );
-}
-
-Form.Gender = () => {
-
-   const { handleChange = () => {}, formField = {}} = useCTX(FormContext);
-   
-  return (
-    <div className="w-full">
-      <select onChange = {handleChange} name = 'gender' className="w-full outline-none">
-        {
-          genders.map((g) => {
-             return <option value = {g}>
-              {capitalizeFirstLetter(g)}
-             </option>
-          })
-        }
-      </select>
-    </div>
-  );
-}
 
 Form.Username = ({placeholder = "Username"}) => {
   const { handleChange = () => {}, formField = {}} = useCTX(FormContext);
@@ -107,10 +67,6 @@ Form.ForgotPassword = () => {
   </>
 }
 
-Form.ErrorMessage = ({error = ''}) => {
-  
-  return <p className = "h-2 text-xs sm:text-[10px] text-red-400">{error && error}</p>
-}
 
 
 Form.NavigateToLogin = () => {

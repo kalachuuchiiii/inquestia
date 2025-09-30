@@ -14,14 +14,10 @@ import EditUsername from "../../components/modals/edit/EditUsername.jsx";
 import EditBio from "../../components/modals/edit/EditBio.jsx";
 import ChangePasswordModal from "../../components/modals/edit/ChangePasswordModal.jsx";
 import ChangeAvatarModal from "../../components/modals/edit/ChangeAvatar.jsx";
-
 import useAsync from "../../hooks/useAsync.js";
 import { fetchApi } from "../../utils/fetchApi.js";
 import { updateUser } from "../../state/slice/user.js";
-import { capitalize } from "../../utils/capitalize.js";
 import { capitalizeFirstLetter } from "../../utils/formatTopicQuery.js";
-import UpdateGender from "../../components/modals/edit/UpdateGender.jsx";
-
 const ProfileInput = ({ label, value, placeholder, onEditClick, readOnly = true }) => {
   const inputStyle = "outline-none w-full p-2";
   const wrapperStyle =
@@ -66,8 +62,7 @@ const ModalManager = ({ activeModal, close, user }) => {
     ),
     bio: <EditBio previousBio={user.bio} onClose={close} />,
     password: <ChangePasswordModal onClose={close} />,
-    avatar: <ChangeAvatarModal onClose={close} />,
-    gender: <UpdateGender onClose={close} />,
+    avatar: <ChangeAvatarModal onClose={close} />
   };
 
   return (
@@ -127,7 +122,7 @@ const EditProfile = () => {
             <label className="text-xs">Bio</label>
             <div className="rounded-lg overflow-hidden px-2 pt-1 bg-neutral-200 dark:bg-zinc-900 flex items-start">
               <Textarea
-                className=""
+                
                 placeholder="No bio yet."
                 readOnly
                 displayLimit={false}
@@ -142,15 +137,6 @@ const EditProfile = () => {
               </button>
             </div>
           </div>
-        </div>
-        <div className="mt-2 flex  justify-between">
-           <div>
-            <label className="text-xs">Gender</label>
-            <p className="outline-none w-full p-2" >{capitalizeFirstLetter(user?.gender || '')}</p>
-           </div>
-           <button onClick={() => setActiveModal("gender")} className="p-5">
-              <HiMiniPencil />
-           </button>
         </div>
         <div className="space-y-3 mt-4">
           <div>
@@ -183,7 +169,7 @@ const EditProfile = () => {
           </div>
         </div>
 
-        <div className="flex border-l-1 border-l-white px-3 py-1 flex-col my-8 gap-4">
+        <div className="flex border-l-1 w-full border-l-white px-3 py-1 flex-col my-8 gap-4">
           <ExternalLinksList externalLinks={user.externalLinks} />
           <div className="flex flex-col">
             <input
@@ -192,11 +178,11 @@ const EditProfile = () => {
               className="text-sm my-2 p-2 dark:text-neutral-100 outline-none w-11/12"
               placeholder="Your external link here..."
             />
-            {error && <p className="text-xs text-red-400">{error}</p>}
+           
           </div>
           <Button
             disabled={externalLink.length < 5 || isLoading}
-            className={`w-full p-2 bg-neutral-100 flex justify-center items-center h-11 rounded-lg text-zinc-900 ${
+            className={`w-full  p-2 bg-neutral-100 flex justify-start items-center h-11 rounded-lg text-zinc-900 ${
               externalLink.length > 5
                 ? "active:bg-zinc-900 active:text-neutral-100"
                 : "opacity-50"

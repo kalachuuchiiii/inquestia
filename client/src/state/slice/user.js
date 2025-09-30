@@ -6,7 +6,7 @@ const initialState = {
     username: '', 
     nickname: '', 
     _id: '', 
-    point: {
+    core: {
       highest: 0, 
       current: 0
     }, 
@@ -15,6 +15,7 @@ const initialState = {
       current: 0
     }
   },
+  hasUnreadNotifications: false,
   interests: ["personal"],
   isAuthenticated: false, 
   isLoading: false, 
@@ -29,6 +30,7 @@ export const getSession = createAsyncThunk("session", async(_,thunkAPI) => {
     
     return res;
   }catch(e){
+    console.log(e)
     return thunkAPI.rejectWithValue("");
   }
 })
@@ -55,11 +57,13 @@ const userSlice = createSlice({
     builder.addCase(getSession.pending, (state) => {
       state.user = initialState.user;
       state.isLoading = true;
+            state.hasUnreadNotifications = false
       state.error = '';
       state.isProcessOK = false;
     })
     builder.addCase(getSession.fulfilled, (state, action) => {
       state.user = action?.payload?.user || {};
+      state.hasUnreadNotifications = action?.payload?.hasUnreadNotifications || false;
       state.isAuthenticated = true; 
       state.error = '';
       state.isLoading = false;

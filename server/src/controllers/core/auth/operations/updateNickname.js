@@ -1,27 +1,19 @@
 const User = require("../../../../models/user.js");
-const { bodyValidator } = require("../../../../utils/schema/bodyValidator.js");
+const { z } = require("zod");
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 
 
+const nicknameSchema = z
+  .string()
+  .max(26, "Nickname must not exceed 26 characters.");
 const updateNickname = async (req, res) => {
   const { verifiedUser } = req;
 
-  const { nickname, error } = bodyValidator({
-    nickname: req.body?.nickname || ''
-  }, {
-    nickname: {
-      min: [0],
-      max: [26, "Nickname must not exceed 26 characters."]
-    }
-  })
+
   
-  if(error){
-    return res.status(400).json({
-      success: false, 
-      message: error
-    })
-  }
+  const parseResult = nicknameSchema.parse(req.body?.nickname || '');
+  const nickname = parseResult;
 
   verifiedUser.nickname = nickname;
   const data = await verifiedUser.save();

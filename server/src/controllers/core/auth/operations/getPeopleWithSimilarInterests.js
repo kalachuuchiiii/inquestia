@@ -24,7 +24,7 @@ const getPeopleWithSimilarInterests = async (req, res) => {
         const usersWithBadges = users.map((user) => {
             return {
                 ...user, 
-                badge: getBadgeByPoint(user.point.current)
+                badge: getBadgeByPoint(user.core.current)
             }
         })
 

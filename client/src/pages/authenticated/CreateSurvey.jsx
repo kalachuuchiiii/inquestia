@@ -11,9 +11,6 @@ import Button from '../../components/html/Button.jsx';
 import { useSelector } from 'react-redux';
 import TagsList from '../../components/lists/InterestTagList.jsx';
 import React from 'react';
-import GenderOptions from '../../components/GenderOptions.jsx';
-
-//fixed
 
 const CreateSurvey = () => {
   const { user = {
@@ -30,17 +27,12 @@ const CreateSurvey = () => {
   selectTag,
   setQuestions,
   questions,
-  handleChangeAgeGroup,
   error,
   isPublishingPending,
   toggleModal, 
   publishSurvey,
   saveSurveyAsDraft, 
   isSavingAsDraft,
-  handleChangeGender,
-  draftError,
-  isPublishSuccess,
-  isDraftSuccess,
   } = useCreateSurvey();
 
 
@@ -96,14 +88,14 @@ const CreateSurvey = () => {
           </div>
           <div>
             <div className="flex items-center gap-2 justify-start">
+              <label className="text-xs">Target Respondents</label>
               <input
                 name="targetRespondents"
                 onChange={handleChangeTagline}
                 value={surveyTagline.targetRespondents}
-                className="w-12 outline-none dark:bg-zinc-700 dark:text-neutral-100 bg-neutral-200  text-zinc-900 text-center rounded"
+                className="rounded px-2 py-1 bg-white  w-12 text-center text-zinc-950  focus:outline-none"
                 type="number"
               />
-              <label className="text-xs">Target Respondents</label>
             </div>
             <p className="text-sm mb-2 opacity-50">
               The number of responds your survey aims to get.
@@ -113,37 +105,21 @@ const CreateSurvey = () => {
               be visible in the survey feed.
             </Notice>
           </div>
-          <div>
-            <div className="flex items-center gap-2 justify-start">
-              <input
-                name="minAge"
-                onChange={handleChangeAgeGroup}
-                value={surveyTagline.ageGroup.minAge}
-                className="w-12 outline-none dark:bg-zinc-700 dark:text-neutral-100 bg-neutral-200  text-zinc-900 text-center rounded"
-                type="number"
-                min={8}
-                max={120}
-                placeholder="Min"
-              />
-              <span className="text-xs">to</span>
-              <input
-                name="maxAge"
-                onChange={handleChangeAgeGroup}
-                value={surveyTagline.ageGroup.maxAge}
-                className="w-12 outline-none dark:bg-zinc-700 dark:text-neutral-100 bg-neutral-200  text-zinc-900 text-center rounded"
-                type="number"
-                min={8}
-                max={120}
-                placeholder="Max"
-              />
-              <label className="text-xs">Target Age Group</label>
+          <div className="my-6  rounded-xl  shadow flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium ">Boost Points:</span>
+              <select name = 'booster' onChange={handleChangeTagline} className="rounded px-2 py-1 bg-white   text-zinc-950  focus:outline-none">
+                {[0, 1, 2, 3, 4, 5].map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className='p-2 mt-10'>
-              <p className='text-xs text-zinc-950 dark:text-neutral-100'>
-                Genders 
-              </p>
-              <GenderOptions  onClick = {handleChangeGender} selectedGenders = {surveyTagline.genderGroup} />
-            </div>
+            <p className="text-xs opacity-50 mt-1">
+              Boosting your survey pushes it to the homepage more often and
+              helps you reach a wider audience faster.
+            </p>
           </div>
           <div className="space-y-4 py-4 px-1 my-10">
             <div>
@@ -160,9 +136,6 @@ const CreateSurvey = () => {
             </div>
           </div>
           <QuestionList setQuestions={setQuestions} questions={questions} />
-          {!isPublishSuccess && !isDraftSuccess && (draftError || error) && (
-            <p className="text-xs text-red-400">{error || draftError}</p>
-          )}
           <div className="flex flex-col gap-2 my-10">
             <div className="flex gap-2">
               <Button
@@ -176,7 +149,7 @@ const CreateSurvey = () => {
               </Button>
               <Button
                 onClick={toggleModal}
-                className="w-full p-2 bg-neutral-200 text-zinc-900 rounded-lg"
+               className="w-full p-2 mx-auto bg-neutral-200 text-zinc-900 rounded-lg"
               >
                 Add Question
               </Button>
@@ -185,7 +158,7 @@ const CreateSurvey = () => {
               <Button
                 loadingState={isPublishingPending}
                 onClick={publishSurvey}
-                className="w-full p-2 bg-zinc-700 text-neutral-100 rounded-lg"
+                  className="w-full p-2 mx-auto bg-blue-600 text-white  rounded-lg"
                 disabled={isPublishingPending || isSavingAsDraft}
               >
                 Publish

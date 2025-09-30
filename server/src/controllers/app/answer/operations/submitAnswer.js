@@ -6,11 +6,14 @@ const Survey = require("../../../../models/survey.js");
 const Answer = require("../../../../models/answer.js");
 const { monitorStreak } = require("../../../utils/survey/monitorStreak.js");
 const User = require("../../../../models/user.js");
+const Notification = require("../../../../models/notification.js");
+const { validateSurveyFields } = require("../../../../middlewares/validation/survey/validateSurveyFields.js");
 
 const submitAnswer = async(req, res, _, commit) => {
   const { verifiedUser } = req;
   const { answers, survey } = req.body;
-  const surveyData = (await Survey.findById(survey._id))
+
+  const surveyData = await Survey.findById(survey._id)
 
   
   if(!surveyData){
@@ -35,30 +38,7 @@ const submitAnswer = async(req, res, _, commit) => {
     })
   }
 
-if (verifiedUser.interests.every(i => !surveyData.tags.includes(i))) {
-  return res.status(400).json({
-    success: false,
-    message: `This survey requires interests in: ${surveyData.tags.join(", ")}.`,
-  });
-}
 
-if (!surveyData.genderGroup.includes(verifiedUser.gender)) {
-  return res.status(400).json({
-    success: false,
-    message: `This survey is only open to: ${surveyData.genderGroup.join(", ")}.`,
-  });
-}
-
-const { userAge: age } = req;
-
-const { minAge, maxAge } = surveyData.ageGroup
-
-if (age < minAge || age > maxAge) {
-  return res.status(400).json({
-    success: false,
-    message: `This survey is only open to users between ${minAge} and ${maxAge} years old. Your age is ${age}.`,
-  });
-} 
   const plainRespondentIds = surveyData.respondents.map(r => r.toString());
   
   if(plainRespondentIds.includes(verifiedUser._id.toString())){
@@ -166,9 +146,13 @@ if (age < minAge || age > maxAge) {
   surveyData.hasReachedTargetRespondents = surveyData.totalRespondents >= targetRespondents;
    
  
-   author.point.current += 10;
-   author.point.highest = Math.max(author.point.current, author.point.highest)
-  
+   author.core.current += 10;
+   author.core.highest = Math.max(author.core.current, author.core.highest)
+  verifiedUser.core.current += 15;
+  verifiedUser.core.highest = Math.max(
+    verifiedUser.core.highest,
+    verifiedUser.core.current
+  );
   const newAns = new Answer(properFormat);
   const { session } = req;
    const { modified } = monitorStreak({ user: verifiedUser });
@@ -177,10 +161,27 @@ if (age < minAge || age > maxAge) {
   } 
   await author.save({session})
   await surveyData.save({session});
-  const data = await newAns.save({session});
+  const data = await newAns.save({session}); 
+  console.log(data)
 
-  await commit();
-  
+  if(surveyData.hasReachedTargetRespondents){ 
+     await new Notification({
+      sender: verifiedUser._id, 
+      receiver: author._id, 
+      action: 'survey-completed', 
+      resourceId: surveyData._id
+    })
+  }else{
+     await new Notification({
+       sender: verifiedUser._id,
+       receiver: author._id,
+       action: "answer",
+       resourceId: data._id,
+     }).save({ session });
+  }
+
+    await commit();
+
   
   
   return res.status(200).json({
@@ -194,6 +195,6 @@ module.exports = build => build({
   name: "submit_answer", 
   path: "/answer", 
   method: "post", 
-  middlewares: [verifySession],
+  middlewares: [verifySession, validateSurveyFields],
   fn: catchErrorWithSession(submitAnswer)
 })

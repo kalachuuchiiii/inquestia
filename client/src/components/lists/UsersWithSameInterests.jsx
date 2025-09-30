@@ -3,13 +3,16 @@ import { fetchApi } from '../../utils/fetchApi';
 import useAsync from '../../hooks/useAsync';
 import UserIcon from '../UserIcon';
 import { useSelector } from 'react-redux';
+import UserCardPlaceholder from '../card/placeholders/UserCardPlaceholder';
 
 
 
 const UsersWithSameInterests = () => {
-    const { user } = useSelector((state) => state.user);
+    const { user, isAuthenticated } = useSelector((state) => state.user);
     const [ users, setUsers ] = useState([]);
+   
     const [getUsers, { isLoading, error }] = useAsync(async () => {
+       if(!user || !isAuthenticated)return;
         const res = await fetchApi("get", `/user/similar-interests`);
         if (!res?.success) return;
         console.log(res);
@@ -17,13 +20,13 @@ const UsersWithSameInterests = () => {
     })
 
     useEffect(() => {
-
+        if(!user || !isAuthenticated)return;
         getUsers();
-    }, []);
+    }, [user, isAuthenticated]);
 
 
   return (
-    <div className="w-2/4 top-0 sticky right-0 h-screen pb-6 px-6 hidden lg:block">
+    <div className="w-100 top-0 sticky right-0 h-screen p-6 pt-10 hidden lg:block">
       <div>
         <div className="flex items-center gap-3 px-4 py-5 h-16 border-b border-gray-200 dark:border-gray-800">
           <div className="shrink-0 ">
@@ -46,17 +49,20 @@ const UsersWithSameInterests = () => {
       </p>
       <hr className="mb-4" />
       <div>
-        {users.length > 0 &&
+        {users.length > 0 ? (
           users.map((user) => (
             <div
               key={user._id}
-              className="p-2 border-b border-neutral-200 dark:border-neutral-800"
+              className="p-2 border-b overflow-x-auto scroll-m-1 border-neutral-200  dark:border-neutral-800"
             >
               <UserIcon user={user}>
                 <UserIcon.Card size="8" />
               </UserIcon>
             </div>
-          ))}
+          ))
+        ) : isLoading ? (
+          <UserCardPlaceholder />
+        ) : <p className='w-full text-center opacity-50'>No users found.</p>}
       </div>
     </div>
   );

@@ -3,14 +3,14 @@ const { use } = require("../../../../config/nodemailer");
 const { verifyObjectId } = require("../../../../middlewares/verification/verifyObjectId")
 const { verifySession } = require("../../../../middlewares/verification/verifySession");
 const User = require("../../../../models/user");
-const { catchError } = require("../../../../utils/errorHandlers/catchError");
+const { catchError, catchErrorWithSession } = require("../../../../utils/errorHandlers/catchError");
 const { sendEmail } = require("../../../../utils/email/sendEmail");
 const Report = require("../../../../models/report");
 
 
 const banDurationSchema = z.number({ required_error: 'Ban Duration is required.'});
-const banUser = async (req, res) => {
-    const { verifiedId, verifiedUser } = req;
+const banUser = async (req, res, _, commit) => {
+    const { verifiedId, verifiedUser, session } = req;
     const { reportId } = req.body;
     if(verifiedUser.role !== 'admin'){
         return res.status(401).json({
@@ -45,29 +45,27 @@ const banUser = async (req, res) => {
         })
     }
     
-    const bannedFor = Date.now() - new Date(userToBan.bannedAt).getTime();
-    const isStillBanned =  bannedFor < userToBan.banDuration;
+   
+    const { isBanned, remainingBanDurationInDays, remainingBanDurationInHour, remainingBanDurationInMinutes } = isStillBanned(userToBan?.bannedAt, userToBan?.banDuration);
 
-    if(isStillBanned){
-        const remainingBanDurationInMinutes = Math.floor((userToBan.banDuration - bannedFor) / (1000 * 60))
-        const remainingBanDurationInHour = Math.floor((userToBan.banDuration - bannedFor) / (1000 * 60 * 60));
-        const remainingBanDurationInDays = Math.floor(
-          (userToBan.banDuration - bannedFor) / (1000 * 60 * 60 * 24)
-        );
-
-       
+    if(isBanned){     
         const format = `${userToBan.username} is already banned. Remaining time: ${remainingBanDurationInDays} day(s) or ${remainingBanDurationInHour} hour(s) or ${remainingBanDurationInMinutes} minute(s)`;
-  
            return res.status(400).json({
-            success: false, 
-            message: format
-           })
+             success: false,
+             message: format,
+           });
     }
 
     userToBan.banDuration = banDuration;
     userToBan.bannedAt = new Date();
 
-    await userToBan.save();
+    report.isResolved = true;
+    report.resolveAction = 'Banned';
+
+
+    await userToBan.save({session});
+    await report.save({session})
+    await commit();
 
 
 const banDurationInDays = Math.floor(banDuration / (1000 * 60 * 60 * 24));
@@ -113,7 +111,7 @@ const banDurationInMinutes = Math.floor(banDuration / (1000 * 60 ));
 
 module.exports = (build) => build({
     name: 'BanUser',
-    fn: catchError(banUser),
+    fn: catchErrorWithSession(banUser),
     path: '/admin/ban/:resourceId', 
     middlewares: [verifyObjectId, verifySession],
     method: 'patch'

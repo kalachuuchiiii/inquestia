@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { interests } = require("../data/interests.js");
 const questionSchema = require("./subdoc/question.js");
 
 const selectTypeQuestionSchema = new mongoose.Schema({
@@ -11,7 +10,7 @@ const selectTypeQuestionSchema = new mongoose.Schema({
     type: [{
       type: String,
       minlength: [1, 'Each choice must contain at least 1 character.'],
-      maxlength: [30, 'Each choice cannot exceed 30 characters.']
+      maxlength: [100, 'Each choice cannot exceed 100 characters.']
     }],
     validate: {
       validator: function (val) {
@@ -27,37 +26,15 @@ const surveySchema = new mongoose.Schema(
     title: {
       type: String,
       minlength: [6, "Survey title must be at least 6 characters long."],
-      maxlength: [150, "Survey title cannot exceed 150 characters."],
+      maxlength: [250, "Survey title cannot exceed 250 characters."],
       required: [true, "Survey title is required."],
     },
     description: {
       type: String,
-      minlength: [6, "Survey description must be at least 10 characters long."],
-      maxlength: [150, "Survey description cannot exceed 150 characters."],
+      minlength: [6, "Survey description must be at least 6 characters long."],
+      maxlength: [500, "Survey description cannot exceed 500 characters."],
       required: [true, "Survey description is required."],
     },
-    ageGroup: {
-      minAge: {
-        type: Number,
-        min: 8,
-        max: 120,
-        default: 8
-      },
-      maxAge: {
-        type: Number,
-        min: 8,
-        max: 120,
-        default: 120
-      },
-    },
-    genderGroup: [
-        {
-          type: String, 
-          enum: ['male', 'female', 'non-binary', 'transgender', 'other'],
-          default: ['male', 'female', 'non-binary', 'transgender', 'other']
-        }
-    ],
-
     targetRespondents: {
       type: Number,
       min: [3, "Target respondents must be at least 3."],
@@ -102,6 +79,12 @@ const surveySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    booster: {
+      type: Number, 
+      default: 0,
+      min: 0,
+      max: 5
+    }
   },
 
   { timestamps: true }
@@ -117,10 +100,20 @@ const deleteAll = async () => {
 
 const indexes = async() => {
   await Survey.collection.dropIndex("respondents_1");
-
 }
 
-//deleteAll();
+surveySchema.pre('deleteOne', async function() {
+  const reports = await mongoose.model("Report").deleteMany({
+    'reportedEntity.entityId': this._id
+  })
+  console.log(reports)
+})
+
+const del = async() => {
+  await Survey.deleteMany();
+}
+
+
 
 mongoose.model("Question", questionSchema);
 module.exports = Survey;

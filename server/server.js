@@ -7,6 +7,10 @@ const redis = require("./src/config/redis/index.js");
 const { connectDB } = require("./src/config/mongodb/index.js");
 const mainRouter = require("./src/router/index.js");
 const { requestTracker } = require("./src/middlewares/tracker/requestTracker.js");
+const User = require("./src/models/user.js");
+const Survey = require("./src/models/survey.js");
+const Notification = require("./src/models/notification.js");
+const Answer = require("./src/models/answer.js");
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
@@ -23,7 +27,7 @@ const getLimiter = rateLimit({
 });
 
 const writeLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
+  windowMs: 60 * 1000, 
   max: 20,
   message: "Too many write requests, please try again later.",
 });
@@ -49,12 +53,14 @@ app.use(requestTracker)
 
 app.use("/api", mainRouter);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; 
+
 
 app.listen(PORT, async () => {
   try {
     await connectDB();
     await redis.connect();
+    
     console.log(`✅ Server running on port ${PORT}`);
   } catch (err) {
     console.error("❌ Failed to start services:", err);

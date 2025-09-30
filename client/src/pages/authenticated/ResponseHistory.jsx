@@ -1,24 +1,25 @@
-
 import { useEffect, useState } from 'react';
 import useAsync from '../../hooks/useAsync.js';
 import { fetchApi } from '../../utils/fetchApi.js';
 import AnswerCard from '../../components/card/AnswerCard.jsx';
 import { useInView } from 'react-intersection-observer';
 import LoadingDisplay from '../../components/html/LoadingDisplay.jsx';
-import { NavLink } from 'react-router-dom';
 import ArrowButton from '../../components/html/ArrowButton.jsx';
 
 const ResponseHistory = () => {
   const [answerList, setAnswerList] = useState([]); 
   const [nextPage, setNextPage] = useState(1);
-  const [getAnswerList, { isLoading, error }] = useAsync(async({page = 1, overwrite = true} = {}) => {
-    const res = await fetchApi("get", "/answer/list", {
-      page
-    });
-    if(!res?.success)return;
-    setNextPage(res.nextPage);
-    setAnswerList(prev => overwrite ? res.answers : [...prev, ...res.answers])
-  })
+
+  const [getAnswerList, { isLoading }] = useAsync(
+    async ({ page = 1, overwrite = true } = {}) => {
+      const res = await fetchApi("get", "/answer/list", { page });
+      if (!res?.success) return;
+      setNextPage(res.nextPage);
+      setAnswerList(prev =>
+        overwrite ? res.answers : [...prev, ...res.answers]
+      );
+    }
+  );
   
   const { ref, inView } = useInView();
   
@@ -27,36 +28,67 @@ const ResponseHistory = () => {
   }, []);
   
   useEffect(() => {
-    if(!inView || nextPage === null || isLoading)return;
-    getAnswerList({ page: nextPage, overwrite: false})
-  }, [ref, inView, nextPage])
+    if (!inView || nextPage === null || isLoading) return;
+    getAnswerList({ page: nextPage, overwrite: false });
+  }, [inView, nextPage]);
   
-  
-return (
-  <div className="p-1 w-full">
-    {answerList?.length > 0 && (
-      <div>
-        <div className="p-1 flex w-full justify-center">
-          <p className="">Your response records: </p>
-        </div>
-        {answerList.map((ans) => (
-          <AnswerCard showRedirect key={ans._id} answer={ans} />
-        ))}
-        <div ref={ref} />
-      </div>
-    )}
-    {isLoading ? (
-      <LoadingDisplay>Loading more responses...</LoadingDisplay>
-    ) : (
-      answerList?.length === 0 && (
-        <div className="w-full h-40 text-center flex gap-2 flex-col items-center justify-center">
-          <p>You have not answered any surveys yet.</p>
-          <ArrowButton className='text-lg gap-4' to='/home'>Start Answering</ArrowButton>
-        </div>
-      )
-    )}
-  </div>
-);
-}
+  return (
+    <div className="p-6 w-full max-w-3xl mx-auto">
+      {answerList?.length > 0 && (
+        <div className="space-y-6">
+        
+          {/* Header */}
+          <div className="flex flex-col items-center text-center">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
+              Your Response Records
+            </h1>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+              A history of all the surveys you’ve contributed to. 
+              Keep track of your answers and revisit surveys anytime!
+            </p>
+          </div>
 
-export default ResponseHistory
+          {/* Answer list */}
+          <div className="space-y-4">
+            {answerList.map((ans) => (
+              <AnswerCard
+                key={ans._id}
+                answer={ans}
+                showRedirectToSurvey
+                className="rounded-xl shadow-md hover:shadow-xl transition bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-cyan-400"
+              />
+            ))}
+          </div>
+
+          {/* Infinite scroll trigger */}
+          <div ref={ref} className="h-12" />
+        </div>
+      )}
+
+      {/* Loading state */}
+      {isLoading && (
+        <div className="mt-8">
+          <LoadingDisplay>Loading more responses...</LoadingDisplay>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!isLoading && answerList?.length === 0 && (
+        <div className="w-full h-72 flex flex-col gap-5 items-center justify-center text-center">
+          <p className="text-lg font-semibold text-zinc-700 dark:text-zinc-300">
+            You haven’t answered any surveys yet.
+          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-md">
+            Start your journey by sharing your thoughts in surveys. 
+            Your opinions shape better results for everyone ✨
+          </p>
+          <ArrowButton to='/home' className="text-base gap-3 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg shadow-lg hover:shadow-xl transition">
+            Start Answering
+          </ArrowButton>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ResponseHistory;

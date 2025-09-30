@@ -52,10 +52,8 @@ return (
         </div>
       </div>
       <div className="flex flex-col items-end justify-center gap-2">
-        {isSuccess ? (
+        {isSuccess && (
           <p className="text-xs text-blue-400">Successfully sent!</p>
-        ) : (
-          error && <p className="text-red-400 text-xs">{error}</p>
         )}
         <Button
           disabled={isLoading || isSuccess || timer !== 60}

@@ -9,7 +9,10 @@ import useInterval from '../../../hooks/useInterval.js';
 const ResendButton = ({ requestToken = () => {}, isLoading = false, timer = 60, setTimer = () => {}, isSuccess = false}) => {
   
   
-  useInterval({ fn: () => setTimer(prev => prev <= 0 ? null : prev - 1), }, []);
+  useInterval(
+    { fn: () => setTimer((prev) => (prev <= 0 ? null : prev - 1)) },
+    []
+  );
   
   const handleResend = async() => {
     if(timer > 0)return;
@@ -27,11 +30,14 @@ const ForgotPasswordRequestModal = ({ onClose = () => { } }) => {
   const [email, setEmail] = useState(null);
   const [timer, setTimer] = useState(60);
   const [requestToken, { isLoading, error, isSuccess }] = useAsync(async ({ isResend = false} = {}) => {
+    console.log(email)
     if(isResend && !isSuccess && timer > 0)return;
+
 
     const res = await fetchApi("post", "/user/send-request-token-f-p", {
       email
     });
+    console.log(res);
     setTimer(60)
     return res;
   })

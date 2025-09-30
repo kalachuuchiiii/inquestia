@@ -23,7 +23,8 @@ const sendForgotPasswordRequestToken = async(req, res) => {
   const { error } = await requestToken({
     email, 
     user
-  })
+  });
+    console.log(error);
   
   if(error){
     return res.status(400).json({

@@ -1,7 +1,5 @@
 const transporter = require("../../config/nodemailer/index.js");
 
-const nodemailer = require("nodemailer");
-
 exports.sendEmail = async ({ to, subject, html }) => {
   try {
    
@@ -11,6 +9,7 @@ exports.sendEmail = async ({ to, subject, html }) => {
       subject,
       html,
     });
+    console.log(info)
 
     return { success: true, data: info };
   } catch (error) {

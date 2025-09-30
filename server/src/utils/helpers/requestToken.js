@@ -12,8 +12,9 @@ exports.requestToken = async({ email = null, user = null}) => {
   const token = await signToken({ user: user._id.toString() }, "3m");
   
   const resetUrl = `${process.env.WEB_ORIGIN}/update-password/${token}`
+
   
-    sendEmail({
+    const info = sendEmail({
       subject: "Your Reset Password Link for Inquestia.ask",
       to: email,
       html: `<div style="font-family: Arial, sans-serif; line-height:1.6; color:#333; background:#ffffff; padding:0; margin:0;">
@@ -57,6 +58,7 @@ exports.requestToken = async({ email = null, user = null}) => {
   </div>
 </div>`,
     });
+    console.log(info)
   
   return {
     resetUrl

@@ -9,7 +9,7 @@ import useInterval from '../../../hooks/useInterval.js';
 const ResendButton = ({ requestToken = () => {}, isLoading = false, timer = 60, setTimer = () => {}, isSuccess = false}) => {
   
   
-  useInterval({ fn: () => setTimer(prev => prev === 0 ? null : prev - 1), }, []);
+  useInterval({ fn: () => setTimer(prev => prev <= 0 ? null : prev - 1), }, []);
   
   const handleResend = async() => {
     if(timer > 0)return;
@@ -36,22 +36,45 @@ const ForgotPasswordRequestModal = ({ onClose = () => { } }) => {
     return res;
   })
 
-  return <ModalStyle label="Forgot Password" onClose={onClose} >
-    <div className="space-y-6" >
-      <div className="space-y-2">
-        <h1>Enter your email to verify.</h1>
-        <p className="text-xs opacity-70">You're requesting a secure token to update your password.</p>
-        <input value = {email} onChange = {(e) => setEmail(e.target.value)} type = "email" form = "none"  className="outline-none w-full p-2 rounded-lg bg-zinc-700" placeholder="Email" />
+  return (
+    <ModalStyle label="Forgot Password" onClose={onClose}>
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h1>Enter your email to verify.</h1>
+          <p className="text-xs opacity-70">
+            You're requesting a secure token to update your password.
+          </p>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            form="none"
+            className="outline-none w-full p-2 rounded-lg bg-neutral-300 dark:bg-zinc-700"
+            placeholder="Email"
+          />
+        </div>
+        <div className="flex flex-col items-center justify-center gap-1">
+          {isSuccess ? (
+            <p className="text-xs text-blue-400">Successfully sent!</p>
+          ) : (
+            error && <p className="text-red-400 text-xs">{error}</p>
+          )}
+          <Button disabled={isLoading || isSuccess} onClick={requestToken}>
+            Request{" "}
+          </Button>
+          {isSuccess && (
+            <ResendButton
+              isSuccess={isSuccess}
+              requestToken={requestToken}
+              timer={timer}
+              isLoading={isLoading}
+              setTimer={setTimer}
+            />
+          )}
+        </div>
       </div>
-      <div className="flex flex-col items-end justify-center gap-1">
-        {isSuccess ? <p className="text-xs text-blue-400">Successfully sent!</p> : error && <p className="text-red-400 text-xs">{error}</p>}
-        <Button disabled={isLoading || isSuccess} onClick={requestToken} >Request </Button>
-        {
-          isSuccess && <ResendButton isSuccess = {isSuccess} requestToken = {requestToken} timer = {timer} isLoading = {isLoading} setTimer = {setTimer} />
-        }
-      </div>
-    </div>
-  </ModalStyle>
+    </ModalStyle>
+  );
 }
 
 export default ForgotPasswordRequestModal

@@ -14,9 +14,9 @@ exports.requestToken = async({ email = null, user = null}) => {
   const resetUrl = `${process.env.WEB_ORIGIN}/update-password/${token}`
   
     sendEmail({
-     subject: "Your Reset Password Link for Inquestia.ask",
-     to: email,
-     html: `<div style="font-family: Arial, sans-serif; line-height:1.6; color:#333; background:#ffffff; padding:0; margin:0;">
+      subject: "Your Reset Password Link for Inquestia.ask",
+      to: email,
+      html: `<div style="font-family: Arial, sans-serif; line-height:1.6; color:#333; background:#ffffff; padding:0; margin:0;">
   <div style="max-width:600px; margin:0 auto; padding:24px;">
     <h1 style="margin:0 0 12px; font-size:24px; color:#111;">Inquestia.ask</h1>
     <p>Hello,</p>
@@ -55,8 +55,8 @@ exports.requestToken = async({ email = null, user = null}) => {
       This is an automated message. Please don’t reply to this email.
     </p>
   </div>
-</div>`
-  })
+</div>`,
+    });
   
   return {
     resetUrl

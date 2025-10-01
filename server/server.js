@@ -14,6 +14,10 @@ const Answer = require("./src/models/answer.js");
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
+(async() => {
+    await connectDB();
+    await redis.connect();
+})();
 
 app.use(cors({
   origin: process.env.WEB_ORIGIN,
@@ -58,12 +62,11 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, async () => {
   try {
-    await connectDB();
-    await redis.connect();
-    
+  
     console.log(`✅ Server running on port ${PORT}`);
   } catch (err) {
     console.error("❌ Failed to start services:", err);
+    process.exit(1);
   }
 });
 

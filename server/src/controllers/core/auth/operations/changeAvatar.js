@@ -3,9 +3,10 @@ const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 const multer = require("multer");
 const { uploadImage, deleteImage } = require("../../../../config/cloudinary/utils/index.js");
 const fs = require("fs");
+const storage = multer.memoryStorage();
 
 const upload = multer({
-  dest: "uploads/"
+  storage
 });
 
 const User = require("../../../../models/user.js");

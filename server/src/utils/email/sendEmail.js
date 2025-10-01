@@ -10,13 +10,14 @@ exports.sendEmail = async ({ to, subject, html }) => {
         user: "parissrowlet@gmail.com",
         pass: process.env.APP_KEY,
       },
-      rejectUnauthorized: false,
+     
       tls: {
         ciphers: "SSLv3",
+         rejectUnauthorized: false,
       },
     });
    
-    const inf = await new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
     transporter.sendMail(
       {
         from: `parissrowlet@gmail.com`,
@@ -35,7 +36,7 @@ exports.sendEmail = async ({ to, subject, html }) => {
     );
   });
 
-    return { success: true, data: inf };
+    return { success: true };
   } catch (error) {
     console.log(error)
     throw error;

@@ -1,13 +1,13 @@
 const Controller = require("../../../controllers/utils/createCRUD/index.js");
-const { fileReader } = require("../../../utils/directoryReader.js");
 
 const { build, getRouter } = Controller("Answer", {
   defaultCrud: false
 })
- 
- const builders = fileReader([__dirname, "operations"]);
 
-Object.entries(builders?.results || {}).forEach(([key, routeBuilder]) => routeBuilder(build))
- 
- module.exports = getRouter();
+require("./operations/getAnswerById.js")(build);
+require("./operations/getAnswerOfUser.js")(build);
+require("./operations/getSurveyAnswers.js")(build);
+require("./operations/submitAnswer.js")(build);
+
+module.exports = getRouter();
 

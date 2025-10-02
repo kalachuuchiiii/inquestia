@@ -55,11 +55,14 @@ app.use("/api", mainRouter);
 
 const PORT = process.env.PORT || 5000; 
 
+connectDB().then(async() => {
+  await redis.connect();
+})
+
 
 app.listen(PORT, async () => {
   try {
-    await connectDB();
-    await redis.connect();
+   
     console.log(`✅ Server running on port ${PORT}`);
   } catch (err) {
     console.error("❌ Failed to start services:", err);

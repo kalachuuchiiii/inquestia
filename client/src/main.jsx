@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import store from './state/store.js';
 import { PostHogProvider } from 'posthog-js/react';
 
+
 const options = {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
   defaults: '2025-05-24',

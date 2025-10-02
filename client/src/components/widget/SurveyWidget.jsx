@@ -10,7 +10,7 @@ import useToggler from '../../hooks/useToggler.js';
 const SurveyWidget = ({ onClose = () => { }, surveyId = null, title = '', closeSurvey = () => { }, isClosingSurvey = false, isDraft = false, Context = null}) => {
   const [isDeleteConfirmationDisplayOpen, o, c, toggle] = useToggler(false);
 
-  const btnStyle = "p-2 text-neutral-100 text-center";
+  const btnStyle = "p-2 text-neutral-100 mx-auto text-center";
 
   return (
     <>

@@ -35,7 +35,7 @@ return (
     <div className="my-3 flex flex-col gap-1">
       {multipleChoice && (
         <p className="bg-neutral-100 rounded-lg px-3 py-1 text-xs my-2 text-zinc-900 w-fit">
-          Multiple Choice
+          You can select multiple options
         </p>
       )}
       <div className="p-2 w-full ml-auto border-l-1 space-y-1 text-sm border-l-neutral-100">

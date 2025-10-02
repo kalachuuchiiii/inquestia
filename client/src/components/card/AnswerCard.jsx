@@ -91,7 +91,7 @@ const AnswerCard = ({
                 </p>
                 {q?.multipleChoice && (
                   <span className="text-[11px] font-medium px-2 py-0.5 bg-neutral-200 dark:bg-zinc-800 rounded">
-                    Multiple Choice
+                      You can select multiple options
                   </span>
                 )}
               </div>

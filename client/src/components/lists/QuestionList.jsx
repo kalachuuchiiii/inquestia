@@ -52,7 +52,7 @@ const QuestionList = ({ questions = [], setQuestions = () => { } }) => {
           <div>
             <SelectAnswerQue.Choices />
             <SelectAnswerQue.AddOption />
-            <SelectAnswerQue.ErrorDisplay />
+           
           </div>
         </SelectAnswerQue>
       );

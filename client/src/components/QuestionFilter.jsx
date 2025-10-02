@@ -14,6 +14,7 @@ const q = questions?.[current] || {
   type: "text",
   question: "No questions available",
   choices: [],
+  multipleChoice: false,
   answer: ['']
 };
 
@@ -69,9 +70,7 @@ const q = questions?.[current] || {
               <div className="flex flex-col gap-2">
                 {q.choices &&
                   q.choices.map((choice, idx) => {
-                    const isSelected = getFieldById(q._id).answer.includes(
-                      choice
-                    );
+                    const isSelected = getFieldById(q._id).answer.includes(choice);
                     return (
                       <label
                         key={idx}
@@ -83,17 +82,27 @@ const q = questions?.[current] || {
                       >
                         <button
                           type="button"
-                          onClick={(e) =>
-                            handleChange(
-                              (prev) => ({
-                                ...prev,
-                                answer: prev.answer.includes(choice)
-                                  ? prev.answer.filter((ans) => ans !== choice)
-                                  : [...prev.answer, choice],
-                              }),
-                              q._id
-                            )
-                          }
+                          onClick={() => {
+                            handleChange((prev) => {
+                              if (q.multipleChoice) {
+                                // Multiple choice: toggle selection
+                                return {
+                                  ...prev,
+                                  answer: prev.answer.includes(choice)
+                                    ? prev.answer.filter((ans) => ans !== choice)
+                                    : [...prev.answer, choice],
+                                };
+                              } else {
+                                // Single choice: only one can be selected
+                                return {
+                                  ...prev,
+                                  answer: prev.answer.includes(choice)
+                                    ? []
+                                    : [choice],
+                                };
+                              }
+                            }, q._id);
+                          }}
                         />
                         <span className="text-gray-700 dark:text-gray-200">
                           {choice}

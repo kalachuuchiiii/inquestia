@@ -139,7 +139,7 @@ SelectAnswerQue.MultipleChoiceButton = () => {
   
   return <div className="flex gap-3 ">
             <input onChange = {handleToggleMultipleChoice} checked = {question.multipleChoice} type = "checkbox" />
-        <p className="text-xs">Allow multiple choice </p>
+        <p className="text-xs">Allow selection of multiple options </p>
       </div>
 }
 

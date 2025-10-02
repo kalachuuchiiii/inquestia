@@ -114,7 +114,7 @@ const submitAnswer = async(req, res, _, commit) => {
         if(!qst.multipleChoice && answer.length > 1){
           return res.status(400).json({
           success: false, 
-          message: "You can only select multiple answers if the questions allows multiple choice."
+          message: "You can only select multiple options if the questions allows it."
         })
         }
         

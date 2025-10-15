@@ -122,15 +122,17 @@ const AnswerCard = ({
             <div key={q._id || i} className="text-sm space-y-1">
               {/* Question Header */}
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-semibold text-zinc-700 dark:text-zinc-200">
+                <div className="flex items-start gap-1">
+                  <span className="font-semibold mt-1 text-zinc-700 dark:text-zinc-200">
                   {i + 1}.
                 </span>
-                <span className="font-medium text-base truncate max-w-[60vw]">
-                  {q.question}
-                </span>
-                <span className="ml-1 px-2 py-0.5 rounded bg-blue-50 dark:bg-zinc-800 text-blue-600 dark:text-blue-300 text-[10px] font-semibold">
+                <span className="font-medium text-base  max-w-[60vw]">
+                  <span className="ml-1 mb-2 px-2 py-0.5 rounded bg-blue-50 dark:bg-zinc-800 text-blue-600 dark:text-blue-300 text-[10px] font-semibold">
                   {capitalize(questionType[q.type] || "Unknown")}
+                </span> {q.question}
                 </span>
+                  </div>
+               
                 {q?.multipleChoice && (
                   <span className="ml-1 text-[10px] font-medium px-2 py-0.5 bg-neutral-200 dark:bg-zinc-800 rounded">
                     Multi

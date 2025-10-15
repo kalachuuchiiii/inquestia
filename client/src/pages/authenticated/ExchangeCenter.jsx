@@ -108,7 +108,7 @@ const ExchangeCenter = () => {
             </span>
           </p>
 
-          <div className="flex flex-wrap justify-center gap-4 w-full">
+          <div className="grid grid-cols-2  justify-center gap-4 w-full">
             {LOAD_OPTIONS.map((amount) => (
               <div
                 key={amount}
@@ -141,18 +141,18 @@ const ExchangeCenter = () => {
             visibility and get more responses!
           </p>
 
-          <div className="flex flex-wrap justify-center gap-4 w-full">
+          <div className="grid grid-cols-2 justify-center gap-4 w-full">
             {[1, 3, 5, 10].map((boost) => (
               <div
                 key={boost}
                 className="flex flex-col items-center bg-gradient-to-br from-green-50/60 to-white dark:from-zinc-800 dark:to-zinc-900 border border-green-100 dark:border-zinc-700 rounded-xl p-5 shadow-sm w-32 hover:shadow-md transition"
               >
-                <span className="text-lg flex items-center gap-2 font-bold text-green-700 dark:text-green-300 mb-1">
+                <span className="text-lg flex items-center truncate gap-2 font-bold text-green-700 dark:text-green-300 mb-1">
                   <FaBolt /> {boost} Boost
                 </span>
                 <span className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
                   {(boost * 10000).toLocaleString()} cores
-                </span>
+                </span> 
                 <button
                   onClick={() => toggleAreYouSureModal(boost)}
                   className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-400 text-white font-semibold py-1.5 rounded-lg transition disabled:opacity-50 text-sm shadow"

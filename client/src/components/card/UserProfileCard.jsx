@@ -10,7 +10,9 @@ const UserProfileCard = ({ user = {} }) => {
     <div className="space-y-6">
       {/* Header Section */}
       <UserProfile user={user} className="flex gap-4 items-center">
-        <UserProfile.Avatar size="20" className="text-20" />
+        <div>
+           <UserProfile.Avatar size="20" className="text-20" />
+        </div>
         <div className="text-left">
           <UserProfile.Nickname className="text-xl " />
           <UserProfile.Username showAt className="text-xs opacity-70" />

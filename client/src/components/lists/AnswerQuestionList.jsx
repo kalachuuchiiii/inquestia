@@ -25,7 +25,7 @@ const { mode } = useSelector(state => state.theme)
       <div className="text-sm px-2 opacity-50 mb-4">
         Questions provided for you:
       </div>
-      <div className="flex items-center w-full max-w-xl justify-between">
+      <div className="flex items-center w-full  justify-between">
         <button
           onClick={handlePrev}
           disabled={current === 0}

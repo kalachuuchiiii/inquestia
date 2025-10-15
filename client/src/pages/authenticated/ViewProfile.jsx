@@ -76,17 +76,17 @@ const ViewProfilePage = () => {
         )}
       </AnimatePresence>
       <div className="p-3 w-full">
-        <div className="space-y-4 flex justify-between p-3 gap-2 items-start w-full">
+        <div className="space-y-4 md:flex flex-col justify-between p-3 gap-2 items-start w-full">
           {userProfile && (
             <div className="w-full">
               <UserCard user={userProfile} />
             </div>
           )}
           <button
-            className="shrink-0 p-2"
+            className="p-2 flex gap-2 items-center"
             onClick={() => setIsReporting((prev) => !prev)}
           >
-            <GoReport size={26} />
+            <GoReport size={26} /> <p >Report</p>
           </button>
         </div>
         {userSurveys?.length > 0 ? (

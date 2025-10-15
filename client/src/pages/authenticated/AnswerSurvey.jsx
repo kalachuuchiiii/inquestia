@@ -88,7 +88,7 @@ const AnswerSurvey = () => {
               {(isAuthor || isAuthorizedViewer) && (
             <div className=" flex justify-end">
               <NavLink 
-               className="inquestia-button"
+               className="inquestia-button  text-xs"
                to = {`/answer/s/${survey._id}`}
               >
                 View Answers
@@ -106,8 +106,17 @@ const AnswerSurvey = () => {
         </div>
         <section className="space-y-4 p-4">
           
-          <div className="flex gap-3 lg:gap-10 items-center">
-            <div
+          <div className="flex gap-3 lg:gap-10 items-start">
+           
+            <div>
+              <h1 className="text-2xl md:ml-3 font-semibold">{survey.title}</h1>
+              {survey.description && (
+                <p className="leading-relaxed text-sm opacity-70">
+                  {survey.description}
+                </p>
+              )}
+            </div>
+             <div
               ref={qrParent}
               className="flex rounded-xl outline outline-white/20 py-2 px-4 flex-col gap-2"
             >
@@ -126,14 +135,6 @@ const AnswerSurvey = () => {
                 {" "}
                 <BsDownload /> Download
               </button>
-            </div>
-            <div>
-              <h1 className="text-2xl font-semibold">{survey.title}</h1>
-              {survey.description && (
-                <p className="leading-relaxed text-sm opacity-70">
-                  {survey.description}
-                </p>
-              )}
             </div>
           </div>
           <div className="text-xs flex gap-3 items-center opacity-70">

@@ -36,7 +36,7 @@ UserIcon.Nickname = memo(({nickname = "", className = '', badgeSize = 'md'}) => 
     }
   } }= useCtx(UserContext);
   return (
-    <div className={`${className} flex gap-2 items-center`}>
+    <div className={`${className} flex overflow-x-scroll gap-2 items-center`}>
       <p className=" truncate ">{user?.nickname || user?.username}</p>
       {user?.badge?.badge && (
         <>

@@ -31,7 +31,7 @@ const SharedSurvey = () => {
 
 
   return (
-    <div>
+    <div className='w-11/12 mx-auto md:w-full'>
       <div className="my-8">
         <h1 class="text-2xl font-bold text-gradient text-zinc-800 dark:text-zinc-100">
           Surveys Shared With You

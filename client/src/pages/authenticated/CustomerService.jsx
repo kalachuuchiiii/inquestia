@@ -78,7 +78,7 @@ const CustomerService = () => {
   }, [inView, nextPage])
 
   return (
-    <div className="flex flex-col h-[80vh] w-full bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-blue-100 dark:border-zinc-800 overflow-hidden">
+    <div className="flex flex-col h-[80vh]  w-11/12 mx-auto md:w-full bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-blue-100 dark:border-zinc-800 md:overflow-hidden">
       <div className="flex-shrink-0 px-6 py-4 ">
         <h2 className="text-xl font-bold text-blue-700 dark:text-blue-300">Submit Feedback</h2>
         <p className="text-xs text-zinc-400 mt-1">Let us know your thoughts, issues, or suggestions. This is not a live chat.</p>
@@ -87,7 +87,13 @@ const CustomerService = () => {
         {feedbacks.length === 0 && (
           <div className="text-center text-zinc-400 text-sm">No feedback submitted yet.</div>
         )}
-        {nextPage !== null ? (
+      
+        <div >
+              {feedbacks.map((feedback, idx) => <FeedbackCard key = {idx} feedback={feedback} >
+                <FeedbackCard.Response />
+              </FeedbackCard>)}
+        </div>
+          {nextPage !== null ? (
           <button
             onClick={() => getFeedbacks({ page: nextPage, overwrite: false })}
             className="block mx-auto my-2 px-4 py-1.5 rounded bg-blue-100 dark:bg-zinc-800 text-blue-700 dark:text-blue-300 font-medium text-sm disabled:opacity-60"
@@ -98,15 +104,12 @@ const CustomerService = () => {
         ) : (
           <div className="text-center text-xs text-zinc-400 my-2">You've reached the end.</div>
         )}
-        <div >
-              {feedbacks.map((feedback, idx) => <FeedbackCard key = {idx} feedback={feedback} >
-                <FeedbackCard.Response />
-              </FeedbackCard>)}
-        </div>
         <div ref={bottomRef} />
+        
       </div>
-      <form onSubmit={handleSubmit} className="flex-shrink-0 border-t border-blue-50 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 flex gap-2 items-end">
-        <select
+      <form onSubmit={handleSubmit} className="flex-shrink-0 flex-col md:flex-row  border-t border-blue-50 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 flex gap-2 md:items-end">
+       <div className='flex items-center gap-2'>
+         <select
           className="min-w-[120px] border border-blue-200 dark:border-zinc-700 rounded-lg px-2 py-2 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
           value={feedbackType}
           onChange={e => setFeedbackType(e.target.value)}
@@ -134,8 +137,10 @@ const CustomerService = () => {
            <span className="text-[10px] text-zinc-400">{attachments.length}/3</span>
          
         </div>
-        <Textarea
-          className="flex-1 rounded-lg dark:bg-zinc-950 bg-white text-zinc-700 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none min-h-[40px] max-h-[120px]"
+       </div>
+        <div className='flex w-full items-end gap-1'>
+          <Textarea
+          className="flex grow-1 rounded-lg dark:bg-zinc-950 bg-white text-zinc-700 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none min-h-[40px] max-h-[120px]"
           value={message}
           onChange={e => setMessage(e.target.value)}
           placeholder="Type your message here..."
@@ -153,6 +158,7 @@ const CustomerService = () => {
         >
           {isSubmitting ? 'Sending...' : 'Send'}
         </button>
+        </div>
       </form>
       {/* Preview attachments */}
       {attachments.length > 0 && (

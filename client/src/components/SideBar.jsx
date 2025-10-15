@@ -11,13 +11,10 @@ const Sidebar = ({ onClose = () => {}, isLargeScreen = false }) => {
   return (
     <AnimationWrapper
       variants="fromLeft"
-      className={`sticky min-h-screen top-0 z-40  `}
+      className={`sticky md:min-h-screen  bottom-0 bg-zinc-900/90 md:bg-black  md:top-0 z-40  `}
     >
-      <aside className="flex justify-start  items-start flex-col  h-screen  ">
-       
-        
-    
-        <nav className="  w-fit overflow-y-auto scrollbar-none">
+      <aside className="flex justify-start  items-start flex-col  md:h-screen  ">
+        <nav className="  w-[100vw] md:w-fit flex md:flex-col  overflow-auto scrollbar-none">
           {navRoutes?.length > 0 &&
             navRoutes.map((info) => (
               <NavIcon
@@ -29,7 +26,7 @@ const Sidebar = ({ onClose = () => {}, isLargeScreen = false }) => {
         </nav>
 
         {isLargeScreen && (
-          <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-500">
+          <div className="px-4 hidden md:block py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-500">
             © 2025 Inquestia.ask
           </div>
         )}

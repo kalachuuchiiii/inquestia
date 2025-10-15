@@ -15,13 +15,13 @@ export const navRoutes = [
     label: "Create",
     icon: (
       <div
-        className={`flex items-center size-16 justify-center rounded-xl transition-all duration-300 ease-out hover:scale-105 dark:hover:shadow-blue-900/40
+        className={`flex items-center size-10 md:size-16 justify-center rounded-xl transition-all duration-300 ease-out hover:scale-105 dark:hover:shadow-blue-900/40
          inquestia-bg
           text-white shadow-[0_0_15px_rgba(99,102,241,0.6)] 
           hover:shadow-[0_0_25px_rgba(129,140,248,0.8)] 
           border border-white/20 scale-110`}
       >
-        <GoPlus size={40} />
+        <GoPlus className="size-12 md:size-40"/>
       </div>
     ),
   },

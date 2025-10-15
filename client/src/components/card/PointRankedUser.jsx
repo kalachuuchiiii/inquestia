@@ -64,9 +64,9 @@ const PointRanked = ({ user = {}, sort = "current" }) => {
         </div>
 
         {/* User Info */}
-        <div className="flex col-span-7 items-center gap-3">
-          <UserHeader.Avatar size="10" />
-          <div className="flex flex-col leading-tight">
+        <div className="flex col-span-7 shrink-0 items-center gap-3">
+          <div><UserHeader.Avatar size="10" /></div>
+          <div className="flex flex-col truncate leading-tight">
             <UserHeader.Nickname badgeSize = '2xl' className="font-semibold text-zinc-800 dark:text-zinc-100" />
             <UserHeader.Username
               showAt

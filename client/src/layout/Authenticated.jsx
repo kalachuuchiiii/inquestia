@@ -22,7 +22,7 @@ setIsUnauthorizedModalOpen(true)
 
   return (
     <div className="h-screen w-full ">
-      <div className="w-full items-start justify-center h-full flex">
+      <div className="w-full items-start justify-start h-full  flex md:flex-row  flex-col-reverse">
         {isAuthenticated && (
           <Sidebar
             isLargeScreen={isLargeScreen}
@@ -44,8 +44,8 @@ setIsUnauthorizedModalOpen(true)
               </NavBar.Relate>
             </NavBar>
 
-            <div className="w-full">
-              <div className="lg:w-10/12 lg:p-4   w-full p-2 overflow-x-hidden outline-none overflow-y-auto mx-auto h-170 ">
+            <div className="w-full ">
+              <div className="lg:w-10/12 lg:p-4  py-8 md:py-3 w-full overflow-x-hidden outline-none overflow-y-auto mx-auto h-[80vh]  ">
                 <Outlet />
               </div>
             </div>

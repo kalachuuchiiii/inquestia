@@ -46,7 +46,7 @@ const ChatbotPage = () => {
   const names = { system: "Inko", user: name };
 
   return (
-    <div className="flex flex-col my-10  bg-gradient-to-b from-blue-50 to-white dark:from-zinc-950 dark:to-zinc-900">
+    <div className="flex w-11/12 mx-auto md:w-full flex-col md:my-10  bg-gradient-to-b from-blue-50 to-white dark:from-zinc-950 dark:to-zinc-900">
       {/* Header */}
       
       <header className="p-4 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md shadow-sm">
@@ -64,7 +64,7 @@ const ChatbotPage = () => {
       </header>
 
       {/* Chat area */}
-      <main className="h-100 overflow-y-auto p-6 space-y-4">
+      <main className="md:h-100 h-80   overflow-y-auto p-6 space-y-4">
         {conversation.length > 0 ? (
           conversation.map((msg, index) => (
             <div

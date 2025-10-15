@@ -51,7 +51,7 @@ const Transactions = () => {
 
   return (
     <div
-      className={` mx-auto p-4 rounded-2xl shadow-lg w-full my-6 ${
+      className={` mx-auto p-4 h-[50vh]  w-11/12 rounded-2xl shadow-lg md:w-full my-6 ${
         mode === "Dark"
           ? "bg-zinc-900 text-neutral-100"
           : "bg-white text-zinc-900"
@@ -62,7 +62,7 @@ const Transactions = () => {
         {statusOptions.map((opt) => (
           <button
             key={opt.value}
-            className={`px-4 py-1 rounded-full text-sm font-medium transition border ${
+            className={`px-4 py-1 rounded-full h-full  text-sm font-medium transition border ${
               status === opt.value
                 ? "bg-blue-600 text-white border-blue-600"
                 : "bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-zinc-700"
@@ -73,7 +73,7 @@ const Transactions = () => {
           </button>
         ))}
       </div>
-      {transactions.length === 0 ? (
+      {transactions.length === 0 && !isLoading ? (
         <div className="flex justify-center items-center h-32 opacity-70">
           No transactions found.
         </div>

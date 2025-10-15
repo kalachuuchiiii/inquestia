@@ -38,7 +38,7 @@ return (
           You can select multiple options
         </p>
       )}
-      <div className="p-2 w-full ml-auto border-l-1 space-y-1 text-sm border-l-neutral-100">
+      <div className="p-2 w-full  ml-auto border-l-2 space-y-1  text-sm border-l-blue-300 dark:border-l-neutral-200">
         {choices.map((c) => (
           <button
             onClick={() => handleClick(c)}

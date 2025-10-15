@@ -17,8 +17,8 @@ const getSurveyListOfUser = async(req, res) => {
   }
   
   const [totalSurveys, surveys] = await Promise.all([  
-    Survey.countDocuments({user: verifiedUser._id, isDraft }).lean(),
-    Survey.find({ user: verifiedUser._id, isDraft }).sort({ createdAt: -1 }).skip(skip).limit(limit).populate("user", "-password").lean()
+    Survey.countDocuments({user: verifiedUser._id, isDraft, isTakendown: false }).lean(),
+    Survey.find({ user: verifiedUser._id, isDraft, isTakendown: false }).sort({ createdAt: -1 }).skip(skip).limit(limit).populate("user", "-password").lean()
     ])
     
     const nextPage = req.getNextPage(totalSurveys);

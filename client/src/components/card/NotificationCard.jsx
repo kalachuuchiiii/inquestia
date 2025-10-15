@@ -4,6 +4,7 @@ import React from 'react'
 import UserIcon from '../UserIcon'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { fetchApi } from '../../utils/fetchApi';
+import { formatIsoString } from '../../utils/formatIsoString';
 
 const NotificationCard = ({notif = {}}) => {
   const nav = useNavigate();
@@ -22,20 +23,25 @@ const NotificationCard = ({notif = {}}) => {
   return (
     <>
       <div
-        className={`flex flex-col items-start gap-3 p-2 rounded-lg ${
+        className={`flex flex-col items-start hover:backdrop-brightness-90 transition-all duration-200 gap-3 p-2 rounded-lg ${
           !notif.isRead ? "bg-blue-50 dark:bg-zinc-800" : ""
         }`}
       >
         <UserIcon user={notif.sender}>
-          <UserIcon.Card />
+          <UserIcon.Card>
+          
+          </UserIcon.Card>
         </UserIcon>
-        <button onClick = {handleNavigate} className="flex-1">
-          <div className="text-xs text-gray-500 dark:text-gray-300">
-            {notif.action === "answer"
-              ? "Answered your question"
-              : "Survey Completed"}
+        <button
+          onClick={handleNavigate}
+          className="flex gap-1 text-xs text-left"
+        >
+          <div className=" text-gray-500 dark:text-gray-300">
+            {notif.message}
           </div>
+          
         </button>
+          <p className='text-xs text-left opacity-50'>{formatIsoString(notif?.createdAt)}</p>
       </div>
     </>
   );

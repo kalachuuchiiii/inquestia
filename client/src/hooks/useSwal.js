@@ -12,7 +12,11 @@ const useSwal = ( ) => {
           ...swalOptions(mode),
         }).then(async (result) => {
           if (!result.isConfirmed) return;
-          await callback(result);
+          try{
+            await callback(result);
+          }catch(err){
+            throw new Error(err);
+          }
         });
     }
 }

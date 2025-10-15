@@ -7,7 +7,6 @@ import UserIcon from "../../components/UserIcon";
 import BanUserModal from "../../components/modals/BanUserModal";
 import { AnimatePresence } from "framer-motion";
 import PointDeductionModal from "../../components/modals/PointDeductionModal";
-import TakeDownSurveyModal from "../../components/modals/TakeDownSurveyModal";
 import { fetchApi } from "../../utils/fetchApi";
 import useAsync from "../../hooks/useAsync";
 import useSwal from "../../hooks/useSwal";
@@ -15,7 +14,7 @@ import useSwal from "../../hooks/useSwal";
 const ReportedCard = ({ report, children = null }) => {
   return (
    <ReportCardContext.Provider value = {{ ...report }}>
-        <div className="   bg-white overflow-hidden dark:bg-zinc-800 dark:text-neutral-100 rounded-2xl w-full shadow-md p-3 mb-6">
+        <div className="   bg-white overflow-hidden dark:bg-zinc-800 dark:text-neutral-100 rounded-2xl w-full shadow-xl p-6 mb-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg dark:text-neutral-100 font-semibold text-gray-800">
           Reported {report.reportedEntity?.entity}
@@ -52,7 +51,7 @@ ReportedCard.Survey = () => {
     const { reportedEntity: { entityId }, entityOwner } = useCTX(ReportCardContext);
 
     return (
-     <div >
+     <div className="outline rounded-md" >
        <SurveyCard survey = {entityId}>
         <SurveyCard.Preview />
         <SurveyCard.Author tempUser = {entityOwner} />
@@ -81,7 +80,7 @@ ReportedCard.BanButton = () => {
       </AnimatePresence>
       <button
         onClick={() => setIsBanModalOpen(true)}
-        className="p-2 w-full rounded backdrop-brightness-125 hover:scale-105 transition-transform duration-200 shadow-md"
+       className="inquestia-button"
       >
         Ban {entityOwner?.username}
       </button>
@@ -90,17 +89,24 @@ ReportedCard.BanButton = () => {
 }; 
 
 ReportedCard.TakeDownSurveyButton = () => {
-     const {
-       reportedEntity = { entityId: { _id: null, title: "" } },
-     } = useCTX(ReportCardContext);
+     const report = useCTX(ReportCardContext);
+
+  
+       const swal = useSwal();
   
     const [takedownSurvey, { isLoading, error, isSuccess }] = useAsync(
     async () => {
-      const res = await fetchApi("delete", `/admin/takedown-survey/${reportedEntity.entityId._id}`);
-      console.log(res);
+      const res = await fetchApi("delete", `/admin/takedown-survey/${report._id}`);
+      if(res?.success){
+        swal({
+          title: 'Taken down successfully!',
+          icon: 'success', 
+
+        })
+      }
     }
   );
-  const swal = useSwal();
+
 
   const handleShowModal = () => {
     swal(
@@ -120,8 +126,7 @@ ReportedCard.TakeDownSurveyButton = () => {
       <>
         <button
           onClick={handleShowModal}
-          className="p-2 w-full rounded backdrop-brightness-125 hover:scale-105 transition-transform duration-200 shadow-md"
-        >
+         className="inquestia-button" >
           Takedown Survey
         </button>
       </>
@@ -149,7 +154,7 @@ ReportedCard.DeductPointButton = () => {
         </AnimatePresence>
         <button
           onClick={() => setIsPointDeductionModalOpen(true)}
-          className="p-2 rounded backdrop-brightness-125 hover:scale-105 transition-transform duration-200 shadow-md"
+          className="inquestia-button"
         >
           Deduct the user's core
         </button>

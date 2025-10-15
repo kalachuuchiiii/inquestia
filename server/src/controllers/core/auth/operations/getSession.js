@@ -1,32 +1,46 @@
+const { interests } = require("../../../../data/interests.js");
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
 const Notification = require("../../../../models/notification.js");
+const User = require("../../../../models/user.js");
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
+const { getBadgeByPoint } = require("../../../../utils/getBadgeByPoint.js");
 const { monitorStreak } = require("../../../utils/survey/monitorStreak.js");
 
 const getSession = async(req, res) => {
-  const user = req.verifiedUser;
+  const user = req.verifiedUser.toObject();
 
   const { action, modified } = monitorStreak({
     user
   });
 
   if(modified && action === 'reset'){
-    await user.save()
+     user.save()
   }
   
   const verifiedUser = {
-    ...user.toObject(),
-    age: req.userAge, 
-    badge: req.userBadge
+    ...user,
+    badge: getBadgeByPoint(user.core.current)
   }
 
   const hasUnreadNotifications = await Notification.exists({ 
     receiver: verifiedUser._id, 
     isRead: false
   })
+
+  const tagQuery = interests.map(async(interest) => {
+    const count = await User.countDocuments({ interests: interest });
+    return {
+      interest,
+      count
+    }
+  })
+
+  const tags = await Promise.all(tagQuery)
+  
   
  return res.status(200).json({
    success: true, 
+   interests: tags,   
    user: verifiedUser,
    authenticated: true,
    hasUnreadNotifications: !(!hasUnreadNotifications),

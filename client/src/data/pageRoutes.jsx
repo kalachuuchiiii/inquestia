@@ -16,6 +16,12 @@ import ViewProfilePage from '../pages/authenticated/ViewProfile.jsx';
 import ResponseHistory from '../pages/authenticated/ResponseHistory.jsx';
 import ViewAnswer from '../pages/authenticated/ViewAnswer.jsx';
 import ExchangeCenter from '../pages/authenticated/ExchangeCenter.jsx';
+import Transactions from '../pages/authenticated/Transactions.jsx';
+import ViewTransaction from '../pages/authenticated/ViewTransaction.jsx';
+import CustomerService from '../pages/authenticated/CustomerService.jsx';
+import SharedSurvey from '../pages/authenticated/SharedSurvey.jsx';
+import FeedbackPage from '../pages/authenticated/FeedbackPage.jsx';
+import ChatbotPage from '../pages/authenticated/ChatbotPage.jsx';
 
 export const publicPages = [
   {
@@ -37,6 +43,14 @@ export const pages = [
     path: "/home",
     element: <HomePage />
   },  
+  { 
+    path: '/transactions', 
+    element: <Transactions />
+  }, 
+  { 
+   path: '/transaction/:id', 
+   element: <ViewTransaction />
+  }, 
   {
     path: "/response-history", 
     element: <ResponseHistory />
@@ -85,4 +99,19 @@ export const pages = [
     path: "/leaderboard",
     element: <Leaderboards />
   }, 
+  { 
+    path: '/shared-surveys',
+    element: <SharedSurvey />
+  },
+  { 
+    path: '/cs', 
+    element: <CustomerService />
+  }, 
+  { 
+    path: '/feedback/:feedbackId',
+    element: <FeedbackPage />
+  }, {
+    path: '/chatbot',
+    element: <ChatbotPage />
+  }
 ]

@@ -1,6 +1,6 @@
 import {  useEffect } from 'react'
 import { Routes, Route, Outlet, useNavigate } from "react-router-dom"
-import { pages, publicPages } from './data/pageRoutes.jsx';
+import  { pages,  publicPages } from './data/pageRoutes.jsx';
 import { getSession } from './state/slice/user.js';
 import NavBar from './components/NavBar.jsx';
 import usePath from './hooks/usePath.js';
@@ -14,11 +14,11 @@ import QuerySurvey from './components/lists/QuerySurvey.jsx';
 import QueryUsers from './components/lists/QueryUsers.jsx';
 import AuthenticatedLayout from './layout/Authenticated.jsx';
 import AdminPage from './pages/admin/Index.jsx';
-import RequestAnalyticsTable from './pages/admin/RequestAnalyticsTable.jsx';
 import ReportedSurveys from './pages/admin/ReportedSurveys.jsx';
 import ReportedUsers from './pages/admin/ReportedUsers.jsx';
-import ResolvedUserReports from './pages/admin/ResolvedUserReports.jsx';
-import ResolvedSurveyReports from './pages/admin/ResolvedSurveyReports.jsx';
+import Welcome from './pages/admin/Welcome.jsx';
+import TransactionRequests from './pages/admin/TransactionRequests.jsx';
+import Feedbacks from './pages/admin/pages/Feedbacks.jsx';
 
 function App() {
   
@@ -76,11 +76,11 @@ const { user = {}, isAuthenticated } = useSelector(state => state.user);
           })
         }
         <Route path = '/adm' element = {<AdminPage />}  >
-        <Route path = '/adm' element = {<RequestAnalyticsTable />} />
-          <Route path = "/adm/reports/surveys" element = {<ReportedSurveys />}/>
+        <Route path = '/adm' element = { <Welcome /> }    />
+        <Route path = '/adm/transactions' element = { <TransactionRequests /> } />
+           <Route path = "/adm/reports/surveys" element = {<ReportedSurveys />}/>
            <Route path = "/adm/reports/users" element = {<ReportedUsers />}/>
-           <Route path = "/adm/reports/resolved/users" element = {<ResolvedUserReports /> } />
-           <Route path = "/adm/reports/resolved/surveys" element = {<ResolvedSurveyReports /> } />
+           <Route path = '/adm/feedbacks' element = {<Feedbacks />} />
         </Route>
       </Route>
     </Routes>

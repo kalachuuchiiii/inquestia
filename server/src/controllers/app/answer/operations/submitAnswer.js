@@ -31,10 +31,10 @@ const submitAnswer = async(req, res, _, commit) => {
     })
    }
   
-  if(surveyData.closed || surveyData.hasReachedTargetRespondents || surveyData.respondents.length >= surveyData.targetRespondents){
+  if(surveyData.closed || surveyData.hasReachedTargetRespondents || surveyData.respondents.length >= surveyData.targetRespondents || survey?.isTakendown){
     return res.status(400).json({
       success: false, 
-      message: "Survey is already closed and/or over."
+      message: "This survey is closed."
     })
   }
 

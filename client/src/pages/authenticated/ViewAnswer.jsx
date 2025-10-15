@@ -32,19 +32,13 @@ const ViewAnswer = () => {
 
   return (
     <div className="flex flex-col py-2 w-full justify-start items-start gap-8">
-      <AnswerCard answer={answer} />
-     <div className='p-2 flex flex-col gap-3'>
-       <ArrowButton to={`/survey/${answer.survey?._id}`}>
-        {" "}
-        View Survey
-      </ArrowButton>
-      {answer?.survey?.user === user?._id && (
+      <AnswerCard showModifyAuthenticityButton showRedirectToSurvey answer={answer} />
+         {answer?.survey?.user === user?._id && (
         <ArrowButton to={`/answer/s/${answer.survey?._id}`}>
           {" "}
           View in Survey Center
         </ArrowButton>
       )}
-     </div>
     </div>
   );
 }

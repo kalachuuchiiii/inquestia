@@ -14,5 +14,6 @@ exports.allowedSurveyFields = {
     username: 1, 
     nickname: 1, 
     avatar: 1, 
+    core: 1
   }
 }

@@ -26,7 +26,7 @@ exports.verifySession = catchError(async(req, res, next) => {
 
   
   
-  const user = await User.findById(decoded.user).select('-password').populate("streak");
+  const user = await User.findById(decoded.user).select('-password').populate();
   
   if(!user){
     return res.status(400).json({

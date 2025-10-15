@@ -33,9 +33,11 @@ exports.catchErrorWithSession = (fn = () => { }) => {
       const commit = async() => {
         await session.commitTransaction();
       }
+    
       await fn(req, res, next, commit); 
       
     } catch (e) {
+      console.log(e)
   
       
       await session.abortTransaction();

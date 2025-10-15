@@ -4,51 +4,64 @@ import { AnimatePresence } from "framer-motion";
 import useToggler from "../../hooks/useToggler.js";
 import LogoutModal from "../modals/LogoutModal.jsx";
 import { changeTheme } from "../../state/slice/theme.js";
-
 import useAsync from "../../hooks/useAsync.js";
 import { fetchApi } from "../../utils/fetchApi.js";
 import { resetState } from "../../state/slice/user.js";
 import useSwal from "../../hooks/useSwal.js";
 
-const SettingButton = ({ children = null, onClick = () => {} }) => {
-  return (
-    <button
-      onClick={onClick}
-      className="w-full flex justify-between items-center p-3 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 dark:from-zinc-800 dark:to-zinc-900 shadow hover:shadow-md transition-all border border-blue-100 dark:border-zinc-800 hover:scale-[1.02]"
-    >
+/* ------------------------
+   🔹 Reusable Button Wrapper
+-------------------------*/
+const SettingButton = ({ children, onClick }) => (
+  <button
+    onClick={onClick}
+    className="group w-full flex justify-between items-center px-4 py-3 rounded-xl
+               bg-neutral-100/60 dark:bg-zinc-900/60
+               border border-neutral-200 dark:border-zinc-800
+               hover:border-blue-400/50 hover:shadow-md dark:hover:shadow-blue-900/20
+               transition-all duration-200 ease-out"
+  >
+    <div className="flex-1 text-left font-medium text-zinc-700 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
       {children}
-    </button>
-  );
-};
-
-const SettingCard = ({ children = null }) => {
-  return (
-    <div className="max-w-2xl mx-auto w-full py-8 px-2">
-      <div className="mb-8 p-6 rounded-2xl  text-center">
-        <h1 className="text-4xl lato font-extrabol text-zinc-950 dark:text-neutral-100 mb-2 drop-shadow">Settings</h1>
-        <p className="text-base text-gray-600 dark:text-gray-300">Adjust themes, and manage your account to your preferences</p>
-      </div>
-      <div className="space-y-5">{children}</div>
     </div>
-  );
-};
+  </button>
+);
 
-// Theme Selector
+/* ------------------------
+   🔹 Card Container
+-------------------------*/
+const SettingCard = ({ children }) => (
+  <div className="max-w-2xl mx-auto py-10 px-4">
+    <div className="space-y-5">{children}</div>
+  </div>
+);
+
+/* ------------------------
+   🎨 Theme Selector
+-------------------------*/
 SettingCard.Theme = () => {
   const dispatch = useDispatch();
   const { mode } = useSelector((state) => state.theme);
 
-  const handleChangeTheme = (e) => {
-    dispatch(changeTheme(e.target.value));
-  };
+  const handleChangeTheme = (e) => dispatch(changeTheme(e.target.value));
 
   return (
-    <div className="w-full flex text-zinc-950 dark:text-neutral-100 justify-between items-center p-3 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 dark:from-zinc-800 dark:to-zinc-900 shadow border border-blue-100 dark:border-zinc-800">
-      <span className="font-medium ">Theme</span>
+    <div className="flex items-center justify-between p-4 rounded-xl
+                    bg-neutral-100/70 dark:bg-zinc-900/70
+                    border border-neutral-200 dark:border-zinc-800
+                    shadow-sm">
+      <span className="font-semibold text-zinc-800 dark:text-zinc-100">
+        Theme
+      </span>
       <select
         value={mode}
         onChange={handleChangeTheme}
-        className="rounded px-3 py-1  bg-white dark:bg-zinc-800 border border-blue-200 dark:border-zinc-700 text-zinc-950 dark:text-neutral-100 focus:outline-none shadow"
+        className="rounded-lg px-3 py-1.5 text-sm font-medium
+                   bg-white dark:bg-zinc-800 
+                   border border-neutral-300 dark:border-zinc-700 
+                   text-zinc-700 dark:text-zinc-100
+                   focus:outline-none focus:ring-2 focus:ring-blue-400/60 
+                   shadow-sm transition"
       >
         <option value="Light">Light</option>
         <option value="Dark">Dark</option>
@@ -57,70 +70,91 @@ SettingCard.Theme = () => {
   );
 };
 
-SettingCard.ExchangeCenter = () => {
+/* ------------------------
+   💱 Exchange Center
+-------------------------*/
+SettingCard.ExchangeCenter = () => (
+  <SettingButton>
+    <NavLink to="/exchange-center">Exchange Center</NavLink>
+  </SettingButton>
+);
 
-  return  <SettingButton>
-      <NavLink to="/exchange-center">
-        <p>Exchange Center</p>
-      </NavLink>
-    </SettingButton>
-}
+/* ------------------------
+   🧩 Section Wrapper (Grouped Options)
+-------------------------*/
+SettingCard.NewOption = ({ label, children }) => (
+  <div className="rounded-2xl p-5 
+                  bg-neutral-50 dark:bg-zinc-900/80
+                  border border-neutral-200 dark:border-zinc-800 
+                  shadow-sm transition">
+    <p className="font-bold text-lg mb-3 text-blue-700 dark:text-blue-300">
+      {label}
+    </p>
+    <div className="flex flex-col gap-3">{children}</div>
+  </div>
+);
 
-// Section with label + children
-SettingCard.NewOption = ({ label = "", children = null }) => {
-  return (
-    <div className="rounded-2xl py-4 px-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-zinc-800 dark:to-zinc-900 shadow border border-blue-100 dark:border-zinc-800">
-      <p className="font-bold text-lg mb-2 text-blue-700 dark:text-blue-200">{label}</p>
-      <div className="flex flex-col gap-2 items-start text-sm ">{children}</div>
-    </div>
-  );
-};
-
-// Logout
+/* ------------------------
+   🚪 Logout Button
+-------------------------*/
 SettingCard.Logout = () => {
-  const swal = useSwal()
+  const swal = useSwal();
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const [handleLogout, { isLoading, error }] = useAsync(async () => {
+
+  const [handleLogout] = useAsync(async () => {
     const res = await fetchApi("post", "/user/logout");
     if (res?.success) {
       dispatch(resetState());
       nav("/login");
     }
   });
-  const logout = () => {
+
+  const logout = () =>
     swal(
       {
         icon: "warning",
-        title: "Are you sure you want to Logout?",
-        text: "You will need to log in again to access your account.",
+        title: "Logout?",
+        text: "You’ll need to log in again to access your account.",
         confirmButtonColor: "#06b6d4",
-        confirmButtonText: "Yes, Log me out",
+        confirmButtonText: "Yes, log me out",
         showCancelButton: true,
         cancelButtonText: "Cancel",
       },
       handleLogout
     );
-  }
- 
-  return (
-    <>
-      <SettingButton >
-        <button onClick = {logout} className="text-red-400 text-left w-full">Logout</button>
-      </SettingButton>
-    </>
-  );
-};
 
-// Account Edit
-SettingCard.Account = () => {
   return (
     <SettingButton>
-      <NavLink to="/profile/edit">
-        <p>Update profile</p>
-      </NavLink>
+      <button
+        onClick={logout}
+        className="text-red-500 font-semibold w-full text-left hover:text-red-600 transition-colors"
+      >
+        Logout
+      </button>
     </SettingButton>
   );
 };
+
+/* ------------------------
+   ✏️ Account Edit
+-------------------------*/
+/* ------------------------
+   💬 Feedback
+-------------------------*/
+SettingCard.Feedback = () => (
+  <SettingButton>
+    <NavLink to="/cs">Feedback</NavLink>
+  </SettingButton>
+);
+
+/* ------------------------
+   💳 Transactions
+-------------------------*/
+SettingCard.Transactions = () => (
+  <SettingButton>
+    <NavLink to="/transactions">Transactions</NavLink>
+  </SettingButton>
+);
 
 export default SettingCard;

@@ -8,7 +8,12 @@ import SubmissionButton from "../../components/html/Button.jsx";
 import SurveyCard from "../../components/card/SurveyCard.jsx";
 import { QRCodeCanvas } from  'qrcode.react';
 import { BsDownload } from "react-icons/bs";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { CiSquarePlus } from "react-icons/ci";
+import { useSelector } from "react-redux";
+import { AnimatePresence } from "framer-motion";
+import SearchUserModal from "../../components/modals/SearchUserModal.jsx";
 
 const AnswerSurvey = () => {
   const {
@@ -22,6 +27,10 @@ const AnswerSurvey = () => {
     isSubmissionError,
     isSubmissionPending,
   } = useAnswerSurvey();
+  const [isSearchUserModalOpen, setIsSearchUserModalOpen ] = useState(false);
+  const navigate = useNavigate();
+ 
+  const { user } = useSelector(state => state.user);
   const qrParent = useRef(null)
 
   const downloadQr = () => {
@@ -32,6 +41,9 @@ const AnswerSurvey = () => {
     a.download = `survey-${survey._id}-qr.png`
     a.click();
   }
+
+  const handleToggle = () => setIsSearchUserModalOpen(prev => !prev);
+
 
   if (isFetchingPending) {
     return (
@@ -49,24 +61,51 @@ const AnswerSurvey = () => {
     );
   }
 
+  // Check if user is author or authorized viewer
+  const isAuthor = user?._id && survey?.user && String(user._id) === String(survey.user._id || survey.user);
+  const isAuthorizedViewer = Array.isArray(survey?.authorizedViewers) && survey.authorizedViewers.some(v => String(v) === String(user?._id));
+
   return (
     <AnswerQuestionContext.Provider
       value={{ modifyFieldById, fieldArray, getFieldById }}
-    >
+    > 
+     <AnimatePresence >
+      { 
+        isSearchUserModalOpen && <SearchUserModal surveyId={survey._id} onClose={handleToggle} />
+      }
+     </AnimatePresence>
       <main className="min-h-screen ">
         <div className="p-3 border-b flex items-center justify-between border-neutral-200 dark:border-neutral-800">
           <div className="flex gap-3 items-center">
             <UserIcon user={survey.user || {}}>
-             <div>
-               <UserIcon.Card /> 
-             </div>
+              <div>
+                <UserIcon.Card />
+              </div>
             </UserIcon>
           </div>
           <SurveyCard className="" survey={survey}>
-            <SurveyCard.Report />
+            <div className="flex items-center gap-2">
+              {(isAuthor || isAuthorizedViewer) && (
+            <div className=" flex justify-end">
+              <NavLink 
+               className="inquestia-button"
+               to = {`/answer/s/${survey._id}`}
+              >
+                View Answers
+              </NavLink>
+            </div>
+          )}
+              <SurveyCard.Report />{" "}
+              {user?.username === survey?.user?.username && (
+                <button onClick = {handleToggle}>
+                  <CiSquarePlus className="size-6" />
+                </button>
+              )}
+            </div>
           </SurveyCard>
         </div>
         <section className="space-y-4 p-4">
+          
           <div className="flex gap-3 lg:gap-10 items-center">
             <div
               ref={qrParent}
@@ -120,6 +159,7 @@ const AnswerSurvey = () => {
             loadingState={isSubmissionPending}
             disabled={survey.questions.length === 0}
             onClick={submitAnswer}
+            className="inquestia-button mx-auto"
           >
             Submit Answer
           </SubmissionButton>

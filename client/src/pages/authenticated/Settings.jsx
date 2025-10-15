@@ -7,10 +7,11 @@ const Settings = () => {
       <SettingCard>
         <SettingCard.NewOption label="Account">
           <SettingCard.Theme />
-          <SettingCard.Account />
           <SettingCard.ExchangeCenter />
+          <SettingCard.Transactions />
+          <SettingCard.Feedback />
           <SettingCard.Logout />
-        </SettingCard.NewOption>
+          </SettingCard.NewOption>
       </SettingCard>
     </div>
   );

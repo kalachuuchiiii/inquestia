@@ -20,7 +20,7 @@ const Profile = () => {
           </div>
           <div className="space-y-6 mt-5">
             <ArrowButton
-              className="dark:bg-neutral-100 bg-zinc-900 text-neutral-100 text-xs rounded w-fit dark:text-zinc-900 px-6 py-2 text-center"
+           
               to="/profile/edit"
             >
               View Account

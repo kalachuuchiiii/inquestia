@@ -4,7 +4,7 @@ export const fetchApi = async(method = "get", route = "/", payload = {}, { crede
 
     const HTTPMethods = ["get", "post", "put", "patch", "delete"];
     if(!HTTPMethods.includes(method)){
-      throw new Error(`${method} is mot a balid HTTP Method`);
+      throw new Error(`${method} is mot a valid HTTP Method`);
     }
     
     const fullUrl = `${import.meta.env.VITE_SERVER_URL}/api${route}`;
@@ -14,7 +14,8 @@ export const fetchApi = async(method = "get", route = "/", payload = {}, { crede
       const res = await axios[method](fullUrl, {
         params: payload, 
         withCredentials: credentials
-      });
+      })
+      
       return res.data;
     }
     

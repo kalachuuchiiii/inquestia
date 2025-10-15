@@ -60,6 +60,7 @@ const searchSurvey = async (req, res) => {
     Survey.aggregate([
       {
         $match: {
+          isTakendown: false,
           hasReachedTargetRespondents: false,
           closed: false,
           isDraft: false
@@ -94,6 +95,7 @@ const searchSurvey = async (req, res) => {
         $match: {
           hasReachedTargetRespondents: false,
           closed: false,
+          isTakendown:false,
           isDraft: false,
           relevancy: {
             $gt: 0

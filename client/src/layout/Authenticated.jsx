@@ -21,8 +21,8 @@ setIsUnauthorizedModalOpen(true)
   }, [user, isAuthenticated, isProcessOK])
 
   return (
-    <div className="h-screen w-full  ">
-      <div className="w-full items-center justify-center h-full flex">
+    <div className="h-screen w-full ">
+      <div className="w-full items-start justify-center h-full flex">
         {isAuthenticated && (
           <Sidebar
             isLargeScreen={isLargeScreen}
@@ -31,7 +31,7 @@ setIsUnauthorizedModalOpen(true)
         )}
 
         {isLargeScreen && isAuthenticated && <UsersWithSameInterests />}
-        <div className="w-full lg:w-9/12 mr-2 lg:mr-8 rounded-2xl bg-white dark:bg-[#101012] shadow-2xl dark:shadow-black/40">
+        <div className="w-full lg:my-16 lg:w-9/12 lg:mr-8 rounded-2xl bg-white dark:bg-[#101012] shadow-2xl dark:shadow-black/40">
           <div className="w-full  transition-all duration-200">
             <NavBar>
               {isLargeScreen ? <NavBar.App /> : <div />}

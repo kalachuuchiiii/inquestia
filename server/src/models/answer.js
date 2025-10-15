@@ -24,6 +24,10 @@ const answerSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User",
     required: true
+  },
+  isAuthentic: {
+    type: Boolean,
+    default: false
   }
 }, {
   collection: "answers",

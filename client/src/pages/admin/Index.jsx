@@ -1,9 +1,10 @@
 
 import { NavLink, Outlet } from 'react-router-dom'
 import usePath from '../../hooks/usePath'
-import RequestAnalyticsTable from './RequestAnalyticsTable'
+
 import { useSelector } from 'react-redux';
-import { FaChartBar, FaUserShield, FaExclamationTriangle, FaCheckCircle, FaHome } from 'react-icons/fa';
+import { FaUserShield, FaExclamationTriangle, FaCheckCircle, FaHome } from 'react-icons/fa';
+import { FaRegHandPaper } from 'react-icons/fa';
 
 const AdminPage = () => {
    
@@ -18,11 +19,12 @@ const AdminPage = () => {
     }
 
   const adminRoutes = [
-    { route: "/adm", name: "Analytics", icon: <FaChartBar className="mr-2" /> },
+    
+    { route: '/adm', name: `Hello! Administrator`, icon: <FaRegHandPaper className="mr-2 text-yellow-500 animate-wave" /> },
     { route: "/adm/reports/surveys", name: "Reported Surveys", icon: <FaExclamationTriangle className="mr-2 text-yellow-500" /> },
     { route: "/adm/reports/users", name: "Reported Users", icon: <FaUserShield className="mr-2 text-blue-500" /> },
-    { route: "/adm/reports/resolved/surveys", name: "Resolved Survey Reports", icon: <FaCheckCircle className="mr-2 text-green-500" /> },
-    { route: "/adm/reports/resolved/users", name: "Resolved User Reports", icon: <FaCheckCircle className="mr-2 text-green-500" /> },
+    { route: '/adm/transactions', name: 'Transactions'}, 
+    { route: '/adm/feedbacks', name: 'Feedbacks'},
     { route: '/home', name: 'Go to Homepage', icon: <FaHome className="mr-2 text-blue-600" /> }
   ];
 

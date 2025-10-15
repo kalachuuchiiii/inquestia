@@ -1,5 +1,6 @@
 const { verifyObjectId } = require("../../../../middlewares/verification/verifyObjectId");
 const { verifySession } = require("../../../../middlewares/verification/verifySession");
+const Notification = require("../../../../models/notification");
 const Report = require("../../../../models/report");
 const User = require("../../../../models/user");
 const { catchErrorWithSession } = require("../../../../utils/errorHandlers/catchError");
@@ -50,6 +51,14 @@ const deductUserPoints = async(req, res, _, commit) => {
     report.resolveAction = 'Core Deduction';
     await user.save({ session})
     await report.save({ session });
+    await new Notification({
+      sender: verifiedUser._id,
+      receiver: user._id,
+      action: "point-deduction",
+      resourceId: user._id,
+    }).save({
+      session,
+    });
     await commit();
 
     return res.status(200).json({

@@ -4,6 +4,7 @@ import useAsync from '../../hooks/useAsync';
 import UserIcon from '../UserIcon';
 import { useSelector } from 'react-redux';
 import UserCardPlaceholder from '../card/placeholders/UserCardPlaceholder';
+import ChatbotTextbox from '../ChatbotTextbox';
 
 
 
@@ -48,7 +49,7 @@ const UsersWithSameInterests = () => {
         perspectives.
       </p>
       <hr className="mb-4" />
-      <div>
+      <div className="h-60 overflow-auto">
         {users.length > 0 ? (
           users.map((user) => (
             <div
@@ -62,8 +63,11 @@ const UsersWithSameInterests = () => {
           ))
         ) : isLoading ? (
           <UserCardPlaceholder />
-        ) : <p className='w-full text-center opacity-50'>No users found.</p>}
+        ) : (
+          <p className="w-full text-center opacity-50">No users found.</p>
+        )}
       </div>
+      <ChatbotTextbox />
     </div>
   );
 }

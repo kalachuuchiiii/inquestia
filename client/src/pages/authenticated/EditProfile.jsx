@@ -122,7 +122,7 @@ const EditProfile = () => {
             <label className="text-xs">Bio</label>
             <div className="rounded-lg overflow-hidden px-2 pt-1 bg-neutral-200 dark:bg-zinc-900 flex items-start">
               <Textarea
-                
+                className=""
                 placeholder="No bio yet."
                 readOnly
                 displayLimit={false}
@@ -182,11 +182,7 @@ const EditProfile = () => {
           </div>
           <Button
             disabled={externalLink.length < 5 || isLoading}
-            className={`w-full  p-2 bg-neutral-100 flex justify-start items-center h-11 rounded-lg text-zinc-900 ${
-              externalLink.length > 5
-                ? "active:bg-zinc-900 active:text-neutral-100"
-                : "opacity-50"
-            }`}
+           
             loadingState={isLoading}
             onClick={saveExternalLink}
           >

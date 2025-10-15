@@ -136,35 +136,42 @@ const CreateSurvey = () => {
             </div>
           </div>
           <QuestionList setQuestions={setQuestions} questions={questions} />
-          <div className="flex flex-col gap-2 my-10">
-            <div className="flex gap-2">
-              <Button
-                color="white"
-                loadingState={isSavingAsDraft}
-                disabled={isSavingAsDraft || isPublishingPending}
-                onClick={saveSurveyAsDraft}
-                className="w-full p-2 bg-zinc-700 text-neutral-100 rounded-lg"
-              >
-                Save as Draft
-              </Button>
-              <Button
-                onClick={toggleModal}
-               className="w-full p-2 mx-auto bg-neutral-200 text-zinc-900 rounded-lg"
-              >
-                Add Question
-              </Button>
-            </div>
-            <div>
-              <Button
-                loadingState={isPublishingPending}
-                onClick={publishSurvey}
-                  className="w-full p-2 mx-auto bg-blue-600 text-white  rounded-lg"
-                disabled={isPublishingPending || isSavingAsDraft}
-              >
-                Publish
-              </Button>
-            </div>
-          </div>
+        <div className="flex flex-col gap-3 my-10">
+  {/* First Row — Add & Save */}
+  <div className="flex flex-wrap gap-3">
+    {/* Save as Draft (Tertiary) */}
+    <Button
+      
+      loadingState={isSavingAsDraft}
+      disabled={isSavingAsDraft || isPublishingPending}
+      onClick={saveSurveyAsDraft}
+      className="flex-1 bg-white/10 dark:text-white border border-white/20 text-zinc-900  hover:backdrop-brightness-90 hover:border-white/30 rounded-lg px-4 py-2 transition-all shadow-sm hover:shadow-md backdrop-blur-md"
+    >
+      Save as Draft
+    </Button>
+
+    {/* Add Question (Secondary) */}
+    <Button
+      onClick={toggleModal}
+      className="flex-1 bg-gradient-to-r from-indigo-400 via-violet-500 to-fuchsia-500 text-white font-medium rounded-lg px-4 py-2 transition-all shadow-md hover:brightness-110 hover:shadow-lg hover:scale-[1.02]"
+    >
+      Add Question
+    </Button>
+  </div>
+
+  {/* Publish (Primary) */}
+  <div>
+    <Button
+      loadingState={isPublishingPending}
+      onClick={publishSurvey}
+      disabled={isPublishingPending || isSavingAsDraft}
+      className="mx-auto w-full sm:w-auto bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-600 text-white font-semibold rounded-lg px-6 py-3 transition-all shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] hover:brightness-110 hover:scale-[1.03]"
+    >
+      Publish
+    </Button>
+  </div>
+</div>
+
         </main>
       </div>
     </React.Fragment>

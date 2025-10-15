@@ -8,15 +8,23 @@ const getSurveyListOfOtherUser = async(req, res) => {
   const { verifiedId, verifiedUser } = req;
   const { page, skip, limit } = req.paginationParams;
   const [surveys, totalSurveys] = await Promise.all([
-     Survey.find({
-    user: verifiedId, 
-    isDraft: false, 
-    closed: false
-  }).sort({createdAt: -1}).skip(skip).limit(limit).populate("user", "username nickname avatar"),
-    Survey.countDocuments({ user: verifiedId, isDraft: false, 
-      closed: false
+    Survey.find({
+      user: verifiedId,
+      isTakendown: false,
+      isDraft: false,
+      closed: false,
     })
-    ])
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("user", "username nickname avatar"),
+    Survey.countDocuments({
+      isTakendown: false,
+      user: verifiedId,
+      isDraft: false,
+      closed: false,
+    }),
+  ]);
     
     const nextPage = req.getNextPage(totalSurveys);
     

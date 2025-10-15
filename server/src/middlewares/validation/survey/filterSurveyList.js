@@ -20,18 +20,19 @@ const selectQuestionSchema = questionBaseSchema.extend({
 
 const textQuestionSchema = questionBaseSchema.extend({
   type: z.literal("text"),
-  answer: z.string(), 
+  answer: z.string().trim(), 
 });
  const surveySchema = z.object({
   questions: z.array(z.union([selectQuestionSchema, textQuestionSchema])),
+  isAuthentic: z.enum(['all', 'false', 'true'])
 });
 
 
 exports.filterSurveyList = (isPaginated = false, limit) => {
     return async(req, res, next) => {
         const { verifiedId, verifiedUser } = req;
-      const filter = JSON.parse(req?.query?.filter || 'null');
-      console.log(filter)
+      const filter = JSON.parse(req?.query?.filter || 'all');
+  
     
       const skip = isPaginated ? (req?.paginationParams?.skip || 0) : 0
     
@@ -56,8 +57,8 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
           })
         }
     
-      if (survey.user.toString() !== verifiedUser._id.toString()) {
-        return res.status(400).json({
+      if (survey.user.toString() !== verifiedUser._id.toString() && !survey?.authorizedViewers?.some(viewerId => String(viewerId) === String(verifiedUser._id))) {
+        return res.status(401).json({
           success: false,
           message: "You're not permitted to view answers from this survey.",
         });
@@ -97,7 +98,7 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
       }
     
       const parsedFilter = surveySchema.parse(filter);
-      const { questions: filterQuestions } = parsedFilter;
+      const { questions: filterQuestions, isAuthentic } = parsedFilter;
     
     //   const data = { 
     //     questions: [ 
@@ -202,28 +203,37 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
     
     const filterMatch = {
       $expr: { $and: exprClauses },
-      survey: survey._id
+      survey: survey._id,
+      
     };
+    switch(isAuthentic){
+      case 'true': filterMatch.isAuthentic = true;
+      break;
+      case 'false': filterMatch.isAuthentic = false;
+      break;
+    }
+
+    console.log(filterMatch)
     
         const pipeline = [
-        { $match: filterMatch },
-        { $skip: skip },
-        { $limit: limit},
-        {
+          { $match: filterMatch },
+          { $skip: skip },
+          { $limit: limit },
+          {
             $lookup: {
-            from: "users",
-            localField: "user",
-            foreignField: "_id",
-            as: "user",
+              from: "users",
+              localField: "user",
+              foreignField: "_id",
+              as: "user",
             },
-        },
-        { $unwind: "$user" },
-        {
+          },
+          { $unwind: "$user" },
+          {
             $project: {
-            "user._id": 0,
-            "user.password": 0,
+              "user._id": 0,
+              "user.password": 0,
             },
-        },
+          },
         ];
     
     const [filteredAgg] = await Answer.aggregate([

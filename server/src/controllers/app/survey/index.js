@@ -16,5 +16,9 @@ require("./operations/getSurveyListOfUser.js")(build);
 require("./operations/searchSurvey.js")(build);
 require("./operations/statusController.js")(build);
 require("./operations/summarizeAnswers.js")(build);
+require("./operations/addViewer.js")(build);
+require("./operations/getAuthorizedViewers.js")(build);
+require('./operations/removeViewer.js')(build);
+require('./operations/getSharedSurvey.js')(build);
 
 module.exports = getRouter();

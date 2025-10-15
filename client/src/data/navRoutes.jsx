@@ -1,73 +1,152 @@
-import { FaRankingStar } from "react-icons/fa6";
-import { CiUser } from "react-icons/ci";
-import { GoPlus } from "react-icons/go";
+import { FaRankingStar, FaRobot } from "react-icons/fa6";
+import { CiUser, CiSearch } from "react-icons/ci";
+import { GoPlus, GoHome } from "react-icons/go";
 import { MdHistory } from "react-icons/md";
 import { TbSettings2 } from "react-icons/tb";
-import { GoHome } from "react-icons/go";
-import { CiSearch } from "react-icons/ci";
+import { FaHandshake } from "react-icons/fa";
 
-const size = 25;
+const iconBase =
+  "size-10 flex items-center justify-center rounded-xl transition-all duration-300 ease-out hover:scale-105 hover:shadow-md dark:hover:shadow-blue-900/40";
 
 export const navRoutes = [
+  // 🌟 Highlighted "Create"
   {
     path: "/create",
-    label:'Create',
+    label: "Create",
     icon: (
-      <div className="size-10 aspect-square rounded-full bg-gradient-to-br from-blue-200 via-blue-300 to-indigo-200 dark:from-indigo-700 dark:via-blue-900 dark:to-blue-950 shadow-lg flex items-center justify-center  font-bold transition-all duration-200 hover:scale-110 border-2 border-blue-100 dark:border-blue-950">
-        <GoPlus size={28} />
+      <div
+        className={`flex items-center size-16 justify-center rounded-xl transition-all duration-300 ease-out hover:scale-105 dark:hover:shadow-blue-900/40
+         inquestia-bg
+          text-white shadow-[0_0_15px_rgba(99,102,241,0.6)] 
+          hover:shadow-[0_0_25px_rgba(129,140,248,0.8)] 
+          border border-white/20 scale-110`}
+      >
+        <GoPlus size={40} />
       </div>
     ),
   },
+
+  // 🏠 Home
   {
     path: "/home",
-    label: 'Home',
+    label: "Home",
     icon: (
-      <div className="size-10 aspect-square rounded-full bg-gradient-to-br from-blue-200 via-blue-400 to-indigo-300 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 shadow flex items-center justify-center  transition-all duration-200 hover:scale-110">
+      <div
+        className={`${iconBase} 
+          bg-neutral-100 dark:bg-zinc-900 
+          text-neutral-700 dark:text-neutral-200 
+          border border-neutral-200 dark:border-zinc-800`}
+      >
         <GoHome size={22} />
       </div>
     ),
   },
+
+  // 🔍 Browse
   {
     path: "/browse",
-    label: 'Browse',
+    label: "Browse",
     icon: (
-      <div className="size-10 aspect-square rounded-full bg-gradient-to-br from-blue-100 via-blue-300 to-purple-200 dark:from-blue-700 dark:via-blue-900 dark:to-purple-900 shadow flex items-center justify-center  transition-all duration-200 hover:scale-110">
+      <div
+        className={`${iconBase} 
+          bg-neutral-100 dark:bg-zinc-900 
+          text-neutral-700 dark:text-neutral-200 
+          border border-neutral-200 dark:border-zinc-800`}
+      >
         <CiSearch size={22} />
       </div>
     ),
   },
+
+  // 👤 Profile
   {
     path: "/profile",
-    label: 'Profile',
+    label: "Profile",
     icon: (
-      <div className="size-10 aspect-square rounded-full bg-gradient-to-br from-indigo-200 via-purple-200 to-blue-200 dark:from-indigo-800 dark:via-purple-900 dark:to-blue-950 shadow flex items-center justify-center  transition-all duration-200 hover:scale-110">
+      <div
+        className={`${iconBase} 
+          bg-neutral-100 dark:bg-zinc-900 
+          text-neutral-700 dark:text-neutral-200 
+          border border-neutral-200 dark:border-zinc-800`}
+      >
         <CiUser size={22} />
       </div>
     ),
   },
+
+  // 🏆 Leaderboard
   {
     path: "/leaderboard",
-    label: 'Leaderboards',
+    label: "Leaderboards",
     icon: (
-      <div className="size-10 aspect-square rounded-full bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 dark:from-blue-900 dark:via-indigo-900 dark:to-purple-800 shadow flex items-center justify-center transition-all  duration-200 hover:scale-110">
-        <FaRankingStar size={22} />
+      <div
+        className={`${iconBase} 
+          bg-neutral-100 dark:bg-zinc-900 
+          text-neutral-700 dark:text-neutral-200 
+          border border-neutral-200 dark:border-zinc-800`}
+      >
+        <FaRankingStar size={20} />
       </div>
     ),
   },
+
+  // 📜 Response History
   {
     path: "/response-history",
-    label: 'Response History',
+    label: "Response History",
     icon: (
-      <div className="size-10 aspect-square rounded-full bg-gradient-to-br from-blue-100 via-blue-200 to-indigo-200 dark:from-blue-900 dark:via-blue-800 dark:to-indigo-800 shadow flex items-center justify-center  transition-all duration-200 hover:scale-110">
+      <div
+        className={`${iconBase} 
+          bg-neutral-100 dark:bg-zinc-900 
+          text-neutral-700 dark:text-neutral-200 
+          border border-neutral-200 dark:border-zinc-800`}
+      >
         <MdHistory size={22} />
       </div>
     ),
   },
+
+  // 🤝 Shared Surveys
+  {
+    path: "/shared-surveys",
+    label: "Shared to you",
+    icon: (
+      <div
+        className={`${iconBase} 
+          bg-neutral-100 dark:bg-zinc-900 
+          text-neutral-700 dark:text-neutral-200 
+          border border-neutral-200 dark:border-zinc-800`}
+      >
+        <FaHandshake size={20} />
+      </div>
+    ),
+  },
+   {
+    path: "/chatbot",
+    label: "Inko",
+    icon: (
+      <div
+        className={`${iconBase} 
+          bg-neutral-100 dark:bg-zinc-900 
+          text-neutral-700 dark:text-neutral-200 
+          border border-neutral-200 dark:border-zinc-800`}
+      >
+        <FaRobot size={22} />
+      </div>
+    ),
+  },
+
+  // ⚙️ Settings
   {
     path: "/settings",
-    label: 'Settings',
+    label: "Settings",
     icon: (
-      <div className="size-10 aspect-square rounded-full bg-gradient-to-br from-blue-100 via-blue-300 to-gray-200 dark:from-blue-950 dark:via-blue-900 dark:to-gray-800 shadow flex items-center justify-center  transition-all duration-200 hover:scale-110">
+      <div
+        className={`${iconBase} 
+          bg-neutral-100 dark:bg-zinc-900 
+          text-neutral-700 dark:text-neutral-200 
+          border border-neutral-200 dark:border-zinc-800`}
+      >
         <TbSettings2 size={22} />
       </div>
     ),

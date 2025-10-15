@@ -42,7 +42,7 @@ const PointRankingList = () => {
     <div className="w-full space-y-6">
       {/* Header */}
       <div className="text-center w-full">
-        <h1 className="text-3xl font-bold lato">Hall of Famers</h1>
+        <h1 className="text-3xl font-semibold text-gradient">Hall of Famers</h1>
         <p className="opacity-80">
           These users racked up the most cores — keep answering to rise in the
           leaderboard!
@@ -81,7 +81,7 @@ const PointRankingList = () => {
           <p className="col-span-2 col-start-9 text-right">Cores</p>
         </div>
 
-        <div className="min-h-[24rem] p-4">
+        <div className="min-h-[24rem] space-y-1 p-4">
           {isLoading ? (
             <div className="w-full text-sm opacity-60 text-center">
               Preparing the leaderboard...

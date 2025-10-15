@@ -33,16 +33,15 @@ const ResponseHistory = () => {
   }, [inView, nextPage]);
   
   return (
-    <div className="p-6 w-full max-w-3xl mx-auto">
+    <div className="p-6 w-full  mx-auto">
       {answerList?.length > 0 && (
         <div className="space-y-6">
-        
-          {/* Header */}
-          <div className="flex flex-col items-center text-center">
+      
+          <div className="flex flex-col items-start text-center">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
               Your Response Records
             </h1>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+            <p className=" text-zinc-600 dark:text-zinc-400 mt-1">
               A history of all the surveys you’ve contributed to. 
               Keep track of your answers and revisit surveys anytime!
             </p>

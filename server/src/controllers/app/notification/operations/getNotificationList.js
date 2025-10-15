@@ -2,6 +2,7 @@ const { getPageParam } = require("../../../../middlewares/pagination/getPagePara
 const { verifySession } = require("../../../../middlewares/verification/verifySession");
 const Notification = require("../../../../models/notification");
 const { catchError } = require("../../../../utils/errorHandlers/catchError");
+const { getPathAndMessage } = require("../../../utils/notification/getPathAndMessage");
 
 
 const getNotificationList = async (req, res) => {
@@ -25,15 +26,16 @@ const getNotificationList = async (req, res) => {
 
    const nextPage = req.getNextPage(totalNotifications);
    notifications = notifications.map((notif) => {
-   console.log(notif.resourceId)
-    return {
-      ...notif,
-      path:
-        notif.action === "answer"
-          ? `/answer/${notif.resourceId}`
-          : `/survey/${notif.resourceId}`,
-    };
-   })
+     const { path, message } = getPathAndMessage(notif);
+
+     return {
+       ...notif,
+       path,
+       message
+     };
+   });
+  
+
 
 
    return res.status(200).json({

@@ -9,4 +9,4 @@ return <div className="grid shrink-1 grid-cols-3 pr-2 pl-1 gap-x-1 w-full mx-aut
      </div>
 }
 
-export default SurveyTagList
+export default SurveyTagList;

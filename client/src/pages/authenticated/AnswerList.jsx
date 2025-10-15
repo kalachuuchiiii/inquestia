@@ -1,129 +1,284 @@
-import { HiOutlineChevronRight, HiOutlineChevronLeft } from "react-icons/hi2";
-import { useSelector } from 'react-redux';
-
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import useAsync from '../../hooks/useAsync.js';
-import { useInView } from 'react-intersection-observer';
-import { fetchApi } from '../../utils/fetchApi.js';
-import AnswerCard from '../../components/card/AnswerCard.jsx';
-import ArrowButton from '../../components/html/ArrowButton.jsx';
-import SurveyStatistics from '../../components/SurveyStatistics.jsx';
-import { NavLink } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
+import useAsync from "../../hooks/useAsync.js";
+import { fetchApi } from "../../utils/fetchApi.js";
+import AnswerCard from "../../components/card/AnswerCard.jsx";
+import ArrowButton from "../../components/html/ArrowButton.jsx";
+import SurveyStatistics from "../../components/SurveyStatistics.jsx";
 import QuestionFilter from "../../components/QuestionFilter.jsx";
 import useFieldArray from "../../hooks/useFieldArray.js";
 import Button from "../../components/html/Button.jsx";
+import { motion } from "framer-motion";
 
 const AnswerListPage = () => {
   const [nextPage, setNextpage] = useState(1);
-  const [answers, setAnswers] = useState([])
-  const [survey, setSurvey] = useState({})
+  const [answers, setAnswers] = useState([]);
+  const [survey, setSurvey] = useState({});
   const [totalAnswers, setTotalAnswers] = useState(0);
-  const { fieldArray: questions, modifyFieldById, getFieldById, setFieldArray } = useFieldArray([]);
+  const { fieldArray: questions, modifyFieldById, getFieldById, setFieldArray } =
+    useFieldArray([]);
   const [statistics, setStatistics] = useState([]);
   const { ref, inView } = useInView();
-  const [isFilterOn, setIsFilterOn] = useState(false)
+  const [isFilterOn, setIsFilterOn] = useState(false);
   const { id } = useParams();
-  const filterObject = useMemo(() => ({ questions}), [ questions])
-  
-  const [getAnswers, { isLoading, error }] = useAsync(async({ page = 1, overwrite = true, turnOnFilter = false} = {}) => {
-    const res = await fetchApi("get", `/answer/s/${id}`, {
-      page, 
-      filter: JSON.stringify(turnOnFilter ? filterObject : null) 
-    }); 
-    setIsFilterOn(turnOnFilter)
-    
-    console.log(res)
-    setTotalAnswers(res.totalAnswers);
-    setNextpage(res.nextPage);
-    setAnswers(prev => !overwrite ? [...prev, ...res.answers] : [...res.answers]);
-  }, [isFilterOn, questions]);
+  const [isAuthentic, setIsAuthentic] = useState("all");
 
+  const filterObject = useMemo(
+    () => ({ questions, isAuthentic }),
+    [isAuthentic, questions]
+  );
 
-  const [getStatistics] = useAsync(async() => {
-    const res = await fetchApi("get", `/survey/${id}/statistics`); 
-    if(!res.success)return;
-    setSurvey(res.survey)
-     setFieldArray(
-       res.survey.questions.map((q) => ({
-         ...q,
-         answer: q.type === "text" ? "" : [],
-         isStrict: false,
-       }))
-     );
+  // 🔹 Fetch Answers
+  const [getAnswers, { isLoading }] = useAsync(
+    async ({ page = 1, overwrite = true, turnOnFilter = false } = {}) => {
+      const res = await fetchApi("get", `/answer/s/${id}`, {
+        page,
+        filter: JSON.stringify(turnOnFilter ? filterObject : null),
+      });
+
+      setIsFilterOn(turnOnFilter);
+      setTotalAnswers(res.totalAnswers);
+      setNextpage(res.nextPage);
+      setAnswers((prev) =>
+        !overwrite ? [...prev, ...res.answers] : [...res.answers]
+      );
+    }
+  );
+
+  // 🔹 Fetch Statistics
+  const [getStatistics, { isLoading: isLoadingSurvey }] = useAsync(async (initial = true) => {
+    const res = await fetchApi("get", `/survey/${id}/statistics`, {
+      isAuthentic,
+    });
+    if (!res.success) return;
+
+    setSurvey(res.survey);
+    if(initial){
+      setFieldArray(
+      res.survey.questions.map((q) => ({
+        ...q,
+        answer: q.type === "text" ? "" : [],
+        isStrict: false,
+      }))
+    );
+    }
     setStatistics(res.statistics);
-  })
+  });
 
- 
- 
-
-
-  
+  // 🔹 Initial load
   useEffect(() => {
-    getStatistics();
     getAnswers();
-  }, [id])
-  
-  useEffect(() => {
-    if(nextPage === null || isLoading || !inView)return; 
-    getAnswers({ page: nextPage, overwrite: false, turnOnFilter: isFilterOn})
-  }, [nextPage, inView]);
-  
+     getStatistics();
+  }, [id]);
 
-return (
-  <div>
-    <div className="p-4">
-      <p className="lato text-xl">{survey.title}</p>
-      <p>{survey.description}</p>
+  useEffect(() => {
+    if (nextPage === null || isLoading || !inView) return;
+    getAnswers({ page: nextPage, overwrite: false, turnOnFilter: isFilterOn });
+  }, [nextPage, inView]);
+
+  const SkeletonCard = () => (
+    <div className="animate-pulse bg-white dark:bg-zinc-900 rounded-xl shadow p-4 border border-blue-50 dark:border-zinc-800 space-y-4">
+      <div className="h-4 bg-zinc-200 dark:bg-zinc-700 rounded w-1/3"></div>
+      <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-2/3"></div>
+      <div className="h-20 bg-zinc-200 dark:bg-zinc-700 rounded w-full"></div>
     </div>
-    {statistics?.length > 0 && <SurveyStatistics data={statistics} />}
-    {survey?.questions?.length > 0 && (
-      <>
-        <QuestionFilter
-         
-          getFieldById={getFieldById}
-          handleChange={modifyFieldById}
-          questions={survey.questions}
-        />
-        <div className="space-y-4">
-          <Button onClick={() => getAnswers({ turnOnFilter: true })}>
-            Filter
-          </Button>
-          <Button onClick={() => getAnswers({ turnOnFilter: false })}>
-            Remove Filter
-          </Button>
-        </div>
-      </>
-    )}
-    {totalAnswers > 0 ? (
-      <>
-        <div className="w-full">
-          <div className="h-20 text-sm flex justify-center items-center">
-            <ArrowButton
-              to={`/survey-summary/${survey._id}`}
-              className="text-sm gap-3"
-            >
-              Generate a Summary
-            </ArrowButton>
+  );
+
+  // 🔹 Authenticity Selector UI
+  const AuthenticitySelector = () => {
+    const options = [
+      { label: "All", value: "all" },
+      { label: "Authentic", value: "true" },
+      { label: "Not Authentic", value: "false" },
+    ];
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="w-full mb-6 rounded-xl bg-gradient-to-r from-blue-50 via-cyan-50 to-blue-100 dark:from-zinc-800 dark:via-zinc-900 dark:to-zinc-800 border border-blue-100 dark:border-zinc-700 p-5 shadow-sm"
+      >
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex flex-col">
+            <h3 className="text-lg font-semibold text-blue-700 dark:text-blue-300">
+              Authentic Answers Filter
+            </h3>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 max-w-2xl">
+              Choose which type of answers to display and include in
+              summaries.{" "}
+              <span className="font-medium text-blue-600 dark:text-blue-400">
+                Authentic answers
+              </span>{" "}
+              are those marked as “makes sense,” while{" "}
+              <span className="font-medium text-red-500 dark:text-red-400">
+                Not authentic
+              </span>{" "}
+              are marked as irrelevant or nonsense.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {options.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setIsAuthentic(opt.value)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border shadow-sm ${
+                  isAuthentic === opt.value
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         </div>
-        <p className="text-xs">These are the answers for survey: </p>
+      </motion.div>
+    );
+  };
 
-        {totalAnswers > 0 && answers?.length > 0 &&
-          answers.map((answer) => (
-            <AnswerCard answer={answer} key={answer._id} />
-          ))}
-      </>
-    ) : (
-      !isLoading && (
-        <div className="h-96 flex justify-center items-center">
-          There are no responses yet for this survey.
+  return (
+    <div className="w-full mx-auto py-8 px-2 md:px-6">
+      {/* Authenticity Filter */}
+      <AuthenticitySelector />
+
+      {/* Survey Header */}
+      <div className="bg-white dark:bg-zinc-900 rounded-xl shadow p-6 mb-6 border border-blue-50 dark:border-zinc-800 flex flex-col gap-2">
+        {isLoadingSurvey ? (
+          <div className="animate-pulse space-y-4">
+            <div className="h-10 bg-zinc-200 dark:bg-zinc-700 w-1/2 rounded"></div>
+            <div className="h-20 bg-zinc-200 dark:bg-zinc-700 w-2/3 rounded"></div>
+            <div className="h-100 bg-zinc-200 dark:bg-zinc-700 w-full rounded"></div>
+            <div className="h-10 bg-zinc-200 dark:bg-zinc-700 w-full rounded"></div>
+          </div>
+        ) : (
+          <>
+            <h1 className="text-2xl text-gradient font-semibold">
+              {survey.title}
+            </h1>
+            <p className="text-zinc-600 dark:text-zinc-300 text-sm mb-2">
+              {survey.description}
+            </p>
+
+            {statistics?.length > 0 && <SurveyStatistics data={statistics} />}
+            <ArrowButton
+              to={`/survey-summary/${survey._id}`}
+              className="inquestia-button"
+            >
+              <span className="inline-block">✨ Generate AI Summary</span>
+            </ArrowButton>
+            <button className="w-full underline text-left" onClick={() => getStatistics(false)}>
+              Refresh
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Filters */}
+      {survey?.questions?.length > 0 && (
+        <div className="md:col-span-5">
+          <div className="bg-white dark:bg-zinc-900 rounded-xl shadow p-5 mb-6 border border-blue-50 dark:border-zinc-800">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg font-semibold text-blue-700 dark:text-blue-300">
+                Filters
+              </h2>
+            </div>
+
+            <QuestionFilter
+              getFieldById={getFieldById}
+              handleChange={modifyFieldById}
+              questions={survey.questions}
+            />
+
+            {isFilterOn && (
+              <div className="text-xs text-blue-500 mt-2 font-medium">
+                Filter: ON
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-3 mt-4">
+              <Button
+                className="outline outline-black/20 shadow-md p-2 rounded hover:backdrop-brightness-90 flex-1 sm:flex-none"
+                onClick={() => getAnswers({ turnOnFilter: true })}
+              >
+                Apply Filter
+              </Button>
+              <Button
+                className="outline p-2 outline-black/20 shadow-md rounded hover:backdrop-brightness-90 flex-1 sm:flex-none"
+                onClick={() => getAnswers({ turnOnFilter: false })}
+                variant="secondary"
+              >
+                Remove Filter
+              </Button>
+            </div>
+          </div>
         </div>
-      )
-    )}
-    <div ref={ref} className="h-2" />
-  </div>
-);
-}
+      )}
 
-export default AnswerListPage
+      {/* Answers Section */}
+      <div>
+        <div
+          className={
+            survey?.questions?.length > 0 ? "md:col-span-7" : "col-span-12"
+          }
+        >
+          {isLoading && answers.length === 0 ? (
+            <div className="space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          ) : totalAnswers > 0 ? (
+            <>
+              <div className="flex justify-between w-full items-center mb-4">
+                <span className="text-sm text-zinc-500">
+                  Total Answers:{" "}
+                  <span className="font-semibold text-blue-600">
+                    {totalAnswers}
+                  </span>
+                </span>
+              </div>
+              <p className="text-xs text-zinc-400 mb-2">
+                These are the answers for this survey:
+              </p>
+              <div className="space-y-4">
+                {answers?.length > 0 &&
+                  answers.map((answer) => (
+                    <AnswerCard
+                      showModifyAuthenticityButton
+                      answer={answer}
+                      key={answer._id}
+                    />
+                  ))}
+              </div>
+              {isLoading && (
+                <div className="flex justify-center mt-6">
+                  <motion.div
+                    className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1,
+                      ease: "linear",
+                    }}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            !isLoading && (
+              <div className="h-96 flex justify-center items-center text-zinc-400">
+                There are no responses yet for this survey.
+              </div>
+            )
+          )}
+          <div ref={ref} className="h-2" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AnswerListPage;

@@ -43,17 +43,9 @@ const SurveyStatistics = ({ data = null }) => {
   };
 
   return (
-    <div className={`shadow-lg rounded-2xl p-6 w-full  mx-auto my-6
+    <div className={`shadow-lg col-span-5 col-start-8 rounded-2xl p-6 w-full  mx-auto my-6
       ${mode === "Dark" ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"}`}>
-      <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-4 flex flex-col gap-2">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          📊 Survey Statistics
-        </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Visualize survey responses with multiple graph types. Download any chart for reporting. {' '}
-          <span>Applicable only to option-based questions.</span>
-        </p>
-      </div>
+     
       {data ? (
         data.length > 0 ? (
           <div className="flex flex-col items-center w-full">

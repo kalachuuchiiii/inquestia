@@ -2,20 +2,30 @@ const { verifySession } = require("../../../../middlewares/verification/verifySe
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 const multer = require("multer");
 const { uploadImage, deleteImage } = require("../../../../config/cloudinary/utils/index.js");
-const fs = require("fs");
 const storage = multer.memoryStorage();
 
 const upload = multer({
   storage
 });
 
-const User = require("../../../../models/user.js");
+
 
 const changeAvatar = async (req, res) => {
   const { verifiedUser } = req;
   const { avatar_public_id = null } = verifiedUser;
 
-  const {url, public_id} = await uploadImage(req?.file?.path || null);
+  const avatar = req?.file?.buffer;
+
+  if(!avatar){
+    return res.status(400).json({
+      success: false,
+      message: 'Please provide a photo'
+    })
+  }
+
+  const base64String = `data:${req.file.mimetype};base64,${avatar.toString('base64')}`;
+
+  const {url, public_id} = await uploadImage(base64String || null);
 
     if(avatar_public_id){
       deleteImage(avatar_public_id);
@@ -28,8 +38,6 @@ const changeAvatar = async (req, res) => {
   const user = data.toObject();
   delete user.password;
 
-
-  await fs.promises.unlink(req.file.path);
   return res.status(200).json({
     success: true,
     user

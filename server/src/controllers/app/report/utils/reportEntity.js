@@ -48,7 +48,7 @@ exports.reportEntity = (entity) => {
         ...reportForm, 
         reportedEntity: {
             entityId: verifiedId, 
-            entity  
+            entity, 
         },
         reportedBy: String(verifiedUser._id),
         entityOwner: entityOwner[entity]

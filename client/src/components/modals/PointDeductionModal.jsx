@@ -3,16 +3,27 @@ import useAsync from '../../hooks/useAsync';
 import ModalStyle from './ModalStyle';
 import Button from '../html/Button';
 import { fetchApi } from '../../utils/fetchApi';
+import useSwal from '../../hooks/useSwal';
 
 const PointDeductionModal = ({onClose = () => {}, userPoint = null, userId = null, reportId = null, username = null}) => {
-    const [pointsToDeduct, setPointsToDeduct] = useState(0)
+    const [pointsToDeduct, setPointsToDeduct] = useState(0);
+    const swal = useSwal();
+
   const [deductUsersPoints, { isLoading, error, isSuccess }] = useAsync(
     async () => {
       const res = await fetchApi("patch", `/admin/deduct/${userId}/`, {
        reportId, 
        pointsToDeduct
       });
-      console.log(res);
+      if(res?.success){
+           swal({
+            title: 'Deducted successfully!', 
+            icon: 'success',
+
+           }, () => {
+            onClose();
+           })
+      }
     }
   );
 
@@ -39,10 +50,7 @@ const PointDeductionModal = ({onClose = () => {}, userPoint = null, userId = nul
           <p className="text-xs">To be</p>
           <p>{userPoint - pointsToDeduct}</p>
         </div>
-        {isSuccess && (
-          <p className="text-xs text-blue-600">Deducted successfully</p>
-        )}
-        <Button onClick = {deductUsersPoints} disabled = {isLoading} loadingState={isLoading}>Deduct</Button>
+        <Button className='inquestia-button mx-auto' onClick = {deductUsersPoints} disabled = {isLoading} loadingState={isLoading}>Deduct</Button>
       </main>
     </ModalStyle>
   );

@@ -46,7 +46,7 @@ const ReportedSurveys = () => {
         </span>
       </div>
 
-      <div className="grid gap-2 w-full sm:grid-cols-2 ">
+      <div className="grid gap-2  w-full sm:grid-cols-2 ">
         {reportedSurveys.length > 0 ? (
           reportedSurveys.map((report) => (
             <ReportedCard key={report._id} report={report}>

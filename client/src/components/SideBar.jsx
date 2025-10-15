@@ -13,7 +13,7 @@ const Sidebar = ({ onClose = () => {}, isLargeScreen = false }) => {
       variants="fromLeft"
       className={`sticky min-h-screen top-0 z-40  `}
     >
-      <aside className="flex justify-center flex-col  h-screen  ">
+      <aside className="flex justify-start  items-start flex-col  h-screen  ">
        
         
     

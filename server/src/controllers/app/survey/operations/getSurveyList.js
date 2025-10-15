@@ -5,13 +5,12 @@ const { getPageParam } = require('../../../../middlewares/pagination/getPagePara
 const { catchError } = require('../../../../utils/errorHandlers/catchError.js');
 const { allowedSurveyFields } = require("../../../../data/allowedFields/survey.js");
 const { default: z } = require('zod');
+const { getBadgeByPoint } = require('../../../../utils/getBadgeByPoint.js');
 
 
 const seenIdsSchema = z.array(z.string());
 const getSurveyList = async (req, res) => {
-  const { skip } = req.paginationParams;
 
-  const { interests } = req.verifiedUser;
   const seenIds = seenIdsSchema.parse(
     JSON.parse(req?.query?.seenIds || "[]")
   );
@@ -20,12 +19,13 @@ const getSurveyList = async (req, res) => {
 
 
 
-  const [totalSurveys, surveys] = await Promise.all([
+  let [totalSurveys, surveys] = await Promise.all([
     Survey.countDocuments({
       hasReachedTargetRespondents: false,
       respondents: {
         $nin: [verifiedUser._id],
       },
+      isTakendown: false,
       closed: false,
       isDraft: false,
     }),
@@ -33,6 +33,8 @@ const getSurveyList = async (req, res) => {
       {
         $match: {
           hasReachedTargetRespondents: false,
+          isTakendown: false,
+
           _id: { $nin: seenIds.map((id) => new mongoose.Types.ObjectId(id)) },
           respondents: {
             $nin: [verifiedUser._id],
@@ -87,6 +89,15 @@ const getSurveyList = async (req, res) => {
     ]),
   ]);
   const nextPage = req.getNextPage(totalSurveys);
+  surveys = surveys.map((surv) => {
+    return { 
+      ...surv,
+      user: {
+        ...surv.user,
+        badge: getBadgeByPoint(surv.user.core.current)
+      }
+    }
+  })
 
   return res.status(200).json({
     success: true,

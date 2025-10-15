@@ -4,6 +4,8 @@ import useToggler from './useToggler.js';
 import { fetchApi } from '../utils/fetchApi.js';
 
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { updateUser } from '../state/slice/user.js';
 
 const surveyInitialState = {
    title: '',
@@ -15,6 +17,7 @@ const surveyInitialState = {
 
 const useCreateSurvey = (initialQuestionState = null) => {
   const [questions, setQuestions] = useState(initialQuestionState || []);
+    const dispatch = useDispatch();
   const nav = useNavigate();
   const [surveyTagline, setSurveyTagline] = useState(surveyInitialState);
   
@@ -25,7 +28,7 @@ const useCreateSurvey = (initialQuestionState = null) => {
     setQuestions(prev => [...prev, { ...preset }]);
   }
   const [publishSurvey, { isLoading: isPublishingPending, isPublishSuccess, error }] = useAsync(async () => {
-    
+
     const surveyFormat = {
       ...surveyTagline, 
       booster: parseInt(surveyTagline.booster),
@@ -38,8 +41,10 @@ const useCreateSurvey = (initialQuestionState = null) => {
       _id: id,
       isDraft: false
     }); 
+    console.log(res);
     
     if(!res?.success)return; 
+    dispatch(updateUser({ user: res?.user}))
     nav("/profile");
     
   })

@@ -18,7 +18,7 @@ import { GoReport } from 'react-icons/go';
 import ReportSurveyModal from '../modals/ReportSurveyModal.jsx';
 import { memo, useState } from "react";
 
-const SurveyCard = memo(({ survey = {}, Context = null, children = null, className = "grid grid-cols-1 grid-rows-1 place-content-center relative dark:bg-zinc-900 bg-neutral-50 rounded-lg shadow-xl overflow-hidden" }) => {
+const SurveyCard = memo(({ survey = {}, Context = null, children = null, className = "grid grid-cols-1 grid-rows-1 place-content-center relative rounded-2xl dark:bg-zinc-900 bg-neutral-50 p-1 shadow-xl overflow-hidden" }) => {
   const [isOptionOpen, o, closeOptionWidget, toggle] = useToggler(false);
   const { user = { _id: null } } = useSelector((state) => state.user);
   const { modifyFieldById = () => {} } = useCTX(Context);
@@ -62,7 +62,7 @@ const SurveyCard = memo(({ survey = {}, Context = null, children = null, classNa
           isOptionOpen,
         }}
       >
-        <div className="flex row-start-1 col-start-1 flex-col gap-2 p-2 relative">
+        <div className="flex row-start-1 col-start-1 flex-col gap-2 p-4 relative">
           {children}
 
           {(survey?.closed || survey?.hasReachedTargetRespondents) && (
@@ -105,10 +105,10 @@ SurveyCard.Preview = () => {
   return (
     <div className="text-sm overflow-y-auto scrollbar-none w-full  bg-neutral-100 p-4 dark:bg-[#101012] rounded-lg">
       <div>
-        <h1 className="text-xl leading-5 lato truncate">{title}</h1>
-        <p className="text-sm opacity-80 line-clamp-2">{description}</p>
+        <h1 className="text-xl leading-5  lato truncate">{title}</h1>
+        <p className="text-sm opacity-80 px-2 text-justify line-clamp-2">{description}</p>
       </div>
-      <div className="p-2 text-xs opacity-80">
+      <div className="p-2 my-2 text-xs opacity-80">
         {questions.map((q = {}, i) => (
           <p key={i}>
             Question {i + 1}: {q?.question}
@@ -143,7 +143,7 @@ SurveyCard.Redirect = () => {
       <div className='text-sm w-full opacity-80'>
         <SurveyTagList tags={tags} />
       </div>
-      <ArrowButton className="gap-6 p-2 m-2 text-sm shrink-0 w-fit" to={`/survey/${_id}`}>
+      <ArrowButton className="inquestia-button truncate" to={`/survey/${_id}`}>
         View Survey
       </ArrowButton>
     </div>
@@ -170,7 +170,7 @@ SurveyCard.Redirect.Draft = () => {
   return (
     <div className="flex items-center justify-between p-2 rounded border-t border-gray-200 dark:border-gray-800">
       <SurveyTagList tags={tags} />
-      <ArrowButton className="gap-6 p-2 m-2 text-xs shrink-0 w-fit" to={`/create/${_id}`}>
+      <ArrowButton className="inquestia-button truncate" to={`/create/${_id}`}>
         View Draft
       </ArrowButton>
     </div>

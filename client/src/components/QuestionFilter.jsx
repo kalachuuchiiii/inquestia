@@ -27,9 +27,6 @@ const q = questions?.[current] || {
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Overview of responses for each question with selectable options.
         </p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-          Use the arrows to navigate between questions and filter answers.
-        </p>
         <p className="text-xs text-blue-500 dark:text-blue-300 mt-2">
           <strong>Strict option filter:</strong> If enabled, only survey answers that exactly match your selected options will be shown. If disabled, answers that contain at least one of your selected options or keywords will be included.
         </p>
@@ -70,7 +67,7 @@ const q = questions?.[current] || {
               <div className="flex flex-col gap-2">
                 {q.choices &&
                   q.choices.map((choice, idx) => {
-                    const isSelected = getFieldById(q._id).answer.includes(choice);
+                    const isSelected = getFieldById(q?._id)?.answer?.includes(choice);
                     return (
                       <label
                         key={idx}

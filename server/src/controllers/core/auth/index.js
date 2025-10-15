@@ -26,6 +26,10 @@ require("./operations/updateInterests.js")(build);
 require("./operations/updateNickname.js")(build);
 require("./operations/updatePassword.js")(build);
 require("./operations/updateUsername.js")(build);
+require("./operations/search-oneUser.js")(build);
+require("./operations/getConversation.js")(build);
+require("./operations/sendMessage.js")(build);
+require("./operations/refreshConversation.js")(build);
 
 const userRouter = getRouter();
 module.exports = userRouter;

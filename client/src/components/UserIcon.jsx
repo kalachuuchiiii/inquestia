@@ -3,8 +3,8 @@ import { UserContext } from '../context/userContext.js';
 import ImageComponent from './html/Image.jsx';
 import { useSelector } from 'react-redux';
 import { NavLink } from "react-router-dom";
-import useCtx from '../hooks/useCTX.js';
-import Textarea from './html/Textarea.jsx';
+import { SiDeepcool } from "react-icons/si";
+import useCtx from '../hooks/useCTX.js'
 const UserIcon = memo(({className = "", children, user}) => {
   const { user: sessionUser } = useSelector(state => state.user);
 
@@ -27,7 +27,7 @@ UserIcon.Username = memo(({className = "", username = "", showAt = false}) => {
   return <NavLink to = {navigateTo} className = {className}>{showAt && '@'}{user?.username || username}</NavLink>
 })
 
-UserIcon.Nickname = memo(({nickname = "", className = ''}) => {
+UserIcon.Nickname = memo(({nickname = "", className = '', badgeSize = 'md'}) => {
   const { user = {
     nickname: '' , 
     username: '',
@@ -37,14 +37,15 @@ UserIcon.Nickname = memo(({nickname = "", className = ''}) => {
   } }= useCtx(UserContext);
   return (
     <div className={`${className} flex gap-2 items-center`}>
-      <p>{user.nickname || user.username}</p>
+      <p className=" truncate ">{user?.nickname || user?.username}</p>
       {user?.badge?.badge && (
-       <>
-       <p>//</p>
-        <p className=" italic font-semibold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent text-sm">
-          {user.badge.badge}
-        </p>
-       </>
+        <>
+          <p> <SiDeepcool /> </p>
+          <p className={user?.badge?.style}
+          >
+            {user?.badge?.badge}
+          </p>
+        </>
       )}
     </div>
   );
@@ -52,6 +53,8 @@ UserIcon.Nickname = memo(({nickname = "", className = ''}) => {
 
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import BadgeText from "./card/BadgeText.jsx";
+import { MdVerified } from "react-icons/md";
 
 UserIcon.Avatar = memo(({size = 20, className = '', disableZoom = false}) => {
   const { user = {

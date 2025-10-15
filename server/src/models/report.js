@@ -10,6 +10,7 @@ const reportSchema = new mongoose.Schema(
       minlength: [10, "Your reason must be at least 10 characters long"],
       maxlength: [250, "Please keep your explanation under 250 characters."],
     },
+
     generalReason: {
       type: String,
       required: true,
@@ -20,13 +21,11 @@ const reportSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         refPath: 'entity',
-        required: true
       },
       entity: {
         type: String, 
-        enum: ['User', 'Survey'],
-        required: true
-      }
+        enum: ['User', 'Survey']
+      }, 
     },
     entityOwner: {
      type: mongoose.Schema.Types.ObjectId, 

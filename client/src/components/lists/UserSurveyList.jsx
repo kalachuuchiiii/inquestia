@@ -6,6 +6,7 @@ import Placeholder from '../card/placeholders/surveyCardPlaceholder.jsx'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import useFieldArray from '../../hooks/useFieldArray.js'
 import { useEffect } from 'react'
+import ArrowButton from '../html/ArrowButton.jsx'
 
 const UserSurveyList = () => {
   const getUserSurvey = async ({ pageParam = 1 }) => {
@@ -93,12 +94,12 @@ const UserSurveyList = () => {
               You don’t have any surveys yet. Start by creating one to begin
               collecting responses.
             </p>
-            <a
-              href="/create"
-              className="p-2 bg-zinc-900 text-neutral-100 dark:bg-neutral-100 rounded-lg dark:text-zinc-900"
+            <ArrowButton
+              to="/create"
+              className="inquestia-button"
             >
               Create survey
-            </a>
+            </ArrowButton>
           </div>
         ) : null}
       </div>

@@ -20,11 +20,12 @@ const exchangeCores = async (req, res) => {
 
     verifiedUser.core.current -= coreCost;
     verifiedUser.boosterPoint += boosterAmount;
-    const userData = await verifiedUser.save().toObject();
+    const userData = (await verifiedUser.save()).toObject();
     delete userData.password;
 
-    return res.statuds(200).json({
+    return res.status(200).json({
         success: true, 
+        user: userData,
         message: `Successfully exchanged ${coreCost} cores for ${boosterAmount} boost points.`,
     })
 }

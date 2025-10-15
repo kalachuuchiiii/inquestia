@@ -16,6 +16,8 @@ const summarizeAnswers = async(req, res) => {
     })
    }
 
+   console.log(filteredData);
+
    if (!filteredData.answers || filteredData.answers.length === 0) {
      return res.status(200).json({
        success: true,

@@ -1,86 +1,101 @@
-import { useNavigate, useParams } from "react-router-dom"
-import Button from '../../components/html/Button.jsx';
-import { useEffect, useState } from 'react';
-import useAsync from '../../hooks/useAsync.js';
-import { fetchApi } from '../../utils/fetchApi.js';
-
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import useAsync from "../../hooks/useAsync.js";
+import { fetchApi } from "../../utils/fetchApi.js";
+import Button from "../../components/html/Button.jsx";
 
 const UpdatePasswordPage = () => {
   const { token } = useParams();
-  const [passForm, setPassForm] = useState({
-    password: null, 
-    confirmPassword: null
-  })
   const nav = useNavigate();
 
-  const [updatePassword, { isLoading, error, isSuccess }] = useAsync(async(e) => { 
-    e.preventDefault();
-    const { password, confirmPassword } = passForm;
-    if(!password || !confirmPassword){
-      throw new Error("Please fill up the required fields")
-    }
-    if(password !== confirmPassword){
-      throw new Error("Passwords do not match.")
-    }
-    const res = await fetchApi("patch", "/user/update-password", {
-      token, 
-      password
-    })
-    if(!res?.success){
-     nav('/login')
-    }
-  }, [token, passForm])
-  
-  const handleChange = (e) => {
-    const { name, value } = e.target; 
-    setPassForm(prev => ({
-      ...prev, 
-      [name]: value
-    }))
-  }
+  const [passForm, setPassForm] = useState({
+    password: "",
+    confirmPassword: "",
+  });
 
-return (
-  <div className="h-96 w-full flex justify-center items-center">
-    <form
-      onSubmit={updatePassword}
-      className="pt-3 pb-8 px-3 w-11/12 sm:w-6/12 lg:w-4/12 rounded-lg gap-4 bg-neutral-100  shadow-md dark:bg-zinc-900 space-y-2 flex flex-col"
-    >
-      <h1 className="text-lg lato">Update your password</h1>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs">New Password</label>
-        <input
-          onChange={handleChange}
-          name="password"
-          value={passForm.password}
-          placeholder="Password"
-          className="outline-none p-2 rounded-lg dakr:bg-zinc-700"
-        />
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs">Confirm Password</label>
-        <input
-          onChange={handleChange}
-          name="confirmPassword"
-          value={passForm.confirmPassword}
-          placeholder="Confirm password"
-          className="outline-none p-2  rounded-lg "
-        />
-        {isSuccess && (
-          <p className="text-blue-600 text-xs">
-            Successfully updated your password
-          </p>
-      )}
-      </div>
-      <div className="w-full flex justify-end">
-        <div className="w-6/12">
-          <Button loadingState={isLoading} type="submit">
-            Update
+  const [updatePassword, { isLoading, error, isSuccess }] = useAsync(
+    async (e) => {
+      e.preventDefault();
+      const { password, confirmPassword } = passForm;
+
+      if (!password || !confirmPassword) {
+        throw new Error("Please fill in all fields.");
+      }
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match.");
+      }
+
+      const res = await fetchApi("patch", "/user/update-password", {
+        token,
+        password,
+      });
+
+      if (res?.success) {
+        nav("/login");
+      } else {
+        throw new Error(res?.message || "Something went wrong.");
+      }
+    },
+    [token, passForm]
+  );
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPassForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  return (
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-50 via-white to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 transition-colors duration-300">
+      <form
+        onSubmit={updatePassword}
+        className="w-11/12 sm:w-8/12 md:w-5/12 lg:w-4/12 xl:w-3/12 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-lg p-8 flex flex-col gap-5 transition-all duration-300"
+      >
+        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 text-center">
+          Update Your Password
+        </h1>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 text-center mb-4">
+          Enter your new password below.
+        </p>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+            New Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            value={passForm.password}
+            onChange={handleChange}
+            placeholder="Enter new password"
+            className="w-full p-2.5 rounded-lg outline-none bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 focus:ring-2 focus:ring-blue-500 transition"
+          />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={passForm.confirmPassword}
+            onChange={handleChange}
+            placeholder="Re-enter password"
+            className="w-full p-2.5 rounded-lg outline-none bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 focus:ring-2 focus:ring-blue-500 transition"
+          />
+        </div>
+        <div className="flex justify-end mt-4">
+          <Button
+            loadingState={isLoading}
+            type="submit"
+            className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white font-semibold rounded-lg transition shadow"
+          >
+            Update Password
           </Button>
         </div>
-      </div>
-    </form>
-  </div>
-);
-}
+      </form>
+    </div>
+  );
+};
 
-export default UpdatePasswordPage
+export default UpdatePasswordPage;

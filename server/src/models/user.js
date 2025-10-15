@@ -143,7 +143,6 @@ const deleteAll = async () => {
   console.log(inf);
 }
 
-//deleteAll();
 
 module.exports = User;
 

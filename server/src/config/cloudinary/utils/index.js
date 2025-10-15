@@ -1,19 +1,18 @@
 const cloudinary = require("../index.js");
 
-exports.uploadImage = async (filePath) => {
-  try {
-    const result = await cloudinary.uploader.upload(filePath, {
-      resource_type: "image",
-      folder: "avatars",
-      transformation: [
-        {
+exports.uploadImage = async (filePath, folder = 'avatars', transformation = [ {
           width: 150,
           height: 150,
           crop: "fill", 
           gravity: "auto" 
-        }
-      ]
+        }]) => {
+  try {
+    const result = await cloudinary.uploader.upload(filePath, {
+      resource_type: "image",
+      folder,
+      transformation,
     });
+    console.log(result)
 
     return {
       url: result?.secure_url,
@@ -21,7 +20,7 @@ exports.uploadImage = async (filePath) => {
     };
   } catch (err) {
     console.error("Cloudinary upload error:", err);
-    throw err;
+    throw new Error(err);
   }
 };
 

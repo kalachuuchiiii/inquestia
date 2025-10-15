@@ -58,7 +58,7 @@ return <UserDraftContext.Provider value = {{
         ) : !isLoading ? <div className="h-60 w-full flex flex-col justify-center gap-3 items-center text-center">
           <p className = "text-xs opacity-70">You don’t have any drafts yet. Start by creating one.
           </p>
-          <NavLink to = "/create" className="p-2 bg-zinc-900 text-neutral-100 dark:bg-neutral-100 rounded-lg dark:text-zinc-900">Create survey</NavLink>
+          <NavLink to = "/create" className="inquestia-button">Create survey</NavLink>
         </div> : isLoading && <Placeholder />
       }
       <div className = "w-full h-2" ref = {ref} />

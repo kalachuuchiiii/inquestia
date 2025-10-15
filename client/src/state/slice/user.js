@@ -16,10 +16,11 @@ const initialState = {
     }
   },
   hasUnreadNotifications: false,
-  interests: ["personal"],
+ interest: [],
   isAuthenticated: false, 
   isLoading: false, 
   error: '', 
+
   isProcessOK: false
 }
 
@@ -66,6 +67,7 @@ const userSlice = createSlice({
       state.hasUnreadNotifications = action?.payload?.hasUnreadNotifications || false;
       state.isAuthenticated = true; 
       state.error = '';
+      state.interest = action?.payload?.interests
       state.isLoading = false;
       state.isProcessOK = true;
     })

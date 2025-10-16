@@ -25,12 +25,17 @@ import ChatbotPage from '../pages/authenticated/ChatbotPage.jsx';
 import AboutPage from '../pages/not-authenticated/About.jsx';
 import TechnologiesPage from '../pages/not-authenticated/Technologies.jsx';
 import NotFoundPage from '../pages/not-authenticated/NotFound.jsx';
+import GuidePage from '../pages/not-authenticated/Guides.jsx';
 
 export const publicPages = [
   {
     path: "/",
     element: <WelcomePage />,
   }, {
+   path: '/guide',
+   element: <GuidePage />
+  },
+   {
     path: "/register",
     element: <RegisterPage />
   },{

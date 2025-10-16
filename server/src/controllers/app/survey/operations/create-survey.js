@@ -35,7 +35,7 @@ const createSurvey = async (req, res, _, commit) => {
   }
 
   verifiedUser.boosterPoint -= survey.booster;
-  verifiedUser.core.current += 30;
+  verifiedUser.core.current += 100;
   verifiedUser.core.highest = Math.max(verifiedUser.core.highest, verifiedUser.core.current);
   
   const userData = await verifiedUser.save({ session });  

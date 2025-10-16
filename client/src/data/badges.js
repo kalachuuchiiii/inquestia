@@ -1,4 +1,4 @@
-exports.badges = [
+export const badges = [
   { badge: "Newbie", pointsRequired: 0, style: "text-gray-500 bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded-lg" },
   { badge: "Survey Starter", pointsRequired: 12000, style: "text-blue-500 bg-blue-50 dark:bg-blue-950/40 px-2 py-1 rounded-lg" },
   { badge: "Curious Mind", pointsRequired: 24000, style: "text-sky-600 bg-sky-50 dark:bg-sky-900/40 px-2 py-1 rounded-lg" },

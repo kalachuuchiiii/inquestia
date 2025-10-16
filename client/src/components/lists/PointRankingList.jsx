@@ -4,39 +4,27 @@ import useAsync from "../../hooks/useAsync.js";
 import { fetchApi } from "../../utils/fetchApi.js";
 
 const PointRankingList = () => {
-  const [isAllTimeHigh, setIsAllTimeHigh] = useState(false);
-  const [currentHighest, setCurrentHighest] = useState([]);
-  const [allTimeHigh, setAllTimeHigh] = useState([]);
+  const [hallOfFamers, sethallOfFamers] = useState([]);
   const [userRank, setUserRank] = useState({
-    core: { highest: 0, current: 0 },
+    core: { current: 0 },
     rank: 1,
   });
 
   const [getLeaderboard, { isLoading, error }] = useAsync(
-    async ({ isAllTimeHigh = false }) => {
-      // Avoid refetch if data is already loaded
-      if (isAllTimeHigh && allTimeHigh.length > 0) return;
-      if (!isAllTimeHigh && currentHighest.length > 0) return;
-
-      const res = await fetchApi("get", "/user/leaderboard", { isAllTimeHigh });
+    async () => {
+      const res = await fetchApi("get", "/user/leaderboard", { isAllTimeHigh: false });
       if (!res.success) throw new Error("Fetching leaderboard failed.");
 
-      const { hallOfFamers = [], userRank: userRankData = [] } = res.leaderboard;
-      if (userRankData[0]) setUserRank(userRankData[0]);
-
-      if (isAllTimeHigh) {
-        setAllTimeHigh(hallOfFamers);
-      } else {
-        setCurrentHighest(hallOfFamers);
-      }
+      const { hallOfFamers: hallOfFamerList, userRank: userRankData = [] } = res.leaderboard;
+      if (userRankData[0]) setUserRank(userRankData[0]); 
+        sethallOfFamers(hallOfFamerList);
+    
     }
   );
 
   useEffect(() => {
-    if (!isLoading) getLeaderboard({ isAllTimeHigh });
-  }, [isAllTimeHigh]);
-
-  const ranklist = isAllTimeHigh ? allTimeHigh : currentHighest;
+    if (!isLoading) getLeaderboard();
+  }, []);
 
   return (
     <div className="w-full space-y-6">
@@ -50,28 +38,7 @@ const PointRankingList = () => {
       </div>
 
       {/* Tabs */}
-      <div className="w-full flex justify-center gap-1 border-b border-neutral-200 dark:border-neutral-800">
-        <button
-          onClick={() => setIsAllTimeHigh(false)}
-          className={`w-full p-2 text-center transition ${
-            !isAllTimeHigh
-              ? "border-b-2 border-blue-600 font-medium text-blue-600"
-              : "opacity-70 hover:opacity-100"
-          }`}
-        >
-          Current Highest
-        </button>
-        <button
-          onClick={() => setIsAllTimeHigh(true)}
-          className={`w-full p-2 text-center transition ${
-            isAllTimeHigh
-              ? "border-b-2 border-blue-600 font-medium text-blue-600"
-              : "opacity-70 hover:opacity-100"
-          }`}
-        >
-          All-Time Highest
-        </button>
-      </div>
+  
 
       {/* Leaderboard Table */}
       <div className="rounded-lg shadow-xl p-3 bg-white dark:bg-zinc-900">
@@ -86,11 +53,10 @@ const PointRankingList = () => {
             <div className="w-full text-sm opacity-60 text-center">
               Preparing the leaderboard...
             </div>
-          ) : ranklist.length > 0 ? (
-            ranklist.map((user, i) => (
+          ) : hallOfFamers.length > 0 ? (
+            hallOfFamers.map((user, i) => (
               <PointRankedCard
-                key={user._id || i}
-                sort={isAllTimeHigh ? "highest" : "current"}
+                key={user?._id || i}
                 user={user}
               />
             ))
@@ -109,13 +75,10 @@ const PointRankingList = () => {
               #{userRank.rank}
             </span>{" "}
             with{" "}
-            {userRank.core[isAllTimeHigh ? "highest" : "current"] ?? 0} cores!
+            {userRank?.core?.current} cores!
           </h1>
         </div>
-        <p className="text-center text-xs opacity-50 mt-1">
-          Each month, current cores are recalculated to 30%, keeping momentum
-          while refreshing progress.
-        </p>
+      
       </div>
     </div>
   );

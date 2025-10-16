@@ -55,32 +55,29 @@ const Dashboard = memo(({ user = {} }) => {
           </p>
         </motion.div>
 
-      {/* Cores Section (Pink Glow Theme) */}
-<motion.div
-  whileHover={{ scale: 1.03 }}
-  className="relative p-5 rounded-xl border border-pink-200 dark:border-pink-700 
+        {/* Cores Section (Pink Glow Theme) */}
+        <motion.div
+          whileHover={{ scale: 1.03 }}
+          className="relative p-5 rounded-xl border border-pink-200 dark:border-pink-700 
              shadow-[0_0_12px_rgba(255,182,193,0.25)] dark:shadow-[0_0_15px_rgba(255,105,180,0.3)] 
              bg-gradient-to-r from-pink-50 to-rose-100 dark:from-pink-950 dark:to-fuchsia-950 
              transition overflow-hidden"
->
-  {/* Subtle Glow Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-br from-pink-300/10 to-transparent blur-xl pointer-events-none" />
+        >
+          {/* Subtle Glow Overlay */}
+          <div className="absolute inset-0  bg-gradient-to-br from-pink-300/10 to-transparent blur-xl pointer-events-none" />
 
-  <p className="text-sm text-zinc-600 dark:text-zinc-400 relative z-10">
-    Highest Cores
-  </p>
-  <h1 className="text-3xl flex items-center gap-2 font-bold text-pink-500 dark:text-fuchsia-400 
-                 drop-shadow-[0_0_6px_rgba(255,105,180,0.6)] relative z-10">
-    <GiAtomicSlashes /> {highestCores}
-  </h1>
-  <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 relative z-10">
-    Current Cores
-  </p>
-  <p className="text-xl font-semibold text-zinc-800 dark:text-zinc-100 relative z-10">
-    {currentCores}
-  </p>
-</motion.div>
-
+          <div className="flex items-start md:items-center justify-center flex-col h-full">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 relative z-10">
+               Core Points
+            </p>
+            <h1
+              className="text-5xl  flex items-center gap-2 font-bold text-pink-500 dark:text-fuchsia-400 
+                 drop-shadow-[0_0_6px_rgba(255,105,180,0.6)] relative z-10"
+            >
+              <GiAtomicSlashes /> {currentCores}
+            </h1>
+          </div>
+        </motion.div>
       </div>
     </motion.div>
   );

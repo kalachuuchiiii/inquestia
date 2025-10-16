@@ -146,9 +146,9 @@ const submitAnswer = async(req, res, _, commit) => {
   surveyData.hasReachedTargetRespondents = surveyData.totalRespondents >= targetRespondents;
    
  
-   author.core.current += 15;
+   author.core.current += 50;
    author.core.highest = Math.max(author.core.current, author.core.highest)
-  verifiedUser.core.current += 15;
+  verifiedUser.core.current += 50;
   verifiedUser.core.highest = Math.max(
     verifiedUser.core.highest,
     verifiedUser.core.current

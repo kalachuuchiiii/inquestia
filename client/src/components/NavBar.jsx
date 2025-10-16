@@ -49,14 +49,15 @@ NavBar.App = memo(({ disabled = false }) => {
 
 import { useState, useRef, useEffect } from "react";
 import NotificationDropdown from "./dropdown/NotificationDropdown";
-
-
-
+import { FaBook } from "react-icons/fa";
 
 NavBar.Points = () => {
   const { user = { core: { current: 0 }, boosterPoint: 0 } } = useSelector(state => state.user);
   return (
     <div className="flex items-center gap-3 px-3 py-1 rounded-xl  shadow ">
+      <div>
+        <NavLink className={'text-xs flex items-center gap-1 truncate'} to = '/guide' > <FaBook  /> <p >Guide</p> </NavLink>
+      </div>
       <div className="flex items-center text-pink-600 gap-1">
         <GiAtomicSlashes className="" size={18} />
         <span className="font-bold  text-sm">{user.core.current}</span>

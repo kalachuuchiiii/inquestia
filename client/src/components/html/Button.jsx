@@ -19,15 +19,15 @@ const Button = ({
       onClick={onClick}
       type={type}
       className={`${className} ${
-        disabled
-          ? " opacity-50 "
+        disabled || loadingState 
+          ? " opacity-20 "
           : "active:bg-zinc-900 active:text-neutral-100 transition-colors duration-200"
       } w-full flex text-center  justify-center h-10 items-center overflow-y-hidden truncate `}
     >
       {loadingState ? (
         <MoonLoader color={loadingStateColor || (mode === 'Dark' ? 'black' : 'white')} size={size} />
       ) : (
-        <p className="w-full text-center flex justify-center items-center h-full">{children}</p>
+        <button className="w-full  text-center flex justify-center items-center h-full">{children}</button>
       )}
     </button>
   );

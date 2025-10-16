@@ -73,9 +73,9 @@ const Register = () => {
         </div>
         <div className="w-6/12">
           <Button
-            loadingState={isRegisterLoading}
+            loadingState={isRegisterLoading || isCodeSendingLoading}
             type="submit"
-            disabled={isRegisterLoading}
+            disabled={isRegisterLoading || isCodeSendingLoading}
           >
             Register
           </Button>

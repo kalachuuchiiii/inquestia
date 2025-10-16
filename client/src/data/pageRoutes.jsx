@@ -22,6 +22,9 @@ import CustomerService from '../pages/authenticated/CustomerService.jsx';
 import SharedSurvey from '../pages/authenticated/SharedSurvey.jsx';
 import FeedbackPage from '../pages/authenticated/FeedbackPage.jsx';
 import ChatbotPage from '../pages/authenticated/ChatbotPage.jsx';
+import AboutPage from '../pages/not-authenticated/About.jsx';
+import TechnologiesPage from '../pages/not-authenticated/Technologies.jsx';
+import NotFoundPage from '../pages/not-authenticated/NotFound.jsx';
 
 export const publicPages = [
   {
@@ -30,12 +33,23 @@ export const publicPages = [
   }, {
     path: "/register",
     element: <RegisterPage />
-  }, {
+  },{
+    path: '*',
+    element: <NotFoundPage />
+  }, 
+  {
     path: '/login',
     element: <LoginPage />
   }, {
     path: "/update-password/:token", 
     element: <UpdatePasswordPage />
+  }, {
+    path: '/technologies',
+    element: <TechnologiesPage />
+  } ,
+  {
+    path: '/about',
+    element: <AboutPage />
   }];
   
 export const pages = [

@@ -9,7 +9,7 @@ const QuestionList = ({ questions = [], setQuestions = () => { } }) => {
       return (
         <TextQuestion
           id={i}
-          className="px-3 pt-4 pb-8 rounded dark:bg-zinc-950 dark:text-neutral-100 bg-neutral-200 text-zinc-900"
+        className="p-5 pb-8 rounded outline outline-black/20 dark:bg-zinc-800 dark:outline dark:outline-white/20 dark:text-neutral-100 bg-neutral-200 text-zinc-900"
           question={q}
           setQuestions={setQuestions}
         >
@@ -34,7 +34,7 @@ const QuestionList = ({ questions = [], setQuestions = () => { } }) => {
       return (
         <SelectAnswerQue
           id={i}
-          className="px-3 pt-4 pb-8 rounded dark:bg-zinc-950 dark:text-neutral-100 bg-neutral-200 text-zinc-900"
+          className="p-5 pb-8 rounded outline outline-black/20 dark:bg-zinc-800 dark:outline dark:outline-white/20 dark:text-neutral-100 bg-neutral-200 text-zinc-900"
           question={q}
           setQuestions={setQuestions}
         >

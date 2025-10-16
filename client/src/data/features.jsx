@@ -37,7 +37,7 @@ export const features = [
   {
     feature: "AI Chatbot named Inko!",
     description:
-      "Inko is an intelligent chatbot integrated into the system, designed to help users explore and understand platform features with ease. Powered by research-trained data, Inko provides insightful answers, assists with survey creation, and guides users in navigating the system efficiently — making research support available anytime.",
+      "Inko is an intelligent chatbot integrated into the system, designed to help users explore and understand platform features with ease. Inko also guides users in navigating the system efficiently — making research support available anytime.",
     icon: (
       <motion.div
         animate={{ rotate: [0, 10, -10, 0] }}

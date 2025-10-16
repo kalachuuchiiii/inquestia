@@ -41,15 +41,15 @@ const ChangeAvatar = ({ onClose = () => { } }) => {
 
   return <ModalStyle label="Change Avatar" onClose={onClose}>
     <div className="p-2 flex items-center justify-between gap-3 my-7">
-      <UserIcon className="flex justify-center items-center gap-3 flex-col" user={user}>
+      <UserIcon className="flex justify-center size-30 md:size-40 items-center gap-3 flex-col" user={user}>
         <UserIcon.Avatar size="40" />
         <p className="opacity-80">Old avatar</p>
       </UserIcon>
       <div>
         <GoArrowSwitch size="40" />
       </div>
-      <UserIcon className="flex gap-3 items-center justify-center flex-col" user={{ avatar: preview }}>
-        <UserIcon.Avatar size="40" disableZoom/>
+      <UserIcon className="flex gap-3 items-center size-30 md:size-40 justify-center flex-col" user={{ avatar: preview }}>
+        <UserIcon.Avatar  size="40" disableZoom/>
         <button className="" onClick={() => document.getElementById("avatar").click()}>
           <input onChange={handleChange} id="avatar" className="hidden " type="file" accept="image/*" />
           <div title='Choose a photo.' className="flex gap-2 underline items-center"><LuImagePlus /> New Avatar</div>

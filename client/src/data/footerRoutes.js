@@ -5,11 +5,8 @@ const footerRoutes = [
     title: "This App", 
     paths: [
       {
-        label: "About us", 
+        label: "About", 
         path: "/about"
-      }, {
-        label: "Terms and Privacy", 
-        path: "/terms-and-privacy"
       }
       ]
   }, 

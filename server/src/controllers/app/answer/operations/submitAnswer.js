@@ -146,7 +146,7 @@ const submitAnswer = async(req, res, _, commit) => {
   surveyData.hasReachedTargetRespondents = surveyData.totalRespondents >= targetRespondents;
    
  
-   author.core.current += 10;
+   author.core.current += 15;
    author.core.highest = Math.max(author.core.current, author.core.highest)
   verifiedUser.core.current += 15;
   verifiedUser.core.highest = Math.max(
@@ -162,7 +162,6 @@ const submitAnswer = async(req, res, _, commit) => {
   await author.save({session})
   await surveyData.save({session});
   const data = await newAns.save({session}); 
-  console.log(data)
 
   if(surveyData.hasReachedTargetRespondents){ 
      await new Notification({

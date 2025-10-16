@@ -11,7 +11,7 @@ const Sidebar = ({ onClose = () => {}, isLargeScreen = false }) => {
   return (
     <AnimationWrapper
       variants="fromLeft"
-      className={`sticky md:min-h-screen  bottom-0 bg-zinc-900/90 md:bg-black  md:top-0 z-40  `}
+      className={`sticky md:min-h-screen  bottom-0  dark:bg-black  md:top-0 z-40  `}
     >
       <aside className="flex justify-start  items-start flex-col  md:h-screen  ">
         <nav className="  w-[100vw] md:w-fit flex md:flex-col  overflow-auto scrollbar-none">

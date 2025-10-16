@@ -14,7 +14,7 @@ const getSession = async(req, res) => {
   });
 
   if(modified && action === 'reset'){
-     user.save()
+    await user.save()
   }
   
   const verifiedUser = {

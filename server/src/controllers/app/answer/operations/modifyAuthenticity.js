@@ -8,7 +8,6 @@ const modifyAuthenticity = async(req, res) => {
     const { verifiedUser } = req;
     const answerId = verifyObjectId(req?.params?.answerId);
 
-
     
 
     const answer = await Answer.findById(answerId).populate('survey');
@@ -27,7 +26,7 @@ const modifyAuthenticity = async(req, res) => {
     }
 
     answer.isAuthentic = !answer?.isAuthentic
-    const resys = await answer.save();
+     await answer.save();
     let msg = answer.isAuthentic ? 'Marked as authentic!' : 'Marked as unauthentic!';
 
 

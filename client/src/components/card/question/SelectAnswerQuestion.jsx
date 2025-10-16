@@ -181,7 +181,7 @@ SelectAnswerQue.Choices = () => {
 SelectAnswerQue.AddOption = () => {
   const { choice = '', setChoice = () => {}, handleAddChoice = () => {}} = useCTX(SelectAnswerContext)
   
-  return <div className="flex justify-between items-center">
+  return <div className="flex dark:outline px-3 py-1 outline my-2 outline-black/20 rounded-xl dark:outline-white/20  justify-between items-center">
           <input value={choice} onChange={(e) => setChoice(e.target.value)} placeholder="Add an option here..." className="p-2 w-full outline-none" />
           <button onClick={handleAddChoice} className="text-sm bg-neutral-100 text-zinc-900 rounded p-2"><GoPlus/></button>
         </div>

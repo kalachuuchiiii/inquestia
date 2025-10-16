@@ -14,7 +14,7 @@ return createPortal(
     variants="fade"
   >
     <div className="w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 mx-auto h-full flex justify-center items-center ">
-      <main className="bg-white overflow-auto shadow-xl h-[80vh] dark:bg-zinc-900  w-full p-3 rounded-2xl space-y-7">
+      <main className="bg-white overflow-auto shadow-xl max-h-[80vh] dark:bg-zinc-900  w-full p-3 rounded-2xl space-y-7">
         <div className="w-full text-center">
           <div className="w-full text-right text-sm">
             {displayCloseButton && (

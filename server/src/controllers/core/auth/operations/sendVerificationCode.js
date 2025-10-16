@@ -17,7 +17,7 @@ const sendVerificationCode = async (req, res) => {
   const { email } = req.user;
   const code = generateSixDigitCode();
 
-    sendEmail({
+    await sendEmail({
     to: email,
     subject: "Your Verification Code for Inquestia.ask",
     html: `<div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">

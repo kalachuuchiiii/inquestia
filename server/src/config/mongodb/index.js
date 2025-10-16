@@ -15,7 +15,6 @@ exports.connectDB = async() => {
     console.log("Mongo DB Connected");
     return connection; 
   }catch(e){
-    console.error(e);
     process.exit(1);
   }
 }

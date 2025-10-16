@@ -71,7 +71,7 @@ const banUser = async (req, res, _, commit) => {
 const banDurationInDays = Math.floor(banDuration / (1000 * 60 * 60 * 24));
 const banDurationInHour = Math.floor(banDuration / (1000 * 60 * 60));
 const banDurationInMinutes = Math.floor(banDuration / (1000 * 60 ));
- sendEmail({
+await sendEmail({
   to: userToBan.email, 
   subject: "Your Account Has Been Banned",
   html: `

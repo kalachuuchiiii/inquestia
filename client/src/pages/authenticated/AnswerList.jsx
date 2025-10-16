@@ -10,6 +10,8 @@ import QuestionFilter from "../../components/QuestionFilter.jsx";
 import useFieldArray from "../../hooks/useFieldArray.js";
 import Button from "../../components/html/Button.jsx";
 import { motion } from "framer-motion";
+import { RefreshCcw } from "lucide-react";
+import MultipleChoiceDataSet from "../../components/MultipleChoiceDataSet.jsx";
 
 const AnswerListPage = () => {
   const [nextPage, setNextpage] = useState(1);
@@ -118,7 +120,7 @@ const AnswerListPage = () => {
               are marked as irrelevant or nonsense.
             </p>
           </div>
-
+       
           <div className="flex items-center gap-2">
             {options.map((opt) => (
               <button
@@ -162,16 +164,25 @@ const AnswerListPage = () => {
               {survey.description}
             </p>
 
-            {statistics?.length > 0 && <SurveyStatistics data={statistics} />}
-            <ArrowButton
-              to={`/survey-summary/${survey._id}`}
-              className="inquestia-button"
-            >
-              <span className="inline-block">✨ Generate AI Summary</span>
-            </ArrowButton>
-            <button className="w-full underline text-left" onClick={() => getStatistics(false)}>
-              Refresh
-            </button>
+            {statistics?.length > 0 && (
+              <>
+                <SurveyStatistics data={statistics} />{" "}
+                <MultipleChoiceDataSet data={statistics} />
+              </>
+            )}
+
+            <div className="flex items-center justify-between w-full gap-2">
+              <button className="flex items-center gap-2" onClick={() => getStatistics(false)}>
+                <RefreshCcw  />
+                  Refresh statistics
+              </button>
+              <ArrowButton
+                to={`/survey-summary/${survey._id}`}
+                className="inquestia-button"
+              >
+                <span className="inline-block">✨ Generate AI Summary</span>
+              </ArrowButton>
+            </div>
           </>
         )}
       </div>
@@ -200,13 +211,13 @@ const AnswerListPage = () => {
 
             <div className="flex flex-wrap gap-3 mt-4">
               <Button
-                className="outline outline-black/20 shadow-md p-2 rounded hover:backdrop-brightness-90 flex-1 sm:flex-none"
+                className="outline truncate outline-black/20 shadow-md p-2 rounded hover:backdrop-brightness-90 flex-1 sm:flex-none"
                 onClick={() => getAnswers({ turnOnFilter: true })}
               >
                 Apply Filter
               </Button>
               <Button
-                className="outline p-2 outline-black/20 shadow-md rounded hover:backdrop-brightness-90 flex-1 sm:flex-none"
+                className="outline p-2 truncate outline-black/20 shadow-md rounded hover:backdrop-brightness-90 flex-1 sm:flex-none"
                 onClick={() => getAnswers({ turnOnFilter: false })}
                 variant="secondary"
               >

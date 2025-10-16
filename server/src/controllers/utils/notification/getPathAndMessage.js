@@ -1,11 +1,15 @@
 
 
 exports.getPathAndMessage = (notif) => {
-    let path = '/'
+    let path = null;
     let message = "Something unexpected has occurred.";
+   
 
     if(!notif?.action || !notif?.resourceId || !notif?.sender?.username){
-        throw new Error('Invalid notification!');
+        return {
+          path,
+          message
+        }
     }
      switch (notif.action) {
        case "answer":

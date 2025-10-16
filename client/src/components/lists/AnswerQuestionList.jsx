@@ -3,6 +3,7 @@ import SelectCard from '../card/answerQuestion/SelectCard.jsx';
 import { HiOutlineChevronRight, HiOutlineChevronLeft } from "react-icons/hi2";
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import SliderButton from '../SliderButton.jsx';
 
 const AnswerQuestionList = ({ questionList = [] }) => {
   const [current, setCurrent] = useState(0);
@@ -26,33 +27,24 @@ const { mode } = useSelector(state => state.theme)
         Questions provided for you:
       </div>
       <div className="flex items-center w-full  justify-between">
-        <button
-          onClick={handlePrev}
-          disabled={current === 0}
-          className="px-4 py-2 disabled:opacity-30 "
-        >
-          <HiOutlineChevronLeft
-            size={30}
-            color={mode === "Dark" ? "white" : "black"}
-          />
-        </button>
-        <div className="flex-1 flex h-70 justify-center">
+        <div className="flex-1 flex min-h-70 justify-center">
           {questionCard[questionList[current].type](
             questionList[current],
             current
           )}
         </div>
-        <button
-          onClick={handleNext}
-          disabled={current === questionList.length - 1}
-          className="px-4 py-2 disabled:opacity-30 "
-        >
-          <HiOutlineChevronRight size={30} />
-        </button>
       </div>
+     <div className='flex flex-col w-full items-center my-4'>
+       <SliderButton
+        handleNext={handleNext}
+        handlePrev={handlePrev}
+        current={current}
+        last={current === questionList.length - 1}
+      />
       <div className="mt-2 text-xs">
         Question {current + 1} of {questionList.length}
       </div>
+     </div>
     </div>
   );
 }

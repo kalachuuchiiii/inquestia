@@ -106,7 +106,7 @@ const AnswerSurvey = () => {
         </div>
         <section className="space-y-4 p-4">
           
-          <div className="flex gap-3 lg:gap-10 items-start">
+          <div className="flex gap-3 lg:gap-10 justify-between w-full items-start">
            
             <div>
               <h1 className="text-2xl md:ml-3 font-semibold">{survey.title}</h1>

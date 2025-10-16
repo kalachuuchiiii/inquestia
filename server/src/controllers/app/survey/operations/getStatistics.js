@@ -60,7 +60,7 @@ const getStatistics = async (req, res) => {
 
           const count = await Answer.countDocuments( filter);
         const percentage = survey.totalRespondents > 0 ? (count / survey.totalRespondents) * 100 : 0;
-        choices.push({ choice, percentage });
+        choices.push({ choice, percentage, count });
     }
         return {
             choices, 

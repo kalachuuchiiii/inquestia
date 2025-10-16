@@ -7,7 +7,7 @@ const refreshConversation = async(req, res) => {
     const { verifiedUser } = req;
     
     const response = await redis.set(`conversation:${String(verifiedUser._id)}`, JSON.stringify([]));
-    console.log(response);
+
 
     return res.status(200).json({
         success: true,

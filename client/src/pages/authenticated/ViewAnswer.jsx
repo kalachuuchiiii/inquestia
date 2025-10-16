@@ -15,7 +15,6 @@ const ViewAnswer = () => {
 
     const [getAnswer, { isLoading, error }] = useAsync(async() => {
         const res = await fetchApi('get', `/answer-by-id/${id}`);
-        console.log(res)
         setAnswer(res.answer)
         
     }) 

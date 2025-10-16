@@ -138,11 +138,5 @@ const userSchema = new mongoose.Schema(
 
 const User = mongoose.model("User", userSchema);
 
-const deleteAll = async () => {
-  const inf = await User.deleteMany();
-  console.log(inf);
-}
-
-
 module.exports = User;
 

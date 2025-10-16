@@ -54,12 +54,7 @@ notificationSchema.pre('save', function(next) {
 });
 
 const Notification = mongoose.model('Notification', notificationSchema)
-const del = async() => {
- const res = await Notification.deleteMany();
- console.log(res);
-  }
 
-  //del();
 
 
 module.exports = Notification;

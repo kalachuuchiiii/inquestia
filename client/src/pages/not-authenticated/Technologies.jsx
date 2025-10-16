@@ -10,7 +10,10 @@ import {
   SiExpress,
   SiMongoose,
   SiFramer,
-  SiMongodb
+  SiMongodb,
+  SiRedux,
+  SiVite,
+  SiVercel
 } from "react-icons/si";
 
 export default function TechnologiesPage() {
@@ -19,12 +22,15 @@ export default function TechnologiesPage() {
     { name: "HTML5", icon: <SiHtml5 className="text-orange-500" /> },
     { name: "CSS3", icon: <SiCss3 className="text-blue-500" /> },
     { name: "React", icon: <SiReact className="text-sky-400" /> },
+    { name: "Redux", icon: <SiRedux className="text-purple-500" /> },
+    { name: "Vite", icon: <SiVite className="text-violet-400" /> },
     { name: "Tailwind CSS", icon: <SiTailwindcss className="text-teal-400" /> },
     { name: "Node.js", icon: <SiNodedotjs className="text-green-500" /> },
     { name: "Express.js", icon: <SiExpress className="text-gray-300 dark:text-gray-100" /> },
-      { name: "Mongo DB", icon: <SiMongodb className="text-green-500" /> },
+    { name: "MongoDB", icon: <SiMongodb className="text-green-500" /> },
     { name: "Mongoose", icon: <SiMongoose className="text-red-500" /> },
     { name: "Framer Motion", icon: <SiFramer className="text-purple-400" /> },
+    { name: "Vercel", icon: <SiVercel className="text-gray-900 dark:text-white" /> },
   ];
 
   return (

@@ -16,8 +16,6 @@ const summarizeAnswers = async(req, res) => {
     })
    }
 
-   console.log(filteredData);
-
    if (!filteredData.answers || filteredData.answers.length === 0) {
      return res.status(200).json({
        success: true,
@@ -63,7 +61,6 @@ if(!response || response?.error){
     message: "Summary Generation Failed. Please try again."
   })
 }
-console.log(response)
 
 return res.status(200).json({
  success: true, 

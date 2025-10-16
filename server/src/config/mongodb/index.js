@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 exports.connectDB = async() => {
   try{
     const connectionString = process.env.MONGODB_KEY; 
-    console.log(connectionString);
     if(!connectionString){
       throw new Error("DB Connection String is missing.");
     }

@@ -24,7 +24,6 @@ const sendForgotPasswordRequestToken = async(req, res) => {
     email, 
     user
   });
-    console.log(error);
   
   if(error){
     return res.status(400).json({

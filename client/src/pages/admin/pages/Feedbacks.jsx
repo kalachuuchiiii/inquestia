@@ -15,7 +15,6 @@ const Feedbacks = () => {
 
     const [getFeedbacks, { isLoading, error }] = useAsync(async({ page = 1, overwrite = true} = {}) => {
         const res = await fetchApi('get', `/admin/feedback/list?page=${page}&feedbackType=${feedbackType}`);
-        console.log(res);
         if(res.success){ 
             setFeedbacks(prev => overwrite ? res.feedbacks : [...prev, ...res.feedbacks]);
             setNextPage(res.nextPage);

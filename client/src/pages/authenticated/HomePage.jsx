@@ -26,7 +26,6 @@ const HomePage = () => {
       page, 
       seenIds: JSON.stringify(surveys.map(s => s._id))
     })
-    console.log(res)
 
    if(!res?.success)return;
     setSurveys(prev => overwrite ? res.surveys : [...prev, ...res.surveys])

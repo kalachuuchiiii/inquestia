@@ -25,7 +25,6 @@ const userSchema = z.object({
 exports.validateUserFields = catchError(async (req, res, next) => {
 
     const parsed = userSchema.parse(req.body.user);
-    console.log(parsed);
     req.user = parsed;
     if(!parsed){
       return res.status(400).json({

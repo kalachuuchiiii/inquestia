@@ -30,7 +30,7 @@ const useRegister = () => {
     error: otpError, 
     resetState: resetSendCodeState
   }] = useAsync(async() => {
-    console.log(form);
+
     
     const res = await axios.post(
       `${import.meta.env.VITE_SERVER_URL}/api/user/register/otp`,

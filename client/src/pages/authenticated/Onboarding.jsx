@@ -23,7 +23,6 @@ const Onboarding = () => {
     const res = await fetchApi("patch", "/user/interests", {
       selectedInterests,
     });
-    console.log(res)
     if (res?.success && res?.user) {
       dispatch(updateUser({ user: res.user }));
       nav('/home')

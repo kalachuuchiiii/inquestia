@@ -41,7 +41,7 @@ const useCreateSurvey = (initialQuestionState = null) => {
       _id: id,
       isDraft: false
     }); 
-    console.log(res);
+ 
     
     if(!res?.success)return; 
     dispatch(updateUser({ user: res?.user}))

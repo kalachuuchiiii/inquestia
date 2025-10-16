@@ -12,7 +12,6 @@ const SharedSurvey = () => {
     const { ref, inView } = useInView();
     const [getSharedSurvey, { isLoading } ] = useAsync(async({ page = 1, overwrite = true} = {}) => {
         const res = await fetchApi('get', `/survey-shared?page=${page}` );
-        console.log(res);
         if(res?.success){
           setSharedSurveys(prev => overwrite ? res.sharedSurveys : [...prev, ...res.sharedSurveys])
           setNextPage(res.nextPage);

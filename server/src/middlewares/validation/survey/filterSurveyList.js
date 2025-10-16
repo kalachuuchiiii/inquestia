@@ -212,8 +212,6 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
       case 'false': filterMatch.isAuthentic = false;
       break;
     }
-
-    console.log(filterMatch)
     
         const pipeline = [
           { $match: filterMatch },

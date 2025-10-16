@@ -12,14 +12,12 @@ exports.uploadImage = async (filePath, folder = 'avatars', transformation = [ {
       folder,
       transformation,
     });
-    console.log(result)
 
     return {
       url: result?.secure_url,
       public_id: result?.public_id,
     };
   } catch (err) {
-    console.error("Cloudinary upload error:", err);
     throw new Error(err);
   }
 };
@@ -29,7 +27,6 @@ exports.deleteImage = async (publicId) => {
     const result = await cloudinary.uploader.destroy(publicId);
     return result;
   } catch (err) {
-    console.error("Cloudinary delete error:", err);
     throw err;
   }
 };

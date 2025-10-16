@@ -50,11 +50,4 @@ const reportSchema = new mongoose.Schema(
 
 const Report = mongoose.model('Report', reportSchema)
 
-const deleteReports = async () => {
-    const res = await Report.deleteMany()
-    console.log(res)
-}
-
-//deleteReports()
-
 module.exports = Report;

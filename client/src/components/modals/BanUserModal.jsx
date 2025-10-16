@@ -17,7 +17,7 @@ const BanUserModal = ({
       banDuration,
       reportId,
     });
-    console.log(res);
+  
   }, [userId, banDuration, reportId]);
 
   const banDurations = [

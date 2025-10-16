@@ -21,7 +21,6 @@ const QueryUsers = () => {
       page
     });
     if (!res?.success) return;
-    console.log(res);
     
     setUsers(prev => overwrite ? res.users : [...prev, ...res?.users]);
     setNextPage(overwrite ? 1 : res?.nextPage);

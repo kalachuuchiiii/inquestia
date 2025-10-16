@@ -3,7 +3,6 @@ import { useEffect, useState, useCallback } from 'react';
 
 const useFieldArray = (fieldArr = [], condition = false) => {
   if(!Array.isArray(fieldArr)){
-    console.error("fieldArr should be an array");
     return
   }
 const [fieldArray, setFieldArray] = useState([]);

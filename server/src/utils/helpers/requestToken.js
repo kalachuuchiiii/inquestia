@@ -58,7 +58,7 @@ exports.requestToken = async({ email = null, user = null}) => {
   </div>
 </div>`,
     });
-    console.log(info)
+
   
   return {
     resetUrl

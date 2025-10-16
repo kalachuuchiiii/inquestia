@@ -57,7 +57,6 @@ const CustomerService = () => {
         return;
     }
    const res = await fetchApi('get', `/feedback-list?page=${page}`);
-   console.log(res);
    setNextPage(res.nextPage)
    if(overwrite && bottomRef.current){
  bottomRef.current.scrollIntoView({ behavior: "smooth" });

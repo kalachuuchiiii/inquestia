@@ -110,7 +110,6 @@ const TransactionRequests = () => {
           });
         } 
       } catch (err) {
-        console.log(err)
         setActionError(err.response.data.message || 'Error rejecting transaction');
         swal({
           icon: 'error',

@@ -41,7 +41,7 @@ const SearchUserModal = ({ onClose = () => {}, surveyId = null}) => {
       const res = await fetchApi('get', `/survey/authorized-viewers/${surveyId}`);
       if(!res.success) return;
       setAuthorizedViewers(res.authorizedViewers)
-      console.log(res);      
+     
     }, [surveyId]);
 
     const [revokeViewerAuthorization] = useAsync(async (userId) => {

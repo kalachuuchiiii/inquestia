@@ -13,7 +13,7 @@ const NotificationCard = ({notif = {}}) => {
     try {
       const res = await fetchApi('patch', `/notification/mark-as-read/${notif._id}`);
     } catch (error) {
-      console.log(error)
+  
     }finally{
       nav(notif.path);
     }

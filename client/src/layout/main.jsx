@@ -7,7 +7,7 @@ import Footer from '../components/Footer.jsx';
 const MainTheme = () => {
 
   const { mode } = useSelector((state) => state.theme);
-  console.log(mode);
+
 
   useEffect(() => {
     if (mode === 'Dark') {

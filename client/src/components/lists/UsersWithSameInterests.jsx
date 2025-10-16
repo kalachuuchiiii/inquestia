@@ -16,7 +16,7 @@ const UsersWithSameInterests = () => {
        if(!user || !isAuthenticated)return;
         const res = await fetchApi("get", `/user/similar-interests`);
         if (!res?.success) return;
-        console.log(res);
+    
         setUsers(res.users);
     })
 

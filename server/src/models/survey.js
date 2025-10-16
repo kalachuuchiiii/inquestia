@@ -118,13 +118,8 @@ surveySchema.pre('deleteOne', async function() {
   const reports = await mongoose.model("Report").deleteMany({
     'reportedEntity.entityId': this._id
   })
-  console.log(reports)
 })
 
-const del = async() => {
- const res = await Survey.deleteMany();
- console.log(res);
-}
 
 //del();
 

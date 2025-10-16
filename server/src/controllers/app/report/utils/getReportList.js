@@ -14,7 +14,6 @@ exports.getReportList = (modelName, isResolved = false) => {
         }
                 const { skip } = req.paginationParams;
         const limit = 10;
-        console.log(modelName)
         const [totalReports, documents] = await Promise.all([
           Report.countDocuments({ "reportedEntity.entity": modelName, isResolved }),
           Report.find({ "reportedEntity.entity": modelName, isResolved })

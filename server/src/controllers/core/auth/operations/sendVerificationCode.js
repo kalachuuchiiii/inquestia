@@ -46,7 +46,7 @@ Thank you.
 Inquestia.ask`
   })
   
-  await redis.set(`OTP ${email}`, JSON.stringify({code: code.toString()}), { EX: 3000 });
+  await redis.set(`OTP ${email}`, JSON.stringify({code: code.toString()}), { EX: 300 });
 
 
   return res.status(200).json({

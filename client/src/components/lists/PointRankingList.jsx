@@ -1,30 +1,31 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import PointRankedCard from "../card/PointRankedUser.jsx";
-import useAsync from "../../hooks/useAsync.js";
 import { fetchApi } from "../../utils/fetchApi.js";
 
 const PointRankingList = () => {
-  const [hallOfFamers, sethallOfFamers] = useState([]);
-  const [userRank, setUserRank] = useState({
-    core: { current: 0 },
-    rank: 1,
+  // Fetch leaderboard data using TanStack Query
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["leaderboard"],
+    queryFn: async () => {
+      const res = await fetchApi("get", "/user/leaderboard", {
+        isAllTimeHigh: false,
+      });
+      if (!res.success) throw new Error("Fetching leaderboard failed.");
+      return res.leaderboard;
+    },
+    refetchOnWindowFocus: false, // optional, prevents auto-refresh
   });
 
-  const [getLeaderboard, { isLoading, error }] = useAsync(
-    async () => {
-      const res = await fetchApi("get", "/user/leaderboard", { isAllTimeHigh: false });
-      if (!res.success) throw new Error("Fetching leaderboard failed.");
-
-      const { hallOfFamers: hallOfFamerList, userRank: userRankData = [] } = res.leaderboard;
-      if (userRankData[0]) setUserRank(userRankData[0]); 
-        sethallOfFamers(hallOfFamerList);
-    
-    }
-  );
-
-  useEffect(() => {
-    if (!isLoading) getLeaderboard();
-  }, []);
+  const hallOfFamers = data?.hallOfFamers ?? [];
+  const userRank = data?.userRank?.[0] ?? {
+    core: { current: 0 },
+    rank: 1,
+  };
 
   return (
     <div className="w-full space-y-6">
@@ -36,9 +37,6 @@ const PointRankingList = () => {
           leaderboard!
         </p>
       </div>
-
-      {/* Tabs */}
-  
 
       {/* Leaderboard Table */}
       <div className="rounded-lg shadow-xl p-3 bg-white dark:bg-zinc-900">
@@ -53,12 +51,13 @@ const PointRankingList = () => {
             <div className="w-full text-sm opacity-60 text-center">
               Preparing the leaderboard...
             </div>
+          ) : isError ? (
+            <div className="text-center text-sm opacity-60 text-red-500">
+              {error.message || "Failed to load leaderboard."}
+            </div>
           ) : hallOfFamers.length > 0 ? (
             hallOfFamers.map((user, i) => (
-              <PointRankedCard
-                key={user?._id || i}
-                user={user}
-              />
+              <PointRankedCard key={user?._id || i} user={user} />
             ))
           ) : (
             <div className="text-center text-sm opacity-60">
@@ -71,14 +70,12 @@ const PointRankingList = () => {
         <div className="text-center border-t border-neutral-200 dark:border-neutral-800 mt-2 pt-2 opacity-90 text-base">
           <h1>
             You’re ranked{" "}
-            <span className="bg-neutral-100 dark:bg-zinc-800 px-2 py-1 lato text-zinc-900 dark:text-neutral-100 rounded">
+            <span className="text-xl md:text-2xl italic font-semibold text-gradient">
               #{userRank.rank}
             </span>{" "}
-            with{" "}
-            {userRank?.core?.current} cores!
+            with {userRank?.core?.current} cores!
           </h1>
         </div>
-      
       </div>
     </div>
   );

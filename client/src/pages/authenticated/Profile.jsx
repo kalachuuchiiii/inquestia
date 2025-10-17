@@ -13,7 +13,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className=" space-y-3">
+      <div className=" space-y-3 py-4 md:py-0">
         <div className=" p-6 shadow-lg space-y-3 rounded-lg">
           <div className="space-y-4">
             <UserProfile user={user} />

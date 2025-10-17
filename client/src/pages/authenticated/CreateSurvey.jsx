@@ -43,7 +43,7 @@ const CreateSurvey = () => {
           <NewQuestionModal onClose={closeModal} addQuestion={addQuestion} />
         )}
       </AnimatePresence>
-      <div className="min-h-screen p-1">
+      <div className="min-h-screen py-8 px-2 md:px-0 md:py-1">
         <main className=" h-full p-1 space-y-4 rounded-lg">
           <div className="flex gap-2 items-start">
             <UserIcon user={user}>

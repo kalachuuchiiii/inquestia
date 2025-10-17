@@ -165,9 +165,7 @@ const GuidePage = () => {
                 your streak is lost.
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300 mt-3">
-                Use streaks to encourage regular participation and reward active
-                users (streak bonuses and other incentives may apply as
-                announced).
+               Continuing your streak also gives you additional 500 core points!
               </p>
             </section>
           )}

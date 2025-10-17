@@ -13,141 +13,151 @@ const submitAnswer = async(req, res, _, commit) => {
   const { verifiedUser } = req;
   const { answers, survey } = req.body;
 
-  const surveyData = await Survey.findById(survey._id)
+  const surveyData = await Survey.findById(survey._id);
 
-  
-  if(!surveyData){
+  if (!surveyData) {
     return res.status(400).json({
+      success: false,
+      message: "Survey not found.",
+    });
+  }
+
+  const author = await User.findById(surveyData.user);
+  if (author._id.toString() === verifiedUser._id.toString()) {
+    return res.status(400).json({
+      success: false,
+      message: "You cannot answer your own survey.",
+    });
+  }
+
+  if (
+    surveyData.closed ||
+    surveyData.hasReachedTargetRespondents ||
+    surveyData.respondents.length >= surveyData.targetRespondents ||
+    survey?.isTakendown
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "This survey is closed.",
+    });
+  }
+
+  const plainRespondentIds = surveyData.respondents.map((r) => r.toString());
+
+  if (plainRespondentIds.includes(verifiedUser._id.toString())) {
+    return res.status(400).json({
+      success: false,
+      message: "You already submitted a response.",
+    });
+  }
+
+  const questionIds = surveyData.questions.map(({ _id }) => _id.toString());
+
+  for (const { type, answer, questionId } of answers) {
+    if (!questionIds.includes(questionId)) {
+      return res.status(400).json({
         success: false,
-        message: "Survey not found."
-      })
-  }
+        message: "Invalid survey questions.",
+      });
+    }
 
-   const author = await User.findById(surveyData.user);
-   if(author._id.toString() === verifiedUser._id.toString()){
-    return res.status(400).json({
-      success: false, 
-      message: 'You cannot answer your own survey.'
-    })
-   }
-  
-  if(surveyData.closed || surveyData.hasReachedTargetRespondents || surveyData.respondents.length >= surveyData.targetRespondents || survey?.isTakendown){
-    return res.status(400).json({
-      success: false, 
-      message: "This survey is closed."
-    })
-  }
+    const qst = surveyData.questions.find(
+      (q) => q._id.toString() === questionId
+    );
 
-
-  const plainRespondentIds = surveyData.respondents.map(r => r.toString());
-  
-  if(plainRespondentIds.includes(verifiedUser._id.toString())){
-    return res.status(400).json({
-      success: false, 
-      message: "You already submitted a response."
-    })
-  }
-  
-  const questionIds = surveyData.questions.map(({_id}) => _id.toString());
-  
-  for(const { type, answer, questionId } of answers){
-    if(!questionIds.includes(questionId)){
+    if (!qst) {
       return res.status(400).json({
-       success: false, 
-       message: 'Invalid survey questions.'
-      })
+        success: false,
+        message: "Invalid survey questions.",
+      });
     }
-    
-    const qst = surveyData.questions.find(q => q._id.toString() === questionId);
 
-    if(!qst){
-      return res.status(400).json({
-        success: false, 
-        message: "Invalid survey questions."
-      })
-    }
-    
-    if(type === "text" && qst.type === "text"){
-      if(typeof answer !== "string"){
+    if (type === "text" && qst.type === "text") {
+      if (typeof answer !== "string") {
         return res.status(400).json({
-          success: false, 
-          message: "Invalid answer format"
-        })
+          success: false,
+          message: "Invalid answer format",
+        });
       }
-      if(qst.isRequired && answer.length === 0){
+      if (qst.isRequired && answer.length === 0) {
         return res.status(400).json({
-          success: false, 
-          message: "Oops! You missed a required question."
-        })
+          success: false,
+          message: "Oops! You missed a required question.",
+        });
       }
-      
-      if(answer.length > 500){
-        return res.status(400).json({
-          success: false, 
-          message: "A text answer can only contain up to 500 characters!."
-        })
-      }
-      
-    }
-    
-      if(type === "select" && qst.type === "select"){
-       if(!Array.isArray(answer)){
-         return res.status(400).json({
-          success: false, 
-          message: "Invalid answer format."
-        }) 
-       }
-        if(qst.isRequired && answer.length === 0){
-          return res.status(400).json({
-          success: false, 
-          message: "Oops! You missed a required question."
-        })
-        }
-        
-        if(!answer.every(ans => qst.choices.includes(ans))){
-          return res.status(400).json({
-          success: false, 
-          message: "Invalid answer/s."
-        })
-        }
-        
-        if(!qst.multipleChoice && answer.length > 1){
-          return res.status(400).json({
-          success: false, 
-          message: "You can only select multiple options if the questions allows it."
-        })
-        }
-        
-        if(answer.length > 6 && qst.multipleChoice){
-          return res.status(400).json({
-            success: false, 
-            message: "You can only select 6 choices as an answer."
-          })
-        }
 
+      if (answer.length > 500) {
+        return res.status(400).json({
+          success: false,
+          message: "A text answer can only contain up to 500 characters!.",
+        });
       }
+    }
+
+    if (type === "select" && qst.type === "select") {
+      if (!Array.isArray(answer)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid answer format.",
+        });
+      }
+      if (qst.isRequired && answer.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Oops! You missed a required question.",
+        });
+      }
+
+      if (!answer.every((ans) => qst.choices.includes(ans))) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid answer/s.",
+        });
+      }
+
+      if (!qst.multipleChoice && answer.length > 1) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "You can only select multiple options if the questions allows it.",
+        });
+      }
+
+      if (answer.length > 6 && qst.multipleChoice) {
+        return res.status(400).json({
+          success: false,
+          message: "You can only select 6 choices as an answer.",
+        });
+      }
+    }
   }
-  
+
   const properFormat = {
     survey: surveyData._id,
-    answers: [], 
-    user: verifiedUser
+    answers: [],
+    user: verifiedUser,
   };
-  
-  for(const qst of surveyData.questions){
-    const ans = answers.find(an => an.questionId.toString() === qst._id.toString());
-    properFormat.answers.push({ question: qst._id, type: qst.type.trim().toLowerCase(), answer: ans.answer });
+
+  for (const qst of surveyData.questions) {
+    const ans = answers.find(
+      (an) => an.questionId.toString() === qst._id.toString()
+    );
+    properFormat.answers.push({
+      question: qst._id,
+      type: qst.type.trim().toLowerCase(),
+      answer: ans.answer,
+    });
   }
-  
+
   const { targetRespondents } = surveyData;
-  
+
   surveyData.respondents.push(new mongoose.Types.ObjectId(verifiedUser._id));
   surveyData.totalRespondents += 1;
-  surveyData.hasReachedTargetRespondents = surveyData.totalRespondents >= targetRespondents;
-   
- 
-   author.core.current += 50;
-   author.core.highest = Math.max(author.core.current, author.core.highest)
+  surveyData.hasReachedTargetRespondents =
+    surveyData.totalRespondents >= targetRespondents;
+
+  author.core.current += 50;
+  author.core.highest = Math.max(author.core.current, author.core.highest);
   verifiedUser.core.current += 50;
   verifiedUser.core.highest = Math.max(
     verifiedUser.core.highest,
@@ -155,39 +165,37 @@ const submitAnswer = async(req, res, _, commit) => {
   );
   const newAns = new Answer(properFormat);
   const { session } = req;
-   const { modified } = monitorStreak({ user: verifiedUser });
-  if(modified){
-    await verifiedUser.save({session});
-  } 
-  await author.save({session})
-  await surveyData.save({session});
-  const data = await newAns.save({session}); 
+  const { modified } = monitorStreak({ user: verifiedUser });
 
-  if(surveyData.hasReachedTargetRespondents){ 
-     await new Notification({
-      sender: verifiedUser._id, 
-      receiver: author._id, 
-      action: 'survey-completed', 
-      resourceId: surveyData._id
-    })
-  }else{
-     await new Notification({
-       sender: verifiedUser._id,
-       receiver: author._id,
-       action: "answer",
-       resourceId: data._id,
-     }).save({ session });
+  await verifiedUser.save({ session });
+
+  await author.save({ session });
+  await surveyData.save({ session });
+  const data = await newAns.save({ session });
+
+  if (surveyData.hasReachedTargetRespondents) {
+    await new Notification({
+      sender: verifiedUser._id,
+      receiver: author._id,
+      action: "survey-completed",
+      resourceId: surveyData._id,
+    });
+  } else {
+    await new Notification({
+      sender: verifiedUser._id,
+      receiver: author._id,
+      action: "answer",
+      resourceId: data._id,
+    }).save({ session });
   }
 
-    await commit();
+  await commit();
 
-  
-  
   return res.status(200).json({
-   success: true, 
-   answerData: data, 
-  })
-  }
+    success: true,
+    answerData: data,
+  });
+}
   
 
 module.exports = build => build({

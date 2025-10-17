@@ -1,18 +1,17 @@
 import React, { useState, useRef } from "react";
-import {
-  HiOutlineChevronLeft,
-  HiOutlineChevronRight,
-} from "react-icons/hi2";
+
 import { FiDownload } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { Bar, Pie, Doughnut } from "react-chartjs-2";
 import Chart from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels"; // ✅ NEW
 import SliderButton from "./SliderButton";
-import MultipleChoiceDataSet from "./MultipleChoiceDataSet";
+
+// ✅ Register plugin once
+Chart.register(ChartDataLabels);
 
 const chartTypes = [
   { label: "Bar", value: "bar" },
-  { label: "Bar (Horizontal)", value: "bar-horizontal" },
   { label: "Pie", value: "pie" },
   { label: "Doughnut", value: "doughnut" },
 ];
@@ -20,7 +19,6 @@ const chartTypes = [
 const SurveyStatistics = ({ data = null }) => {
   const [current, setCurrent] = useState(0);
   const [chartType, setChartType] = useState("bar");
-  const { mode } = useSelector((state) => state.theme);
   const chartRef = useRef(null);
 
   const handleNext = () =>
@@ -34,6 +32,7 @@ const SurveyStatistics = ({ data = null }) => {
       {
         label: "Responses (%)",
         data: questionData.choices.map((c) => c.percentage),
+        counts: questionData.choices.map((c) => c.count), // ✅ Added counts
         backgroundColor: [
           "#2563eb",
           "#38bdf8",
@@ -59,13 +58,24 @@ const SurveyStatistics = ({ data = null }) => {
     link.click();
   };
 
+  // ✅ Chart options updated with data labels
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    indexAxis:  "x",
     plugins: {
       legend: {
-        labels: {
-          color: "#000", // Always black text
+        labels: { color: "#000" },
+      },
+      datalabels: {
+        color: "#000",
+        anchor: chartType === "bar" ? "end" : "center",
+        align: chartType === "bar" ? "top" : "center",
+        font: { weight: "bold", size: 12 },
+        formatter: (value, context) => {
+          const count =
+            context.chart.data.datasets[0].counts[context.dataIndex];
+          return `${value.toFixed(1)}% (${count})`;
         },
       },
     },
@@ -73,16 +83,15 @@ const SurveyStatistics = ({ data = null }) => {
       chartType === "bar" || chartType === "bar-horizontal"
         ? {
             x: {
-              ticks: { color: "#000" }, // Always black text
+              ticks: { color: "#000" },
               grid: { color: "#ddd" },
             },
             y: {
-              ticks: { color: "#000" }, // Always black text
+              ticks: { color: "#000" },
               grid: { color: "#ddd" },
             },
           }
         : {},
-    indexAxis: chartType === "bar-horizontal" ? "y" : "x", // Horizontal vs Vertical
   };
 
   const renderChart = () => {
@@ -90,11 +99,11 @@ const SurveyStatistics = ({ data = null }) => {
       ref: chartRef,
       data: getChartData(data[current]),
       options: chartOptions,
+      plugins: [ChartDataLabels], // ✅ attach the plugin
     };
 
     switch (chartType) {
       case "bar":
-      case "bar-horizontal":
         return <Bar {...chartProps} />;
       case "pie":
         return <Pie {...chartProps} />;
@@ -106,10 +115,7 @@ const SurveyStatistics = ({ data = null }) => {
   };
 
   return (
-    <div
-      className={`shadow-lg col-span-5 col-start-8 rounded-2xl p-6 w-full mx-auto my-6
-        `}
-    >
+    <div className="shadow-lg col-span-5 col-start-8 rounded-2xl p-6 w-full mx-auto my-6">
       {data ? (
         data.length > 0 ? (
           <div className="flex flex-col items-center w-full">
@@ -145,7 +151,7 @@ const SurveyStatistics = ({ data = null }) => {
             </div>
 
             {/* Chart Container */}
-            <div className="w-full md:w-8/12  bg-white rounded-xl p-4 shadow-inner border border-gray-200">
+            <div className="w-full md:w-8/12 bg-white rounded-xl p-4 shadow-inner border border-gray-200">
               <div className="relative h-64 sm:h-80 md:h-96">
                 {renderChart()}
               </div>

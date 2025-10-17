@@ -16,6 +16,7 @@ const ViewAnswer = () => {
     const [getAnswer, { isLoading, error }] = useAsync(async() => {
         const res = await fetchApi('get', `/answer-by-id/${id}`);
         setAnswer(res.answer)
+        console.log(res);
         
     }) 
 
@@ -31,7 +32,7 @@ const ViewAnswer = () => {
 
   return (
     <div className="flex flex-col py-2 w-full justify-start items-start gap-8">
-      <AnswerCard showModifyAuthenticityButton showRedirectToSurvey answer={answer} />
+      <AnswerCard showModifyAuthenticityButton getAnswer = {getAnswer} showRedirectToSurvey answer={answer} />
          {answer?.survey?.user === user?._id && (
         <ArrowButton to={`/answer/s/${answer.survey?._id}`}>
           {" "}

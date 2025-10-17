@@ -167,7 +167,7 @@ const AnswerListPage = () => {
             {statistics?.length > 0 && (
               <>
                 <SurveyStatistics data={statistics} />{" "}
-                <MultipleChoiceDataSet data={statistics} />
+              
               </>
             )}
 
@@ -203,21 +203,17 @@ const AnswerListPage = () => {
               questions={survey.questions}
             />
 
-            {isFilterOn && (
-              <div className="text-xs text-blue-500 mt-2 font-medium">
-                Filter: ON
-              </div>
-            )}
+          
 
-            <div className="flex flex-wrap gap-3 mt-4">
+            <div className="flex md:flex-col gap-3 mt-4">
               <Button
-                className="outline truncate outline-black/20 shadow-md p-2 rounded hover:backdrop-brightness-90 flex-1 sm:flex-none"
+                className={`outline ${isFilterOn ? ' bg-blue-600 ' : ''} truncate outline-blue-400 shadow-md p-2 rounded hover:backdrop-brightness-90 flex-1 sm:flex-none `}
                 onClick={() => getAnswers({ turnOnFilter: true })}
               >
                 Apply Filter
               </Button>
               <Button
-                className="outline p-2 truncate outline-black/20 shadow-md rounded hover:backdrop-brightness-90 flex-1 sm:flex-none"
+                className="outline p-2 truncate outline-blue-400 shadow-md rounded hover:backdrop-brightness-90 flex-1 sm:flex-none"
                 onClick={() => getAnswers({ turnOnFilter: false })}
                 variant="secondary"
               >

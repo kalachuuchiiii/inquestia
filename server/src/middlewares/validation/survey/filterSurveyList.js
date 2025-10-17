@@ -140,8 +140,39 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
                   as: "ans",
                   in: {
                     $and: [
-                      { $eq: ["$$ans.question", new mongoose.Types.ObjectId(filterQ._id)] },
-                      { $setIsSubset: ["$$ans.answer", filterQ.answer ] }
+                      {
+                        $eq: [
+                          "$$ans.question",
+                          new mongoose.Types.ObjectId(filterQ._id),
+                        ],
+                      },
+                      {
+                        $setIsSubset: [
+                          "$$ans.answer",
+                          {
+                            $cond: {
+                              if: {
+                                $and: [
+                                  { $ne: [filterQ.answer, null] },
+                                  { $ne: [filterQ.answer, ""] },
+                                  {
+                                    $gt: [
+                                      {
+                                        $size: {
+                                          $ifNull: [filterQ.answer, []],
+                                        },
+                                      },
+                                      0,
+                                    ],
+                                  },
+                                ],
+                              },
+                              then: filterQ.answer,
+                              else: "$$ans.answer",
+                            },
+                          },
+                        ],
+                      },
                     ],
                   },
                 },
@@ -184,12 +215,30 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
                   as: "ans",
                   in: {
                     $and: [
-                      { $eq: ["$$ans.question",  new mongoose.Types.ObjectId( filterQ._id)] },
-                      { $regexMatch: {
-                          input: { $toLower: "$$ans.answer" },
-                          regex: filterQ.answer.toLowerCase()
-                        }
-                      }
+                      {
+                        $eq: [
+                          "$$ans.question",
+                          new mongoose.Types.ObjectId(filterQ._id),
+                        ],
+                      },
+                      {
+                        $cond: {
+                          if: {
+                            $or: [
+                              { $eq: ["$$ans.answer", null] },
+                              { $eq: ["$$ans.answer", ""] },
+                              { $eq: [{ $type: "$$ans.answer" }, "missing"] },
+                            ],
+                          },
+                          then: true,
+                          else: {
+                            $regexMatch: {
+                              input: { $toLower: "$$ans.answer" },
+                              regex: filterQ.answer.toLowerCase(),
+                            },
+                          },
+                        },
+                      },
                     ],
                   },
                 },

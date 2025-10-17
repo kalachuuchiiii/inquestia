@@ -1,17 +1,21 @@
 
-const { verifyObjectId } = require("../../../../middlewares/verification/verifyObjectId");
 const { verifySession } = require("../../../../middlewares/verification/verifySession");
 const Answer = require("../../../../models/answer");
-const Survey = require("../../../../models/survey");
 const { catchError } = require("../../../../utils/errorHandlers/catchError");
+const { getBadgeByPoint } = require("../../../../utils/getBadgeByPoint");
+const { verifyObjectId } = require("../../../../utils/schema/verifyObjectId");
 
 
 const getAnswerById = async(req, res) => {
-    const { verifiedId, verifiedUser } = req;
-   const answer = await Answer.findById(verifiedId).populate([
-  { path: "survey", model: "Survey" },
-  { path: "user", model: "User" }
-]);
+    const { verifiedUser } = req;
+    const answerId = verifyObjectId(req?.params?.answerId);
+
+   const answer = await Answer.findById(answerId).populate([
+  { path: "survey", model: "Survey", select: '-respondents' },
+  { path: "user", model: "User", select: 'username nickname avatar core' }
+]).lean();
+
+
 
 
     if(!answer){
@@ -23,13 +27,15 @@ const getAnswerById = async(req, res) => {
 
  if (
   !answer.survey.user.equals(verifiedUser._id) &&
-  !answer.user.equals(verifiedUser._id)
+  !answer.user.equals(verifiedUser._id) && 
+  !answer.survey.authorizedViewers.includes(String(verifiedUser._id))
 ) {
   return res.status(401).json({
     success: false,
     message: "You're not authorized to view this survey.",
   });
 }
+answer.user.badge = getBadgeByPoint(answer.user.core.current);
 
 
     return res.status(200).json({
@@ -40,9 +46,9 @@ const getAnswerById = async(req, res) => {
 }
 
 module.exports = build => build({
-    path: '/answer-by-id/:resourceId', 
+    path: '/answer-by-id/:answerId', 
     method: 'get', 
     fn: catchError(getAnswerById), 
     name: 'getAnswerById', 
-    middlewares: [verifySession, verifyObjectId]
+    middlewares: [verifySession]
 })

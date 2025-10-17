@@ -1,24 +1,23 @@
 import { Outlet } from "react-router-dom";
-import { AnimatePresence } from 'framer-motion';
 import Sidebar from '../components/SideBar.jsx';
 import NavBar from '../components/NavBar.jsx'
 import UserIcon from '../components/UserIcon.jsx'
 import useWindow from '../hooks/useWindow.js'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import UnauthorizedModal from '../components/modals/UnauthorizedModal.jsx';
 import UsersWithSameInterests from "../components/lists/UsersWithSameInterests.jsx";
 
 const AuthenticatedLayout = () => {
   const [isSidebarOpen, setIsSideBarOpen] = useState(window.screenSize >= 1024);
   const { user = {}, isAuthenticated, isProcessOK } = useSelector(state => state.user);
   const [isLargeScreen] = useWindow({ screenSize: 1024});
-  const [isUnauthorizedModalOpen, setIsUnauthorizedModalOpen] = useState(false);
+  const upperRef = useRef(null);
 
   useEffect(() => {
-    if (!isProcessOK || isAuthenticated || user?._id) return;
-setIsUnauthorizedModalOpen(true)
-  }, [user, isAuthenticated, isProcessOK])
+   if(!upperRef.current)return;
+
+   upperRef.current.scrollIntoView({ behavior: "auto" });
+  }, [window.location.pathname])
 
   return (
     <div className="h-screen w-full ">
@@ -45,7 +44,9 @@ setIsUnauthorizedModalOpen(true)
             </NavBar>
 
             <div className="w-full ">
+              
               <div className="lg:w-10/12 lg:p-4  py-8 md:py-3 w-full overflow-x-hidden outline-none overflow-y-auto mx-auto h-[80vh]  ">
+                 <div className="h-1 w-full " ref = {upperRef} />
                 <Outlet />
               </div>
             </div>

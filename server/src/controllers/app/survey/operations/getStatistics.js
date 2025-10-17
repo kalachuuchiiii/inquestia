@@ -12,7 +12,7 @@ const getStatistics = async (req, res) => {
    const isAuthentic = isAuthenticSchema.parse(req?.query?.isAuthentic || 'false')
    const survey = await Survey.findOne({
      _id: surveyId
-   }).populate('user').lean();
+   }).populate('user', 'avatar nickname username').lean();
 
    if (!survey) {
      return res.status(404).json({ 

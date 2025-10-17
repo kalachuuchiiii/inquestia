@@ -10,7 +10,7 @@ const modifyAuthenticity = async(req, res) => {
 
     
 
-    const answer = await Answer.findById(answerId).populate('survey');
+    const answer = await Answer.findById(answerId).populate('survey', '-respondents');
     if(!answer || !answer?.survey){
         return res.status(404).json({
             success: false,

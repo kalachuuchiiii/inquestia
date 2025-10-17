@@ -10,7 +10,8 @@ const getAnswersOfUser = async(req, res) => {
   const [answers, totalAnswers] = await Promise.all([
     Answer.find({ user: verifiedUser._id }).sort({createdAt: -1}).skip(skip).limit(limit).populate({
       path: "survey", 
-      model: "Survey"
+      model: "Survey", 
+      select: '-respondents'
     }).lean(), 
     Answer.countDocuments({ user: verifiedUser._id})
     ])

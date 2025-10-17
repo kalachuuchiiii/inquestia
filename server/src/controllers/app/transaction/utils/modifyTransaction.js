@@ -22,7 +22,7 @@ exports.modifyTransaction =  (newStatus = "rejected") => {
             });
         }
 
-        const transac = await Transaction.findById(verifiedId).populate("candidate");
+        const transac = await Transaction.findById(verifiedId).populate("candidate", 'username');
         if (!transac) {
             return res.status(400).json({
                 success: false,

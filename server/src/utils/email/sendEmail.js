@@ -37,7 +37,6 @@ exports.sendEmail = async ({ to, subject, html, attachments }) => {
 
     return { success: true };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

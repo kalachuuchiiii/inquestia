@@ -15,9 +15,7 @@ const ViewAnswer = () => {
 
     const [getAnswer, { isLoading, error }] = useAsync(async() => {
         const res = await fetchApi('get', `/answer-by-id/${id}`);
-        setAnswer(res.answer)
-        console.log(res);
-        
+        setAnswer(res.answer)        
     }) 
 
     useEffect(() => {

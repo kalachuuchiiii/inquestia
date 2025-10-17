@@ -5,7 +5,7 @@ const { getBadgeByPoint } = require('../../../../utils/getBadgeByPoint.js');
 
 const getSurveyById = async(req, res) => {
   const { verifiedId } = req; 
-  const survey = await Survey.findById(verifiedId).populate('user', "-password ").select('-respondents').lean();
+  const survey = await Survey.findById(verifiedId).populate('user', "nickname username avatar core").select('-respondents').lean();
   
   if(!survey){
     return res.status(400).json({

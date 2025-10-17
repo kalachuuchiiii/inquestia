@@ -22,7 +22,7 @@ exports.getReportList = (modelName, isResolved = false) => {
             .limit(limit)
             .populate([
               { path: "reportedBy", select: "nickname username avatar" },
-              { path: "reportedEntity.entityId", model: modelName},
+              { path: "reportedEntity.entityId", model: modelName, select:'-password -email'},
               { path: 'entityOwner', select: 'username streak core nickname avatar '}
             ]),
         ]);

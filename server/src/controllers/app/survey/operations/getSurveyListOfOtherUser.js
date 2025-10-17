@@ -25,6 +25,7 @@ const getSurveyListOfOtherUser = async(req, res) => {
       closed: false,
     }),
   ]);
+
     
     const nextPage = req.getNextPage(totalSurveys);
     

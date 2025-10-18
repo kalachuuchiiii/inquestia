@@ -13,7 +13,7 @@ const logout = async(req, res) => {
 module.exports = build => build({
   name: "logout", 
   path: "/user/logout", 
-  fn: logout, 
+  fn: catchError(logout), 
   middlewares: [verifySession], 
   method: "post"
 })

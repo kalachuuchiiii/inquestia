@@ -7,19 +7,20 @@ const { getBadgeByPoint } = require("../../../../utils/getBadgeByPoint.js");
 const { monitorStreak } = require("../../../utils/survey/monitorStreak.js");
 
 const getSession = async(req, res) => {
-  const user = req.verifiedUser.toObject();
+  const user = req.verifiedUser;
+  const plainObj = user.toObject();
 
   const { action, modified } = monitorStreak({
-    user
+    user: plainObj
   });
 
   if(modified && action === 'reset'){
-    await user.save()
+    await user.save();
   }
   
   const verifiedUser = {
-    ...user,
-    badge: getBadgeByPoint(user.core.current)
+    ...plainObj,
+    badge: getBadgeByPoint(plainObj.core.current)
   }
 
   const hasUnreadNotifications = await Notification.exists({ 

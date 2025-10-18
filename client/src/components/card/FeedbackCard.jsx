@@ -50,7 +50,7 @@ const FeedbackCard = ({ children = null, feedback = {
         <span className="text-xs text-zinc-400 ml-auto">
           From:{' '}
           <NavLink to={redirectUrl} className="font-mono text-zinc-500">
-            {from.username}
+            {from?.username}
           </NavLink>
         </span>
       </div>

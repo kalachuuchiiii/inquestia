@@ -36,7 +36,7 @@ return <div className = " px-3 py-6 w-full">
     
   </div>
   <div className = "my-3">
-    <TextArea value = {getFieldById(_id)?.answer} onChange = {handleChange} className = "dark:bg-zinc-800 bg-neutral-200 rounded-lg" placeholder = "Your answer here..." />
+    <TextArea limit = {500} value = {getFieldById(_id)?.answer} onChange = {handleChange} className = "dark:bg-zinc-800 bg-neutral-200 rounded-lg" placeholder = "Your answer here..." />
   </div>
 </div>
 }

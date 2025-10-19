@@ -34,7 +34,7 @@ const AuthenticatedLayout = () => {
           <div className="w-full  transition-all duration-200">
             <NavBar>
               {isLargeScreen ? <NavBar.App /> : <div />}
-              <NavBar.Relate gap="gap-6">
+              <NavBar.Relate gap="gap-2 md:gap-6">
                 <NavBar.Points />
                 <UserIcon user={user}>
                   <UserIcon.Avatar size="8" />

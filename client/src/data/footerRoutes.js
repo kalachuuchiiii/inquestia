@@ -7,6 +7,9 @@ const footerRoutes = [
       {
         label: "About", 
         path: "/about"
+      }, {
+        label: 'Guides',
+        path: '/guide'
       }
       ]
   }, 

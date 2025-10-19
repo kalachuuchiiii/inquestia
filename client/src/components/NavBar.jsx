@@ -15,8 +15,8 @@ const NavBar = memo(
   }) => {
     return (
       <nav
-        className={`top-0 z-20 rounded-t-2xl left-0 inset-x-0 sticky h-19 
-          px-6 py-4 w-full bg-blue-50 flex justify-between items-center 
+        className={`top-0  z-20 rounded-t-2xl left-0 inset-x-0 sticky h-19 
+          px-6 py-4 w-full bg-blue-50 flex justify-center md:justify-between items-center 
            dark:bg-zinc-900/70 backdrop-blur-md 
           shadow-sm transition-colors ${className}`}
       >
@@ -27,7 +27,7 @@ const NavBar = memo(
 );
 
 // Group wrapper for navbar items
-NavBar.Relate = memo(({ gap = "gap-4", children }) => {
+NavBar.Relate = memo(({ gap = "gap-2", children }) => {
   return <div className={`flex items-center ${gap}`}>{children}</div>;
 });
 

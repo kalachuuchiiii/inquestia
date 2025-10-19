@@ -19,6 +19,7 @@ const useAsync = (fn = () => {}, deps = null) => {
         setError("");
         setIsSuccess(true);
       } catch (e) {    
+        console.log(e)
         const msg =
           e?.response?.data?.message ||
           e?.message ||

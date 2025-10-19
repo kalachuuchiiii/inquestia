@@ -19,12 +19,11 @@ const getSharedSurveys = async(req, res) => {
     ]);
 
     sharedSurveys = sharedSurveys.map((surv) => {
-
         return {
             ...surv,
             user: {
                 ...surv.user,
-                badge: getBadgeByPoint(surv.user.core.current)
+                badge: getBadgeByPoint(surv?.user?.core?.current || 50)
             }
         }
     })

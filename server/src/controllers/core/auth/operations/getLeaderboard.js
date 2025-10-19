@@ -5,7 +5,6 @@ const { getBadgeByPoint } = require("../../../../utils/getBadgeByPoint.js");
 
 
 const getLeaderboard = async (req, res) => {
-  const isAllTimeHigh = JSON.parse(req.query.isAllTimeHigh || "false");
   const { verifiedUser } = req;
 
   const project = {
@@ -19,14 +18,12 @@ const getLeaderboard = async (req, res) => {
     }
   };
 
-  const sort = isAllTimeHigh ? { "core.highest": -1 } : { "core.current": -1 };
-
 
 
   const [leaderboard] = await User.aggregate([
     {
       $setWindowFields: {
-        sortBy: sort,
+        sortBy: { "core.current": -1 } ,
         output: {
           rank: { $rank: {} }
         }

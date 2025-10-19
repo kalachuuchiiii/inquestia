@@ -1,5 +1,6 @@
 exports.monitorStreak = ({  
-  user = null  
+  user = null,
+  giveReward = false   
 } = {}) => {  
   if (!user || !user.streak) return { modified: false };
 
@@ -29,7 +30,9 @@ exports.monitorStreak = ({
     userStreak.current += 1; 
     userStreak.highest = Math.max(userStreak.highest, userStreak.current);
     userStreak.lastResponseTime = now;
-    user.core.current += 500;
+    if(giveReward){
+      user.core.current += 500;
+    }
     return { modified: true, action: "increment" };
   }
 

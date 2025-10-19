@@ -24,7 +24,7 @@ const createSurvey = async (req, res, _, commit) => {
   
   
   if(!isDraft && !surv){
-     monitorStreak({ user: verifiedUser })
+     monitorStreak({ user: verifiedUser, giveReward: true })
   }
   const boosterPoint = verifiedUser?.boosterPoint || 0;
   if(survey.booster > boosterPoint){

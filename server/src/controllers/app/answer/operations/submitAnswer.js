@@ -165,7 +165,7 @@ const submitAnswer = async(req, res, _, commit) => {
   );
   const newAns = new Answer(properFormat);
   const { session } = req;
-  const { modified } = monitorStreak({ user: verifiedUser });
+   monitorStreak({ user: verifiedUser, giveReward: true });
 
   await verifiedUser.save({ session });
 

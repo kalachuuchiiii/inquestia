@@ -7,7 +7,6 @@ import { FaFire } from "react-icons/fa";
 const Dashboard = memo(({ user = {} }) => {
   const highestStreak = user.streak?.highest ?? 0;
   const currentStreak = user.streak?.current ?? 0;
-  const highestCores = user.core?.highest ?? 0;
   const currentCores = user.core?.current ?? 0;
 
   return (

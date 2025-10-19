@@ -3,7 +3,11 @@ const { verifySession } = require("../../../../middlewares/verification/verifySe
 
 const logout = async(req, res) => {
   const { verifiedUser } = req;
-  res.clearCookie(`token`);
+  res.clearCookie(`token`, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  });
   
   return res.status(200).json({
    success: true, 

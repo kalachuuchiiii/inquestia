@@ -45,7 +45,11 @@ const updatePassword = async (req, res) => {
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(password, salt);
-   const red = res.clearCookie(`${timeframe}-req`);
+   const red = res.clearCookie(`${timeframe}-req`, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
+  });
 
   const inf = await user.save();
   const userObj = user.toObject(); 

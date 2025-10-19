@@ -29,7 +29,7 @@ exports.verifySession = catchError(async(req, res, next) => {
   const user = await User.findById(decoded.user).select('-password')
   
   if(!user){
-    return res.status(400).json({
+    return res.status(401).json({
       success: false, 
       message: "User not found.", 
       authenticated: false
@@ -42,7 +42,7 @@ exports.verifySession = catchError(async(req, res, next) => {
 
       const format = `Your account has been banned. Remaining time: ${remainingBanDurationInDays} day(s) or ${remainingBanDurationInHour} hour(s) or ${remainingBanDurationInMinutes} minute(s)`;
 
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
         message: format,
       });

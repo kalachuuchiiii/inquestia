@@ -2,12 +2,14 @@ import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { swalOptions } from "../data/swalOptions";
+import { useNavigate } from "react-router-dom";
 
 const useAsync = (fn = () => {}, deps = null) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const { mode } = useSelector(state => state.theme);
+  const nav = useNavigate();
 
   const call = useCallback(
     async (arg) => {
@@ -16,9 +18,7 @@ const useAsync = (fn = () => {}, deps = null) => {
         await fn(arg);
         setError("");
         setIsSuccess(true);
-      } catch (e) {
-        
-       
+      } catch (e) {    
         const msg =
           e?.response?.data?.message ||
           e?.message ||
@@ -32,6 +32,11 @@ const useAsync = (fn = () => {}, deps = null) => {
           text: msg,
           ...swalOptions(mode),
           confirmButtonColor: "#06b6d4",
+        } ).then((result) => {
+  if(e?.status === 401){
+    nav("/login");
+    return;
+  }
         });
       } finally {
         setIsLoading(false);

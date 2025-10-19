@@ -75,7 +75,7 @@ const AnswerSurvey = () => {
       }
      </AnimatePresence>
       <main className="min-h-screen ">
-        <div className="p-3 border-b flex items-center justify-between border-neutral-200 dark:border-neutral-800">
+        <div className="p-3 border-b overflow-x-auto flex items-center justify-between border-neutral-200 dark:border-neutral-800">
           <div className="flex gap-3 items-center">
             <UserIcon user={survey.user || {}}>
               <div>

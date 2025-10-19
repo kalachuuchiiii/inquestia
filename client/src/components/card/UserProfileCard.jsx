@@ -9,12 +9,12 @@ const UserProfileCard = ({ user = {} }) => {
   return (
     <div className="space-y-6">
       {/* Header Section */}
-      <UserProfile user={user} className="flex gap-4 items-center">
+      <UserProfile user={user} className="flex overflow-x-auto py-6 px-2 gap-4 items-center">
         <div>
            <UserProfile.Avatar size="20" className="text-20" />
         </div>
         <div className="text-left">
-          <UserProfile.Nickname className="text-xl " />
+          <UserProfile.Nickname className="text-base md:text-xl leading-4 " />
           <UserProfile.Username showAt className="text-xs opacity-70" />
           <p className="mt-2 text-xs text-gray-600 dark:text-gray-300 max-w-xs line-clamp-3">
             {bio}

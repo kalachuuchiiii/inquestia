@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+p, h2, h1, h3, label {
+  user-select: none;
+  cursor: default; /* or pointer, depending on what you want */
+}
+
 
 .bbh-sans-bartle-regular {
   font-family: "BBH Sans Bartle", sans-serif;

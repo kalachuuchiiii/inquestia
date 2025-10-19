@@ -12,11 +12,17 @@ const WelcomePage = () => {
    const [hasLoaded, setHasLoaded] = useState(false);
    const nav = useNavigate();
   const isLoggedIn = async() => {
-    const res = await fetchApi('post', '/user/is-logged-in');
-    setHasLoaded(true);
+  try{
+  const res = await fetchApi('post', '/user/is-logged-in');
+ 
     if(res?.isLoggedIn === true){
       nav('/home')
     }
+  }catch(e){
+    
+  }finally{
+    setHasLoaded(true)
+  }
   }
 
   useEffect(( ) => {

@@ -1,6 +1,7 @@
 const { emailValidator } = require("../string.validators.js");
 const { signToken } = require("../auth/jwt.methods.js");
 const { sendEmail } = require("../email/sendEmail.js");
+const { storeCookie } = require("../auth/cookies.methods.js");
 
 exports.requestToken = async({ email = null, user = null}) => {
   
@@ -9,9 +10,10 @@ exports.requestToken = async({ email = null, user = null}) => {
     throw new Error("Invalid Email.")
   }
   
-  const token = await signToken({ user: user._id.toString() }, "3m");
+  const token = await signToken({ user: user._id.toString() }, "5m");
+  const time = Date.now().toString();
   
-  const resetUrl = `${process.env.WEB_ORIGIN}/update-password/${token}`
+  const resetUrl = `${process.env.WEB_ORIGIN}/update-password/${time}`;
 
   
     const info = await sendEmail({
@@ -61,7 +63,10 @@ exports.requestToken = async({ email = null, user = null}) => {
 
   
   return {
-    resetUrl
+    resetUrl, 
+    token, 
+    time, 
+    error: ''
   }
   }catch(e){
     return {

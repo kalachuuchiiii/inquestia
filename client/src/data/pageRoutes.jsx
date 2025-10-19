@@ -46,7 +46,7 @@ export const publicPages = [
     path: '/login',
     element: <LoginPage />
   }, {
-    path: "/update-password/:token", 
+    path: "/update-password/:timeframe", 
     element: <UpdatePasswordPage />
   }, {
     path: '/technologies',

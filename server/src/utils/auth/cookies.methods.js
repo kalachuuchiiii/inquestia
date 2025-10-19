@@ -3,7 +3,9 @@ const ThirtyDays = (((1000 * 60) * 60) * 24) * 30;
 exports.storeCookie = (res, {
   key = null,
   value = null,
-}) => {
+} = {}, { 
+  expiration = ThirtyDays
+} = {}) => {
   if (!key || !value) {
     throw new Error("Key and value is expected to store cookies");
   }
@@ -11,7 +13,7 @@ exports.storeCookie = (res, {
   const cookie = res.cookie(key, value, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: ThirtyDays,
+    maxAge: expiration,
     sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
   })
   return cookie;

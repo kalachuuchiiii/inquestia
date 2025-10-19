@@ -6,7 +6,6 @@ exports.catchError = (fn = () => { }) => {
     try {
       await fn(req, res, next); 
     } catch (e) {
-      console.log(e)
       if(e instanceof z.ZodError){
         const parsed = JSON.parse(e); 
           return res.status(500).json({

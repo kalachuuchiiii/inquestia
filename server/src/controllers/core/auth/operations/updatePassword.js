@@ -6,7 +6,7 @@ const User = require("../../../../models/user.js");
 const { sendEmail } = require("../../../../utils/email/sendEmail.js");
 
 const updatePassword = async (req, res) => {
-  let { password, token = null } = req.body;
+  let { password, timeframe = null } = req.body;
 
   if (typeof password !== "string") {
     return res.status(400).json({
@@ -30,8 +30,9 @@ const updatePassword = async (req, res) => {
       message: "Password must contain 8-20 characters only."
     })
   }
+  console.log(req.cookies)
 
-  const { user: userId, error = null } = await decodeToken(token);
+  const { user: userId, error = null } = await decodeToken(req.cookies[`${timeframe}-req`]);
   
   const user = await User.findById(userId);
 
@@ -44,6 +45,7 @@ const updatePassword = async (req, res) => {
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(password, salt);
+   const red = res.clearCookie(`${timeframe}-req`);
 
   const inf = await user.save();
   const userObj = user.toObject(); 
@@ -51,7 +53,7 @@ const updatePassword = async (req, res) => {
   
   const link = `${process.env.WEB_ORIGIN}/login?forgotten=true`;
   
-   sendEmail({
+   await sendEmail({
     to: inf.email,
     subject: 'Password Updated',
     html: `<div style="font-family: Arial, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px;">

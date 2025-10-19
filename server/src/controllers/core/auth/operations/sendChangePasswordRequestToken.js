@@ -3,13 +3,14 @@ const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 const User = require("../../../../models/user.js");
 const { requestToken } = require("../../../../utils/helpers/requestToken.js");
 const { verifySession } = require("../../../../middlewares/verification/verifySession.js");
+const { storeCookie } = require("../../../../utils/auth/cookies.methods.js");
 
 const sendChangePasswordRequestToken = async(req, res) => {
   
   const { verifiedUser } = req; 
   const email = verifiedUser.email.trim().toLowerCase();
   
-  const { error } = await requestToken({ email, user: verifiedUser })
+  const { error, resetUrl, time, token } = await requestToken({ email, user: verifiedUser });
   
   if(error){
     return res.status(400).json({
@@ -17,6 +18,13 @@ const sendChangePasswordRequestToken = async(req, res) => {
       message: error
     })
   }
+
+  storeCookie(res, { 
+    key: `${time}-req`,
+    value: token
+  }, {
+    expiration: 1000 * 60 * 5 //5 mins
+  })
   
   return res.status(200).json({
    success: true, 

@@ -5,7 +5,7 @@ import { fetchApi } from "../../utils/fetchApi.js";
 import Button from "../../components/html/Button.jsx";
 
 const UpdatePasswordPage = () => {
-  const { token } = useParams();
+  const { timeframe } = useParams();
   const nav = useNavigate();
 
   const [passForm, setPassForm] = useState({
@@ -26,7 +26,7 @@ const UpdatePasswordPage = () => {
       }
 
       const res = await fetchApi("patch", "/user/update-password", {
-        token,
+        timeframe,
         password,
       });
 
@@ -36,7 +36,7 @@ const UpdatePasswordPage = () => {
         throw new Error(res?.message || "Something went wrong.");
       }
     },
-    [token, passForm]
+    [timeframe, passForm]
   );
 
   const handleChange = (e) => {

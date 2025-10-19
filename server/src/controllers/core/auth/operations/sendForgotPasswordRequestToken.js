@@ -1,6 +1,7 @@
 const { catchError } = require("../../../../utils/errorHandlers/catchError.js");
 const User = require("../../../../models/user.js");
 const { requestToken } = require("../../../../utils/helpers/requestToken.js");
+const { storeCookie } = require("../../../../utils/auth/cookies.methods.js");
 
 const sendForgotPasswordRequestToken = async(req, res) => {
   let { email = null } = req.body;
@@ -20,7 +21,7 @@ const sendForgotPasswordRequestToken = async(req, res) => {
     })
   }
   
-  const { error } = await requestToken({
+  const { error, time, token } = await requestToken({
     email, 
     user
   });
@@ -31,6 +32,13 @@ const sendForgotPasswordRequestToken = async(req, res) => {
       message: error
     })
   }
+
+  storeCookie(res, {
+    key: `${time}-req`,
+    value: token
+  }, {
+    expiration: 1000 * 60 * 50
+  })
   
   return res.status(200).json({
    success: true, 

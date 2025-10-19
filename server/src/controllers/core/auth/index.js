@@ -30,6 +30,8 @@ require("./operations/search-oneUser.js")(build);
 require("./operations/getConversation.js")(build);
 require("./operations/sendMessage.js")(build);
 require("./operations/refreshConversation.js")(build);
+require("./operations/isLoggedIn.js")(build);
+
 
 const userRouter = getRouter();
 module.exports = userRouter;

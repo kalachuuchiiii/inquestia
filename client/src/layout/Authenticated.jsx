@@ -21,7 +21,7 @@ const AuthenticatedLayout = () => {
 
   return (
     <div className="h-screen w-full ">
-      <div className="w-full items-start justify-start h-full  flex md:flex-row  flex-col-reverse">
+      <div className="w-full items-start justify-start h-full   flex md:flex-row  flex-col-reverse">
         {isAuthenticated && (
           <Sidebar
             isLargeScreen={isLargeScreen}
@@ -30,7 +30,7 @@ const AuthenticatedLayout = () => {
         )}
 
         {isLargeScreen && isAuthenticated && <UsersWithSameInterests />}
-        <div className="w-full lg:my-16 lg:w-9/12 lg:mr-8 rounded-2xl bg-white dark:bg-[#101012] shadow-2xl dark:shadow-black/40">
+        <div className="w-full lg:my-16 mx-auto lg:w-9/12 lg:mr-4 rounded-2xl bg-white dark:bg-[#101012] shadow-2xl dark:shadow-black/40">
           <div className="w-full  transition-all duration-200">
             <NavBar>
               {isLargeScreen ? <NavBar.App /> : <div />}
@@ -45,7 +45,7 @@ const AuthenticatedLayout = () => {
 
             <div className="w-full ">
               
-              <div className="lg:w-10/12 lg:p-4  py-8 md:py-3 w-full overflow-x-hidden outline-none overflow-y-auto mx-auto h-[80vh]  ">
+              <div className="lg:w-10/12 lg:p-4   py-8 md:py-3 w-full overflow-x-hidden outline-none overflow-y-auto mx-auto h-[80vh]  ">
                  <div className="h-1 w-full " ref = {upperRef} />
                 <Outlet />
               </div>

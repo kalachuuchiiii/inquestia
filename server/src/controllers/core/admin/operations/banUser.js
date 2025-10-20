@@ -6,6 +6,7 @@ const User = require("../../../../models/user");
 const { catchError, catchErrorWithSession } = require("../../../../utils/errorHandlers/catchError");
 const { sendEmail } = require("../../../../utils/email/sendEmail");
 const Report = require("../../../../models/report");
+const { isStillBanned } = require("../../../../utils/isStillBanned");
 
 
 const banDurationSchema = z.number({ required_error: 'Ban Duration is required.'});

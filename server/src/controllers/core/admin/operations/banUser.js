@@ -20,7 +20,7 @@ const banUser = async (req, res, _, commit) => {
         })
     }
 
-    const report = await Report.findById(reportId).lean();
+    const report = await Report.findById(reportId);
 
     if(!report){
         return res.status(400).json({

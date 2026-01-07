@@ -6,7 +6,7 @@
   },
   "include": [
     "client/src",
-    "server/server.js",
+    "server/server.ts",
     "server/src"
   ]
 }

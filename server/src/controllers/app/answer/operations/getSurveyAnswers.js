@@ -25,7 +25,7 @@ const getSurveyAnswers = async(req, res) => {
 module.exports = build => build({
   name: 'answer_list', 
   method: 'get', 
-  path: '/answer/s/:resourceId',
+  path: '/answer/s/:surveyId',
   fn: catchError(getSurveyAnswers),
-  middlewares: [verifySession, verifyObjectId, getPageParam, catchError(filterSurveyList(true, 4))]
+  middlewares: [verifySession, getPageParam, catchError(filterSurveyList(true, 4))]
 })

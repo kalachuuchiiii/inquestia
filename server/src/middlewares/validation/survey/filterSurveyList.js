@@ -2,6 +2,7 @@ const { default: z } = require("zod");
 const Answer = require("../../../models/answer");
 const Survey = require("../../../models/survey");
 const { default: mongoose } = require("mongoose");
+const { verifyObjectId } = require("../../../utils/schema/verifyObjectId");
 
 const questionBaseSchema = z.object({
   _id: z.string(),
@@ -30,15 +31,16 @@ const textQuestionSchema = questionBaseSchema.extend({
 
 exports.filterSurveyList = (isPaginated = false, limit) => {
     return async(req, res, next) => {
-        const { verifiedId, verifiedUser } = req;
-      const filter = JSON.parse(req?.query?.filter || 'all');
+        const { verifiedUser } = req;
+        const surveyId = verifyObjectId(req?.params?.surveyId); 
+      const filter = JSON.parse(req?.query?.filter);
   
     
       const skip = isPaginated ? (req?.paginationParams?.skip || 0) : 0
     
       const [survey, totalAnswers] = await Promise.all([
-        Survey.findById(verifiedId).lean(),
-        Answer.countDocuments({ survey: verifiedId })
+        Survey.findById(surveyId).lean(),
+        Answer.countDocuments({ survey: surveyId })
       ]);
     
       if (!survey) {

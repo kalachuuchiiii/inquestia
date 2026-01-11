@@ -1,0 +1,21 @@
+{
+  "name": "@inquestia/shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/lodash": "^4.17.21",
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^25.0.3",
+    "lodash": "^4.17.21",
+    "typescript": "^5.9.3",
+    "zod": "^4.3.5"
+  }
+}

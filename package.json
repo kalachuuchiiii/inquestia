@@ -1,9 +1,12 @@
 {
-  "dependencies": {
-    "@types/mongoose": "^5.11.96",
-    "@types/node": "^25.0.3",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
-    "zod": "^4.3.5"
-  }
+    "name": "inquestia",
+    "private": true,
+    "workspaces": [
+        "@inquestia/server",
+        "@inquestia/shared"
+    ],
+    "dependencies": {
+        "@types/mongoose": "^5.11.96",
+        "zod": "^4.3.5"
+    }
 }

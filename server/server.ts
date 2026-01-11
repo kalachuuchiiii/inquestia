@@ -6,6 +6,17 @@ import rateLimit from "express-rate-limit";
 import cookieParser from 'cookie-parser';
 import { connectDatabase } from '@/config/connectDatabase';
 
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: string;
+  }
+}
+
+
+
+
+
+
 const app = express();
 
 app.use(cookieParser());

@@ -8,7 +8,7 @@ import { connectDatabase } from '@/config/connectDatabase';
 
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: string;
+    userId?: string ;
   }
 }
 

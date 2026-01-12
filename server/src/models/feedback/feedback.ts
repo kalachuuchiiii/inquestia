@@ -1,3 +1,4 @@
+
 import {
   FEEDBACK_TYPE_ENUM,
   FEEDBACK_TYPE_MSG,
@@ -5,9 +6,10 @@ import {
   MESSAGE_MIN,
   MESSAGE_MSG,
 } from "@shared/constants";
-import mongoose from "mongoose";
+import { IFeedback } from "@shared/types";
+import mongoose, { Document } from "mongoose";
 
-const feedbackSchema = new mongoose.Schema(
+const feedbackSchema = new mongoose.Schema<IFeedback & Document>(
   {
     from: {
       type: mongoose.Schema.Types.ObjectId,
@@ -16,15 +18,14 @@ const feedbackSchema = new mongoose.Schema(
     },
     feedbackType: {
       type: String,
-      enum: FEEDBACK_TYPE_ENUM,
-      validate: {
-        validator: (f: string) => FEEDBACK_TYPE_ENUM.includes(f),
-        message: FEEDBACK_TYPE_MSG.invalid
+      enum: {
+        values: FEEDBACK_TYPE_ENUM,
+        message: FEEDBACK_TYPE_MSG.enum
       },
       required: true
     },
     response: {
-      type: String
+      type: String //the admin's
     },
     message: {
       type: String,

@@ -1,10 +1,11 @@
 
 import { isValidEmail } from "@shared/utils";
-import mongoose from "mongoose";
+import mongoose, { Document, Types } from "mongoose";
 import bcrypt from 'bcryptjs';
 import { IMPLICIT_EMAIL_MSG, ROLE_ENUM } from "@shared/constants";
+import { ICredential } from "@shared/types";
 
-const credentialSchema = new mongoose.Schema({
+const credentialSchema = new mongoose.Schema<ICredential & Document>({
     role: {
       type: String,
       default: 'user',
@@ -25,7 +26,7 @@ const credentialSchema = new mongoose.Schema({
         type: String
     },
     userId: {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },

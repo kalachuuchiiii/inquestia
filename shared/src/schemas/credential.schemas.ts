@@ -9,16 +9,16 @@ import {
 import { isAlphanumeric } from "@/utils";
 import z from "zod";
 
-export const explicitEmailSchema = z.email(EXPLICIT_EMAIL_MSG.invalid);
-export const implicitEmailSchema = z.email(IMPLICIT_EMAIL_MSG.invalid);
+export const ExplicitEmailSchema = z.email(EXPLICIT_EMAIL_MSG.invalid);
+export const ImplicitEmailSchema = z.email(IMPLICIT_EMAIL_MSG.invalid);
 
-export const explicitPasswordSchema = z
+export const ExplicitPasswordSchema = z
   .string()
   .min(PASSWORD_MIN, EXPLICIT_PASSWORD_MSG.min)
   .max(PASSWORD_MAX, EXPLICIT_PASSWORD_MSG.max)
   .refine(isAlphanumeric, EXPLICIT_PASSWORD_MSG.invalid);
 
-export const implicitPasswordSchema =  z
+export const ImplicitPasswordSchema =  z
   .string()
   .min(PASSWORD_MIN, IMPLICIT_PASSWORD_MSG.min)
   .max(PASSWORD_MAX, IMPLICIT_PASSWORD_MSG.max)

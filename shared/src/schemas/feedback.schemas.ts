@@ -7,13 +7,13 @@ import {
   FEEDBACK_TYPE_MSG
 } from "@/constants";
 
-export const feedbackTypeSchema = z.enum(FEEDBACK_TYPE_ENUM, FEEDBACK_TYPE_MSG.invalid);
-export const feedbackMessageSchema = z
+export const FeedbackTypeSchema = z.enum(FEEDBACK_TYPE_ENUM, FEEDBACK_TYPE_MSG.invalid);
+export const FeedbackMessageSchema = z
   .string()
   .min(MESSAGE_MIN, MESSAGE_MSG.min)
   .max(MESSAGE_MAX, MESSAGE_MSG.max);
 
-export const feedbackSchema = z.object({
-  type: feedbackTypeSchema,
-  message: feedbackMessageSchema
+export const FeedbackSchema = z.object({
+  type: FeedbackTypeSchema,
+  message: FeedbackMessageSchema
 });

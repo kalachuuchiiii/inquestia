@@ -1,20 +1,23 @@
 import mongoose from "mongoose";
 import { selectTypeQuestionSchema } from "./selectTypeQuestion";
+import { QUESTION_TITLE_MAX, QUESTION_TITLE_MIN, QUESTION_TITLE_MSG, QUESTION_TYPE_ENUM, QUESTION_TYPE_MSG } from "@shared/constants";
+import { Question } from "@shared/types";
 
 
- const questionSchema = new mongoose.Schema({
+
+ const questionSchema = new mongoose.Schema<Question & Document>({
   question: {
     type: String, 
-    minlength: [6, 'Question must be at least 6 characters long.'], 
-    maxlength: [250, 'Question cannot exceed 250 characters.'],
+    minlength: [QUESTION_TITLE_MIN, QUESTION_TITLE_MSG.min], 
+    maxlength: [QUESTION_TITLE_MAX, QUESTION_TITLE_MSG.max],
     required: true
   }, 
   type: {
     type: String, 
     required: true,
     enum: {
-      values: ['text', 'select'],
-      message: 'Question type must be either "text" or "select".'
+      values: QUESTION_TYPE_ENUM,
+      message: QUESTION_TYPE_MSG.enum
     }
   }, 
   isRequired: {

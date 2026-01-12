@@ -1,3 +1,7 @@
+import { QUESTION_TYPE_ENUM } from "@shared/constants";
+import { QueryParamParser, QuestionChoiceListSchema, QuestionChoiceSchema, QuestionTitleSchema, QuestionTypeSchema, TextAnswerSchema } from "@shared/schemas";
+import { RequestHandler } from "express";
+
 const { default: z } = require("zod");
 const Answer = require("../../../models/answer");
 const Survey = require("../../../models/survey");
@@ -6,115 +10,113 @@ const { verifyObjectId } = require("../../../utils/schema/verifyObjectId");
 
 const questionBaseSchema = z.object({
   _id: z.string(),
-  question: z.string(),
+  question: QuestionTitleSchema.catch(''),
   isRequired: z.boolean(),
   isStrict: z.boolean(),
-  type: z.enum(["select", "text"]),
+  type: QuestionTypeSchema
 });
 
 const selectQuestionSchema = questionBaseSchema.extend({
   type: z.literal("select"),
-  choices: z.array(z.string()),
+  choices: QuestionChoiceListSchema,
   multipleChoice: z.boolean(),
-  answer: z.array(z.string()), 
+  answer: QuestionChoiceListSchema,
 });
 
 const textQuestionSchema = questionBaseSchema.extend({
   type: z.literal("text"),
-  answer: z.string().trim(), 
+  answer: TextAnswerSchema
 });
- const surveySchema = z.object({
+const surveySchema = z.object({
   questions: z.array(z.union([selectQuestionSchema, textQuestionSchema])),
-  isAuthentic: z.enum(['all', 'false', 'true'])
+  isAuthentic: z.enum(['AUTHENTIC', 'NOT_AUTHENTIC', '*'])
 });
 
+exports.filterSurveyList = (isPaginated = false, limit): RequestHandler => {
+  return async (req, res, next) => {
+    const userId = z.string().parse(req.userId);
+    const surveyId = verifyObjectId(req?.params?.surveyId);
+    const filter = JSON.parse(req?.query?.filter);
 
-exports.filterSurveyList = (isPaginated = false, limit) => {
-    return async(req, res, next) => {
-        const { verifiedUser } = req;
-        const surveyId = verifyObjectId(req?.params?.surveyId); 
-      const filter = JSON.parse(req?.query?.filter);
-  
-    
-      const skip = isPaginated ? (req?.paginationParams?.skip || 0) : 0
-    
-      const [survey, totalAnswers] = await Promise.all([
-        Survey.findById(surveyId).lean(),
-        Answer.countDocuments({ survey: surveyId })
+    const { skip } = QueryParamParser.parse(req.query);
+    const [survey, totalAnswers] = await Promise.all([
+      Survey.findById(surveyId).lean(),
+      Answer.countDocuments({ survey: surveyId }),
+    ]);
+
+    if (!survey) {
+      return res.status(400).json({
+        success: false,
+        message: "Survey not found.",
+      });
+    }
+
+    if (survey?.isDraft) {
+      return res.status(400).json({
+        success: false,
+        message: "You can't generate a summary of a draft",
+      });
+    }
+
+    if (
+      survey.user.toString() !== verifiedUser._id.toString() &&
+      !survey?.authorizedViewers?.some(
+        (viewerId) => String(viewerId) === String(verifiedUser._id)
+      )
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: "You're not permitted to view answers from this survey.",
+      });
+    }
+    if (!filter) {
+      const answers = await Answer.aggregate([
+        { $match: { survey: survey._id } },
+        { $skip: skip },
+        { $limit: limit },
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        { $unwind: "$user" },
+        {
+          $project: {
+            "user._id": 0,
+            "user.password": 0,
+          },
+        },
       ]);
-    
-      if (!survey) {
-        return res.status(400).json({
-          success: false,
-          message: "Survey not found.",
-        });
-      }
+      req.filteredData = {
+        success: true,
+        answers: answers.map((ans: IAnswer) => ({ ...ans, survey })),
+        survey,
+        totalAnswers,
+        nextPage: isPaginated ? req?.getNextPage(totalAnswers) : null,
+        plainAnswers: answers,
+      };
+      return next();
+    }
 
-      
-        
-        if(survey?.isDraft){
-          return res.status(400).json({
-            success: false, 
-            message: "You can't generate a summary of a draft"
-          })
-        }
-    
-      if (survey.user.toString() !== verifiedUser._id.toString() && !survey?.authorizedViewers?.some(viewerId => String(viewerId) === String(verifiedUser._id))) {
-        return res.status(401).json({
-          success: false,
-          message: "You're not permitted to view answers from this survey.",
-        });
-      }
-    
-    
-      if (!filter) {
-        const answers = await Answer.aggregate([
-          { $match: { survey: survey._id } },
-          { $skip: skip },
-          { $limit: limit },
-          {
-            $lookup: {
-              from: "users",
-              localField: "user",
-              foreignField: "_id",
-              as: "user",
-            },
-          },
-          { $unwind: "$user" },
-          {
-            $project: {
-              "user._id": 0,
-              "user.password": 0,
-            },
-          },
-        ]);
-        req.filteredData = {
-          success: true,
-          answers: answers.map(ans => ({...ans, survey})),
-          survey,
-          totalAnswers,
-          nextPage: isPaginated ? req?.getNextPage(totalAnswers) : null,
-          plainAnswers: answers,
-        }
-        return next();
-      }
-    
-      const parsedFilter = surveySchema.parse(filter);
-      const { questions: filterQuestions, isAuthentic } = parsedFilter;
-    
-    //   const data = { 
-    //     questions: [ 
-    //       { 
-    //         isStrict: false, 
+    const parsedFilter = surveySchema.parse(filter);
+    const { questions: filterQuestions, isAuthentic } = parsedFilter;
+
+    //   const data = {
+    //     questions: [
+    //       {
+    //         isStrict: false,
     //         type: ['select', 'text'], //enum
     //         answer: [['opt', 'choice'], 'textual'], //enum
-    //         _id: objectId, 
+    //         _id: objectId,
     //       }
-    //     ], 
-    // 
+    //     ],
+    //
     //   }
-    
-      const exprClauses = filterQuestions.map(filterQ => {
+
+    const exprClauses = filterQuestions.map((filterQ) => {
       if (filterQ.type === "select") {
         if (filterQ.isStrict) {
           return {
@@ -125,7 +127,12 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
                   as: "ans",
                   in: {
                     $and: [
-                      { $eq: ["$$ans.question", new mongoose.Types.ObjectId(filterQ._id)] },
+                      {
+                        $eq: [
+                          "$$ans.question",
+                          new mongoose.Types.ObjectId(filterQ._id),
+                        ],
+                      },
                       { $setEquals: ["$$ans.answer", filterQ.answer] },
                     ],
                   },
@@ -183,11 +190,9 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
           };
         }
       }
-    
-    
+
       if (filterQ.type === "text") {
         if (filterQ.isStrict) {
-    
           return {
             $anyElementTrue: [
               {
@@ -196,12 +201,18 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
                   as: "ans",
                   in: {
                     $and: [
-                      { $eq: ["$$ans.question", new mongoose.Types.ObjectId(filterQ._id)] },
-                      { $regexMatch: {
+                      {
+                        $eq: [
+                          "$$ans.question",
+                          new mongoose.Types.ObjectId(filterQ._id),
+                        ],
+                      },
+                      {
+                        $regexMatch: {
                           input: { $toLower: "$$ans.answer" },
-                          regex: `^${filterQ.answer.toLowerCase()}$`
-                        }
-                      }
+                          regex: `^${filterQ.answer.toLowerCase()}$`,
+                        },
+                      },
                     ],
                   },
                 },
@@ -250,57 +261,58 @@ exports.filterSurveyList = (isPaginated = false, limit) => {
         }
       }
       return null;
-    })
-    
+    });
+
     const filterMatch = {
       $expr: { $and: exprClauses },
       survey: survey._id,
-      
     };
-    switch(isAuthentic){
-      case 'true': filterMatch.isAuthentic = true;
-      break;
-      case 'false': filterMatch.isAuthentic = false;
-      break;
+    switch (isAuthentic) {
+      case "true":
+        filterMatch.isAuthentic = true;
+        break;
+      case "false":
+        filterMatch.isAuthentic = false;
+        break;
     }
-    
-        const pipeline = [
-          { $match: filterMatch },
-          { $skip: skip },
-          { $limit: limit },
-          {
-            $lookup: {
-              from: "users",
-              localField: "user",
-              foreignField: "_id",
-              as: "user",
-            },
-          },
-          { $unwind: "$user" },
-          {
-            $project: {
-              "user._id": 0,
-              "user.password": 0,
-            },
-          },
-        ];
-    
+
+    const pipeline = [
+      { $match: filterMatch },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+      {
+        $project: {
+          "user._id": 0,
+          "user.password": 0,
+        },
+      },
+    ];
+
     const [filteredAgg] = await Answer.aggregate([
       { $match: filterMatch },
       { $count: "total" },
     ]);
     const totalFiltered = filteredAgg?.total || 0;
-    
+
     const answers = await Answer.aggregate(pipeline);
-    
-   req.filteredData = {
-     success: true,
-     nextPage: isPaginated ? req.getNextPage(totalFiltered) : null,
-     answers: answers.map((a) => ({ ...a, survey })),
-     plainAnswers: answers,
-     survey,
-     totalAnswers: totalFiltered,
-   };
-     next();
-    }
-}
+
+    req.filteredData = {
+      success: true,
+      nextPage: isPaginated ? req.getNextPage(totalFiltered) : null,
+      answers: answers.map((a) => ({ ...a, survey })),
+      plainAnswers: answers,
+      survey,
+      totalAnswers: totalFiltered,
+    };
+    next();
+  };
+};

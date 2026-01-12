@@ -1,5 +1,7 @@
 export const STATUS_ENUM = ["pending", "fulfilled", "rejected"] as const;
-
+export const STATUS_MSG = {
+  enum: 'Invalid Status'
+}
 export const INVALID_PHONE_NUMBER_MSG = "Invalid PH phone number.";
 
 export const PHONE_NUMBER_MIN = 11;

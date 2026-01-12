@@ -29,66 +29,64 @@ import {
   LINKS_MAX,
 } from "../constants/user.constraints";
 
-export const bannedAt = z.date();
-export const banDuration = z
+export const BannedAtSchema = z.date();
+export const BanDurationSchema = z
   .number()
   .int()
   .min(BAN_MIN_DAYS, BAN_MSG.min)
   .max(BAN_MAX_DAYS, BAN_MSG.max);
 
-export const username = z
+export const UsernameSchema = z
   .string()
   .min(USERNAME_MIN, USERNAME_MSG.min)
   .max(USERNAME_MAX, USERNAME_MSG.max)
   .regex(USERNAME_REGEX, USERNAME_MSG.pattern);
 
-export const nickname = z
+export const NicknameSchema = z
   .string()
   .min(NICKNAME_MIN, NICKNAME_MSG.min)
   .max(NICKNAME_MAX, NICKNAME_MSG.max)
   .regex(NICKNAME_REGEX, NICKNAME_MSG.pattern);
 
-export const avatar = z.string();
-export const bio = z.string().max(BIO_MAX, BIO_MSG.max);
-export const isFinishedOnboarding = z.boolean();
-export const boosterPoint = z
+export const AvatarSchema = z.string();
+export const BioSchema = z.string().max(BIO_MAX, BIO_MSG.max);
+export const IsFinishedOnboardingSchema = z.boolean();
+export const BoosterPointSchema = z
   .number()
   .int()
   .min(BOOSTER_MIN, BOOSTER_MSG.min)
   .max(BOOSTER_MAX, BOOSTER_MSG.max);
 
-export const interestName = z.enum(INTEREST_ENUM);
+export const InterestSchema = z.enum(INTEREST_ENUM);
 
-export const interests = z
-  .array(interestName)
+export const InterestListSchema = z
+  .array(InterestSchema)
   .max(INTERESTS_MAX, INTERESTS_MSG.max);
 
-export const externalLink = z
+export const ExternalLinkSchema = z
   .string()
   .url(LINK_MSG.invalid)
   .min(LINK_MIN, LINK_MSG.min)
   .max(LINK_MAX, LINK_MSG.max);
 
-export const externalLinks = z.array(externalLink).max(LINKS_MAX);
+export const ExternalLinkListSchema = z.array(ExternalLinkSchema).max(LINKS_MAX);
 
-export const streakHighest = z.number().int().min(STREAK_MIN).max(STREAK_MAX);
-export const streakCurrent = z.number().int().min(STREAK_MIN).max(STREAK_MAX);
-export const streakLastResponseTime = z.date();
+export const StreakHighestSchema = z.number().int().min(STREAK_MIN).max(STREAK_MAX);
+export const StreakCurrentSchema = z.number().int().min(STREAK_MIN).max(STREAK_MAX);
+export const StreakLastResponseTimeSchema = z.date();
 
 export const streakSchema = z.object({
-  highest: streakHighest,
-  current: streakCurrent,
-  lastResponseTime: streakLastResponseTime
+  highest: StreakHighestSchema,
+  current: StreakCurrentSchema,
+  lastResponseTime: StreakLastResponseTimeSchema
 });
 
 
-export const coreHighest = z.number().int().min(CORE_MIN).max(CORE_MAX);
-export const coreCurrent = z.number().int().min(CORE_MIN).max(CORE_MAX);
+export const CoreHighestSchema = z.number().int().min(CORE_MIN).max(CORE_MAX);
+export const CoreCurrentSchema = z.number().int().min(CORE_MIN).max(CORE_MAX);
 
-export const coreSchema = z.object({
-  highest: coreHighest,
-  current: coreCurrent
+export const CoreSchema = z.object({
+  highest: CoreHighestSchema,
+  current: CoreCurrentSchema
 })
 
-export const createAt = z.date();
-export const updatedAt = z.date();

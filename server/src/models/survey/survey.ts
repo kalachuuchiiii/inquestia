@@ -1,33 +1,36 @@
-import { SURVEY_DESCRIPTION_LENGTH_MAX, SURVEY_DESCRIPTION_LENGTH_MESSAGE, SURVEY_DESCRIPTION_LENGTH_MIN, SURVEY_TITLE_LENGTH_MAX, SURVEY_TITLE_LENGTH_MESSAGE, SURVEY_TITLE_LENGTH_MIN } from "@shared/constraints";
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 import questionSchema from './question';
+import { APPLIED_BOOSTER_MAX, APPLIED_BOOSTER_MIN, AUTHORIZED_VIEWERS_MAX, AUTHORIZED_VIEWERS_MSG, DESCRIPTION_MAX, DESCRIPTION_MIN, DESCRIPTION_MSG, TAGS_ENUM, TAGS_MAX, TAGS_MIN, TAGS_MSG, TARGET_RESPONDENTS_MAX, TARGET_RESPONDENTS_MIN, TARGET_RESPONDENTS_MSG, TITLE_MAX, TITLE_MIN, TITLE_MSG, TOTAL_RESPONDENTS_MAX, TOTAL_RESPONDENTS_MSG } from "@shared/constants";
+import { ISurvey } from "@shared/types";
 
-const surveySchema = new mongoose.Schema(
+
+const surveySchema = new mongoose.Schema<ISurvey & Document>(
   {
     title: {
       type: String,
-      minlength: [SURVEY_TITLE_LENGTH_MIN, SURVEY_TITLE_LENGTH_MESSAGE],
-      maxlength: [SURVEY_TITLE_LENGTH_MAX, SURVEY_TITLE_LENGTH_MESSAGE],
+      minlength: [TITLE_MIN, TITLE_MSG.min],
+      maxlength: [TITLE_MAX, TITLE_MSG.max],
       required: true,
       index: true
     },
     description: {
       type: String,
-      minlength: [SURVEY_DESCRIPTION_LENGTH_MIN, SURVEY_DESCRIPTION_LENGTH_MESSAGE],
+      minlength: [DESCRIPTION_MIN, DESCRIPTION_MSG.min],
       index: true,
-      maxlength: [SURVEY_DESCRIPTION_LENGTH_MAX, SURVEY_DESCRIPTION_LENGTH_MESSAGE],
+      maxlength: [DESCRIPTION_MAX, DESCRIPTION_MSG.max],
       required: true
     },
     targetRespondents: {
       type: Number,
-      min: [3, "Target respondents must be at least 3."],
-      max: [1000, "Target respondents cannot exceed 1000."],
+      min: [TARGET_RESPONDENTS_MIN, TARGET_RESPONDENTS_MSG.min],
+      max: [TARGET_RESPONDENTS_MAX, TARGET_RESPONDENTS_MSG.max],
+      default: 12
     },
     totalRespondents: {
       type: Number,
       default: 0,
       index: true,
-      max: [1000, "Total respondents cannot exceed 1000."],
+      max: [TOTAL_RESPONDENTS_MAX, TOTAL_RESPONDENTS_MSG.max],
     },
     hasReachedTargetRespondents: {
       type: Boolean,
@@ -40,16 +43,15 @@ const surveySchema = new mongoose.Schema(
       index: true
     },
     tags: {
-      type: [{ type: String, index: true}],
+      type: [{ type: String, enum: TAGS_ENUM, index: true}],
       validate: {
-        validator: function (val: string[]) {
-          return val.length >= 1 && val.length <= 5;
-        },
-        message: "You must select between 1 and 5 tags.",
+        validator: (val: string[]) => val.length >= TAGS_MIN && val.length <= TAGS_MAX,
+        message: TAGS_MSG.range,
       },
+      required: true
     },
     questions: [questionSchema],
-    user: {
+    authorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       index: true,
@@ -68,9 +70,12 @@ const surveySchema = new mongoose.Schema(
       index: true
     },
     authorizedViewers: {
-      type: [{ type:mongoose.Schema.Types.ObjectId, ref: 'User', index: true  }], 
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true  }], 
       default: [],
-      maxlength: [10, 'You can only have 10 viewers for your survey.'],
+      validate: {
+        validator: (val: string[]) => val.length <= AUTHORIZED_VIEWERS_MAX,
+        message: AUTHORIZED_VIEWERS_MSG.max
+      },
       index: true
     },
     isTakendown: {
@@ -80,10 +85,10 @@ const surveySchema = new mongoose.Schema(
     },
     booster: {
       type: Number, 
-      default: 0,
-      min: 0,
+      default: APPLIED_BOOSTER_MIN,
+      min: APPLIED_BOOSTER_MIN,
       index: true,
-      max: 5
+      max: APPLIED_BOOSTER_MAX
     }
   },
   { timestamps: true }

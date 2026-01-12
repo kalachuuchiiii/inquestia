@@ -1,7 +1,10 @@
-import mongoose from "mongoose";
+
+import { ANSWER_LIST_MAX, ANSWER_LIST_MIN, ANSWER_LIST_MSG, ANSWER_MAX, ANSWER_MIN, ANSWER_MSG, QUESTION_CHOICELIST_MAX, QUESTION_CHOICELIST_MIN, QUESTION_TYPE_ENUM, QUESTION_TYPE_MSG } from "@shared/constants";
+import { IAnswer } from "@shared/types";
+import mongoose, { Document } from "mongoose";
 
 
-const answerSchema = new mongoose.Schema({
+const answerSchema = new mongoose.Schema<IAnswer & Document>({
   surveyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Survey",
@@ -10,6 +13,15 @@ const answerSchema = new mongoose.Schema({
   answers: [{
     answer: {
       type: mongoose.Schema.Types.Mixed, 
+      minlength: [ANSWER_MIN, ANSWER_MSG.min],
+      maxlength: [ANSWER_MAX, ANSWER_MSG.max],
+      validate: {
+        validator: (ans: string | string[]) => {
+            if(typeof ans === 'string')return true;
+            return ans.length >= ANSWER_LIST_MIN && ans.length <= ANSWER_LIST_MAX
+        },
+        message: ANSWER_LIST_MSG.range
+      },
       required: true
     }, 
     questionId: {
@@ -18,10 +30,13 @@ const answerSchema = new mongoose.Schema({
     }, 
     type: {
       type: String, 
-      enum: ['text', 'select']
+      enum: {
+        values: QUESTION_TYPE_ENUM,
+        message: QUESTION_TYPE_MSG.enum
+      }
     }
   }], 
-  userId: {
+  respondentId: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User",
     required: true

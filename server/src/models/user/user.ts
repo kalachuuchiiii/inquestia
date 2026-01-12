@@ -1,3 +1,4 @@
+
 import {
   BIO_MAX,
   BIO_MSG,
@@ -21,11 +22,12 @@ import {
   USERNAME_MSG,
   USERNAME_REGEX,
 } from "@shared/constants";
+import { IUser } from "@shared/types";
 
 import { isValidUrl } from "@shared/utils";
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<IUser & Document>(
   {
     bannedAt: {
       type: Date,

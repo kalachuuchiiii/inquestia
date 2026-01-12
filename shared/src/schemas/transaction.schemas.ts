@@ -8,20 +8,20 @@ import {
   AMOUNT_MSG
 } from "@/constants";
 
-export const statusSchema = z.enum(STATUS_ENUM);
+export const StatusSchema = z.enum(STATUS_ENUM);
 
-export const phoneNumberSchema = z
+export const PhoneNumberSchema = z
   .string()
   .min(PHONE_NUMBER_MIN, PHONE_NUMBER_MSG.min)
   .max(PHONE_NUMBER_MAX, PHONE_NUMBER_MSG.max)
   .regex(/^\d+$/, PHONE_NUMBER_MSG.invalid);
 
-export const amountSchema = z
+export const AmountSchema = z
   .number()
   .refine(val => AMOUNT_ENUM.includes(val), AMOUNT_MSG.invalid);
 
-export const transactionSchema = z.object({
-  status: statusSchema,
-  phoneNumber: phoneNumberSchema,
-  amount: amountSchema
+export const TransactionSchema = z.object({
+  status: StatusSchema,
+  phoneNumber: PhoneNumberSchema,
+  amount: AmountSchema
 });

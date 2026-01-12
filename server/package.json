@@ -18,8 +18,8 @@
     "nodemon": "^3.1.10"
   },
   "dependencies": {
-    "@inquestia/shared": "file:../shared",
     "@aws-sdk/client-sesv2": "^3.899.0",
+    "@inquestia/shared": "file:../shared",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",

@@ -1,8 +1,11 @@
+
 import { GENERAL_REASONS, SPECIFIC_REASON_MAX, SPECIFIC_REASON_MIN, SPECIFIC_REASON_MSG } from "@shared/constants";
+import { IReport } from "@shared/types";
+import mongoose, { Document } from "mongoose";
 
-const { default: mongoose } = require("mongoose");
 
-const reportSchema = new mongoose.Schema(
+
+const reportSchema = new mongoose.Schema<IReport & Document>(
   {
     specificReason: {
       type: String,
@@ -41,7 +44,7 @@ const reportSchema = new mongoose.Schema(
         default: false
     }, 
     resolveAction: {
-        type: String
+        type: String  //the admin (me) decides what will this be in his own words
     }
   },
   { timestamps: true }

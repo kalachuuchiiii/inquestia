@@ -8,7 +8,6 @@ import SliderButton from "./SliderButton";
 const QuestionFilter = ({ questions = [], getFieldById = () => {}, handleChange = () => {}}) => {
   const [current, setCurrent] = useState(0);
   const { mode } = useSelector(state => state.theme)
-
   const handlePrev = () => setCurrent((prev) => (prev > 0 ? prev - 1 : prev));
   const handleNext = () => setCurrent((prev) => (prev < questions.length - 1 ? prev + 1 : prev));
 const q = questions?.[current] || {

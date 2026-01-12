@@ -1,7 +1,7 @@
 
 export const FEEDBACK_TYPE_ENUM =  ['suggestion', 'concern', 'help', 'bug', 'account', 'other'];
 export const FEEDBACK_TYPE_MSG = {
-    invalid: 'Invalid feedback type.'
+    enum: 'Invalid feedback type.'
 }
 
 export const MESSAGE_MIN = 10;

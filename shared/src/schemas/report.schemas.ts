@@ -6,14 +6,14 @@ import {
   SPECIFIC_REASON_MSG
 } from "@/constants";
 
-export const generalReasonSchema = z.enum(GENERAL_REASONS);
+export const GeneralReasonSchema = z.enum(GENERAL_REASONS);
 
-export const specificReasonSchema = z
+export const SpecificReasonSchema = z
   .string()
   .min(SPECIFIC_REASON_MIN, SPECIFIC_REASON_MSG.min)
   .max(SPECIFIC_REASON_MAX, SPECIFIC_REASON_MSG.max);
 
-export const reportSchema = z.object({
-  generalReason: generalReasonSchema,
-  specificReason: specificReasonSchema
+export const ReportSchema = z.object({
+  generalReason: GeneralReasonSchema,
+  specificReason: SpecificReasonSchema
 });

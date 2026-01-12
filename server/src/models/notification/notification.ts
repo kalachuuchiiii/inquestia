@@ -1,7 +1,10 @@
-import mongoose from "mongoose";
+
+import { NOTIFICATION_ACTION_ENUM, NOTIFICATION_ACTION_MSG } from "@shared/constants";
+import { INotification } from "@shared/types";
+import mongoose, { Document } from "mongoose";
 
 
-const notificationSchema = new mongoose.Schema(
+const notificationSchema = new mongoose.Schema<INotification & Document>(
   {
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
@@ -17,17 +20,10 @@ const notificationSchema = new mongoose.Schema(
     },
     action: {
       type: String,
-      enum: [
-        "answer",
-        "survey-completed",
-        "transaction-fulfilled",
-        "transaction-rejected",
-        "feedback-response",
-        "removed-as-viewer",
-        "added-as-viewer",
-        "survey-takendown", 
-        "point-deduction"
-      ],
+      enum: {
+        values: NOTIFICATION_ACTION_ENUM,
+        message: NOTIFICATION_ACTION_MSG.enum
+      },
       required: true,
     },
     resourceId: {

@@ -1,4 +1,4 @@
-import { ANSWER_MAX, ANSWER_MIN, ANSWER_MSG } from "@/constants";
+import { ANSWER_MAX, ANSWER_MIN, ANSWER_MSG } from "../constants";
 import z from "zod";
 import { QuestionChoiceListSchema } from "./question.schemas";
 

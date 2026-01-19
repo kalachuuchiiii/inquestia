@@ -6,7 +6,7 @@ import {
   PHONE_NUMBER_MSG,
   AMOUNT_ENUM,
   AMOUNT_MSG
-} from "@/constants";
+} from "../constants";
 
 export const StatusSchema = z.enum(STATUS_ENUM);
 

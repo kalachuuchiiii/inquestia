@@ -32,3 +32,9 @@ export class ForbiddenError extends CustomError {
         super(403, message, code);
     }
 }
+
+export class BadRequestError extends CustomError {
+    constructor(message: string, code: string){
+        super(400, message, code);
+    }
+}

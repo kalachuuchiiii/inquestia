@@ -11,9 +11,6 @@
     "target": "esnext",
     "types": ["node"],
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],

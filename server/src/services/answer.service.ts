@@ -5,7 +5,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "@/utils/errors/customErrorClass";
-import { IAnswer, ISurvey, IUser } from "@shared/types";
+import { IAnswer, SurveyDTO, UserDTO } from "@shared/types";
 import { SortOrder, Types } from "mongoose";
 
 const entityHelper = new EntityHelper(Answer);
@@ -19,7 +19,7 @@ export class AnswerService {
     answerId: string;
   }) => {
     const answer = await Answer.findById<
-      IAnswer & { surveyId: ISurvey; respondentId: IUser }
+      IAnswer & { surveyId: SurveyDTO; respondentId: UserDTO }
     >(answerId)
       .populate([
         {

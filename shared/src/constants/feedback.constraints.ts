@@ -1,5 +1,5 @@
 
-export const FEEDBACK_TYPE_ENUM =  ['suggestion', 'concern', 'help', 'bug', 'account', 'other'];
+export const FEEDBACK_TYPE_ENUM =  ['suggestion', 'concern', 'help', 'bug', 'account', 'other'] as const;
 export const FEEDBACK_TYPE_MSG = {
     enum: 'Invalid feedback type.'
 }

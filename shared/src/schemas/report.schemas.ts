@@ -4,7 +4,7 @@ import {
   SPECIFIC_REASON_MIN,
   SPECIFIC_REASON_MAX,
   SPECIFIC_REASON_MSG
-} from "@/constants";
+} from "../constants";
 
 export const GeneralReasonSchema = z.enum(GENERAL_REASONS);
 

@@ -14,7 +14,6 @@ export interface IAnswer {
   respondentId: Types.ObjectId;       
 
   answers: AnswerItem[];
-
   isAuthentic: boolean;
 
   answerType?: string;     

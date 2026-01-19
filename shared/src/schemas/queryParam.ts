@@ -7,7 +7,7 @@ export const SortParser = z.union([
   z.literal("ascending"),
   z.literal("desc"),
   z.literal("descending"),
-]);
+]).catch('descending');
 
 export const QueryParamParser = z.object({
   sort: SortParser,
@@ -17,3 +17,5 @@ export const QueryParamParser = z.object({
     ...data,
     skip: (data.page - 1) * data.limit
 }))
+
+export type QueryParam = z.infer<typeof QueryParamParser>;

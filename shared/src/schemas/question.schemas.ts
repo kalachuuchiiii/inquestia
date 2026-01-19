@@ -10,7 +10,7 @@ import {
   QUESTION_TITLE_MSG,
   QUESTION_TYPE_ENUM,
   QUESTION_TYPE_MSG,
-} from "@/constants";
+} from "../constants";
 import z from "zod";
 
 export const QuestionTitleSchema = z

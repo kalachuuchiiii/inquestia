@@ -1,10 +1,10 @@
 
+import { NotificationModel, NotificationSchema } from "@/types/notification";
 import { NOTIFICATION_ACTION_ENUM, NOTIFICATION_ACTION_MSG } from "@shared/constants";
-import { INotification } from "@shared/types";
 import mongoose, { Document } from "mongoose";
 
 
-const notificationSchema = new mongoose.Schema<INotification & Document>(
+const notificationSchema = new mongoose.Schema<NotificationSchema>(
   {
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
@@ -49,7 +49,7 @@ notificationSchema.pre('save', function(next) {
   next();
 });
 
-const Notification = mongoose.model('Notification', notificationSchema);
+const Notification = mongoose.model<NotificationModel>('Notification', notificationSchema);
 
 export default Notification;
 

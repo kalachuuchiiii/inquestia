@@ -1,3 +1,4 @@
+import { QueryParam } from "@shared/schemas";
 import { Document, Model, FilterQuery, Query } from "mongoose";
 
 type GetListOfResourceProps<T> = {
@@ -7,8 +8,17 @@ type GetListOfResourceProps<T> = {
   limit: number;
 };
 
-export class EntityHelper<T extends Document> {
+export class EntityHelper<T> {
   constructor(public Entity: Model<T>) {}
+
+  getNextPage = ({
+    page,
+    limit,
+    totalResources,
+  }: Pick<QueryParam, 'page' | 'limit'> & { totalResources: number }) => {
+    const nextPage = page * limit < totalResources ? page + 1 : null;
+    return nextPage;
+  };
 
   getListOfResource = async ({
     filterQuery,
@@ -16,15 +26,14 @@ export class EntityHelper<T extends Document> {
     page,
     limit,
   }: GetListOfResourceProps<T>) => {
-    const [resourceList, totalResource] = await Promise.all([
+    const [resourceList, totalResources] = await Promise.all([
       query,
       this.Entity.countDocuments(filterQuery),
     ]);
-    const nextPage = page * limit < totalResource ? page + 1 : null;
-
+    const nextPage = this.getNextPage({ page, limit, totalResources });
     return {
       resourceList,
-      totalResource,
+      totalResources,
       nextPage,
     };
   };

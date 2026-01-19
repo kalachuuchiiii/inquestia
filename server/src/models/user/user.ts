@@ -1,4 +1,4 @@
-
+import { UserDoc, UserFields } from "@/types";
 import {
   BIO_MAX,
   BIO_MSG,
@@ -8,6 +8,7 @@ import {
   CORE_MIN,
   INTEREST_ENUM,
   INTERESTS_MAX,
+  INTERESTS_MIN,
   INTERESTS_MSG,
   LINK_MAX,
   LINK_MIN,
@@ -17,17 +18,19 @@ import {
   NICKNAME_MSG,
   NICKNAME_REGEX,
   STREAK_MIN,
+  USER_BADGES,
   USERNAME_MAX,
   USERNAME_MIN,
   USERNAME_MSG,
   USERNAME_REGEX,
 } from "@shared/constants";
-import { IUser } from "@shared/types";
+import { Interest } from "@shared/types";
+
 
 import { isValidUrl } from "@shared/utils";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, InferSchemaType } from "mongoose";
 
-const userSchema = new mongoose.Schema<IUser & Document>(
+const userSchema = new mongoose.Schema<UserFields>(
   {
     bannedAt: {
       type: Date,
@@ -92,8 +95,8 @@ const userSchema = new mongoose.Schema<IUser & Document>(
       enum: INTEREST_ENUM,
       default: ["personal"],
       validate: {
-        validator: (v: string[]) => v.length < INTERESTS_MAX,
-        message: INTERESTS_MSG.max,
+        validator: (v: Interest[]) => v.length >= INTERESTS_MIN && v.length <= INTERESTS_MAX,
+        message: INTERESTS_MSG.range,
       },
     },
     lastUsernameUpdate: {
@@ -134,9 +137,25 @@ const userSchema = new mongoose.Schema<IUser & Document>(
       max: [BOOSTER_MAX, BOOSTER_MSG.max],
     },
   },
-  { timestamps: true }
+  { timestamps: true, virtuals: true }
 );
 
-const User = mongoose.model("User", userSchema);
+userSchema.virtual("banDetails").get(function () {
+  const data = { isBanned: false, remainingMS: 0 };
+  if (!this.bannedAt || !this.banDuration) return data;
+
+  const bannedFor = Date.now() - new Date(this.bannedAt).getTime();
+  data.isBanned = bannedFor < this.banDuration;
+  data.remainingMS = this.banDuration - bannedFor;
+
+  return data;
+});
+
+userSchema.virtual('badge').get(function() {
+  const badge = USER_BADGES.find((b) => this.core.current > b.pointsRequired);
+  return badge;
+})
+
+const User = mongoose.model<UserDoc>("User", userSchema);
 
 export default User;

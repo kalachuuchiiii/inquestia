@@ -13,7 +13,6 @@ import {
   INTERESTS_MAX,
   INTERESTS_MSG,
   STREAK_MIN,
-  STREAK_MAX,
   CORE_MIN,
   CORE_MAX,
   BOOSTER_MIN,
@@ -27,6 +26,7 @@ import {
   BOOSTER_MSG,
   INTEREST_ENUM,
   LINKS_MAX,
+  INTERESTS_MIN,
 } from "../constants/user.constraints";
 
 export const BannedAtSchema = z.date();
@@ -57,11 +57,12 @@ export const BoosterPointSchema = z
   .min(BOOSTER_MIN, BOOSTER_MSG.min)
   .max(BOOSTER_MAX, BOOSTER_MSG.max);
 
-export const InterestSchema = z.enum(INTEREST_ENUM);
+export const InterestSchema = z.enum(INTEREST_ENUM, INTERESTS_MSG.invalid);
 
 export const InterestListSchema = z
   .array(InterestSchema)
-  .max(INTERESTS_MAX, INTERESTS_MSG.max);
+  .min(INTERESTS_MIN, INTERESTS_MSG.range)
+  .max(INTERESTS_MAX, INTERESTS_MSG.range);
 
 export const ExternalLinkSchema = z
   .string()
@@ -71,8 +72,8 @@ export const ExternalLinkSchema = z
 
 export const ExternalLinkListSchema = z.array(ExternalLinkSchema).max(LINKS_MAX);
 
-export const StreakHighestSchema = z.number().int().min(STREAK_MIN).max(STREAK_MAX);
-export const StreakCurrentSchema = z.number().int().min(STREAK_MIN).max(STREAK_MAX);
+export const StreakHighestSchema = z.number().int().min(STREAK_MIN)
+export const StreakCurrentSchema = z.number().int().min(STREAK_MIN)
 export const StreakLastResponseTimeSchema = z.date();
 
 export const streakSchema = z.object({

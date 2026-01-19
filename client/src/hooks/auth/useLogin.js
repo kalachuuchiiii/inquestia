@@ -7,7 +7,7 @@ import { getSession } from '../../state/slice/user.js';
 
 const useLogin = () => {
   const [form, setForm] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -15,6 +15,7 @@ const useLogin = () => {
   const nav = useNavigate();
 
   const [login, { isLoading, isSuccess, error }] = useAsync(async () => {
+    console.log('yes this ran', form)
     const res = await axios.post(
       `${import.meta.env.VITE_SERVER_URL}/api/user/login`,
       {

@@ -6,3 +6,4 @@ export * from './transaction.schemas';
 export * from './question.schemas'
 export * from './queryParam';
 export * from './answer.schemas';
+export * from './assistant.schemas';

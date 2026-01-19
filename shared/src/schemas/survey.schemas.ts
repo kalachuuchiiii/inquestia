@@ -19,7 +19,7 @@ import {
   AUTHORIZED_VIEWERS_MSG,
   APPLIED_BOOSTER_MIN,
   APPLIED_BOOSTER_MAX,
-} from "@/constants";
+} from "../constants";
 
 export const TagSchema = z.enum(TAGS_ENUM);
 

@@ -5,9 +5,9 @@ import {
   MESSAGE_MAX,
   MESSAGE_MSG,
   FEEDBACK_TYPE_MSG
-} from "@/constants";
+} from "../constants";
 
-export const FeedbackTypeSchema = z.enum(FEEDBACK_TYPE_ENUM, FEEDBACK_TYPE_MSG.invalid);
+export const FeedbackTypeSchema = z.enum(FEEDBACK_TYPE_ENUM, FEEDBACK_TYPE_MSG.enum);
 export const FeedbackMessageSchema = z
   .string()
   .min(MESSAGE_MIN, MESSAGE_MSG.min)

@@ -8,3 +8,4 @@ export * from './survey.constraints';
 export * from './question.constraints';
 export * from './answer.constraints';
 export * from './notification.constraints';
+export * from './assistant.constraints';

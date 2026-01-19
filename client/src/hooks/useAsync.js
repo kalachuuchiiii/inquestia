@@ -3,8 +3,10 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { swalOptions } from "../data/swalOptions";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from './useAuth';
 
 const useAsync = (fn = () => {}, deps = null) => {
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -19,7 +21,6 @@ const useAsync = (fn = () => {}, deps = null) => {
         setError("");
         setIsSuccess(true);
       } catch (e) {    
-        console.log(e)
         const msg =
           e?.response?.data?.message ||
           e?.message ||

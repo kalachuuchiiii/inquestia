@@ -3,7 +3,8 @@
     "private": true,
     "workspaces": [
         "@inquestia/server",
-        "@inquestia/shared"
+        "@inquestia/shared",
+        "@inquestia/client"
     ],
     "dependencies": {
         "@types/mongoose": "^5.11.96",

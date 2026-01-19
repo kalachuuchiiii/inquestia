@@ -1,71 +1,63 @@
-import dotenv from 'dotenv';
-dotenv.config({ quiet: true });
-import express, { RequestHandler } from 'express';
-import cors from 'cors';
-import rateLimit from "express-rate-limit";
-import cookieParser from 'cookie-parser';
-import { connectDatabase } from '@/config/connectDatabase';
+import { ENV_CONFIG } from "@/config/environmentVars";
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import { connectDatabase } from "@/config/connectDatabase";
+import { mainRouter } from "@/router";
+import { errorHandler } from "@/utils/errorHandler";
+import redis from "@/config/redis";
+import Survey from "@/models/survey/survey";
 
-declare module 'express-serve-static-core' {
+
+declare module "express-serve-static-core" {
   interface Request {
-    userId?: string ;
+    userId?: string;
   }
 }
-
-
-
-
-
 
 const app = express();
 
 app.use(cookieParser());
 app.use(express.json());
 
-app.use(cors({
-  origin: process.env.WEB_ORIGIN,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.WEB_ORIGIN,
+    credentials: true,
+  })
+);
+
 app.set("trust proxy", 1);
-const getLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 80,
-  message: "Too many GET requests, please slow down.",
+
+app.use('/api', mainRouter);
+app.use(errorHandler);
+
+app.get("/", (_, res) => {
+  res.send("Server is running");
 });
 
-const writeLimiter = rateLimit({
-  windowMs: 60 * 1000, 
-  max: 20,
-  message: "Too many write requests, please try again later.",
-});
+const PORT = process.env.PORT || 5000;
 
-const methodLimiter: RequestHandler = (req, res, next) => {
-  if (req.method === "GET") {
-    return getLimiter(req, res, next);
+connectDatabase().then(async () => {
+  // Run migration to rename 'user'/'userId' fields to 'authorId'
+  try {
+    const result = await Survey.updateMany(
+      { $or: [{ user: { $exists: true } }, { userId: { $exists: true } }] },
+      { $rename: { user: "authorId", userId: "authorId" } },
+      { multi: true }
+    );
+    if (result.modifiedCount > 0) {
+      console.log(`✅ Migrated ${result.modifiedCount} survey documents: user/userId → authorId`);
+    }
+  } catch (err) {
+    console.error("⚠️ Survey migration warning:", err);
   }
-  if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
-    return writeLimiter(req, res, next);
-  }
-  next();
-};
 
-app.use(methodLimiter);
-
-app.get("/", (req, res) => {
-  res.send("Server is running")
+  await redis.connect();
 });
-
-
-const PORT = process.env.PORT || 5000; 
-
-connectDatabase().then(async() => {
-
-})
-
 
 app.listen(PORT, async () => {
   try {
-   
     console.log(`✅ Server running on port ${PORT}`);
   } catch (err) {
     console.error("❌ Failed to start services:", err);
@@ -73,4 +65,4 @@ app.listen(PORT, async () => {
   }
 });
 
-module.exports = app;
+export default app;

@@ -1,5 +1,6 @@
-import { Types } from "mongoose";
+import { Document, HydratedDocument, Types } from "mongoose";
 import { TAGS_ENUM } from "@shared/constants";
+import { UserDTO } from "./user";
 
 export interface SelectTypeQuestion {
   multipleChoice: boolean;
@@ -14,7 +15,9 @@ export type Question = {
   isRequired: boolean;
 };
 
-export interface ISurvey {
+
+
+export type SurveyFields = Document & {
   _id: Types.ObjectId;
 
   title: string;
@@ -40,3 +43,19 @@ export interface ISurvey {
   createdAt: Date;
   updatedAt: Date;
 }
+
+
+export type SurveyDTO = Omit<SurveyFields, 'respondents' | 'authorId' | 'authorizedViewers' | '_id'> & {
+  _id: string;
+  author: UserDTO;
+}
+
+export type SurveyDoc = HydratedDocument<SurveyFields, {}>;
+
+export type SurveyListResponse = {
+  surveys: SurveyDTO[],
+  nextPage: number | null;
+  success: boolean;
+  totalSurveys: number;
+}
+

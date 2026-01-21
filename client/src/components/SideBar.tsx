@@ -1,12 +1,10 @@
 import AnimationWrapper from "./AnimationWrapper";
 import { navRoutes } from "../data/navRoutes";
-import NavBar from "./NavBar";
 import NavIcon from "./NavIcon";
-import UserIcon from "../components/UserIcon";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/hooks/useAppSelector";
 
 const Sidebar = ({ onClose = () => {}, isLargeScreen = false }) => {
-  const { user } = useSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.user);
 
   return (
     <AnimationWrapper

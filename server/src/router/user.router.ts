@@ -13,5 +13,7 @@ userRouter.use(catchErrors(authMiddleware.verifyAccessToken));
 
 userRouter.patch('/interests', catchErrors(userController.updateUserInterests));
 userRouter.get('/similar-interests', catchErrors(userController.getUsersWithSimilarInterests));
+userRouter.get('/get-by-username/:username', catchErrors(userController.getUserByUsername));
+
 
 export default userRouter;

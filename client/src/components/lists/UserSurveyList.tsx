@@ -7,6 +7,9 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import useFieldArray from '../../hooks/useFieldArray.js'
 import { useEffect } from 'react'
 import ArrowButton from '../html/ArrowButton.jsx'
+import { Button } from '../ui/button.js'
+import { ChevronRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const UserSurveyList = () => {
   const getUserSurvey = async ({ pageParam = 1 }) => {
@@ -68,25 +71,7 @@ const UserSurveyList = () => {
       <div className="space-y-3">
         {surveys?.length > 0 ? (
           surveys.map((survey) => (
-            <SurveyCard
-              Context={UserSurveyContext}
-              survey={survey}
-              key={survey._id}
-            >
-              <div className="grid grid-cols-12 items-start ">
-                <div className="col-span-11 col-start-1">
-                  <SurveyCard.Preview />
-                </div>
-                {!survey.closed && (
-                  <div className="col-span-1 col-start-12 w-full flex justify-center h-full items-center z-40">
-                    <SurveyCard.OptionButton />
-                  </div>
-                )}
-              </div>
-              <SurveyCard.Author />
-              <SurveyCard.Redirect />
-              <SurveyCard.Bar />
-            </SurveyCard>
+            <SurveyCard survey = {survey} />
           ))
         ) : !isLoading ? (
           <div className="h-60 w-full flex flex-col justify-center gap-3 items-center text-center">
@@ -94,12 +79,13 @@ const UserSurveyList = () => {
               You don’t have any surveys yet. Start by creating one to begin
               collecting responses.
             </p>
-            <ArrowButton
-              to="/create"
-              className="inquestia-button"
-            >
-              Create survey
-            </ArrowButton>
+            
+          <Link to='/create'>
+            <Button variant={"outline"}>
+              <p>Create Survey</p>
+              <ChevronRight />
+            </Button>
+          </Link>
           </div>
         ) : null}
       </div>

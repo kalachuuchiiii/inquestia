@@ -1,11 +1,9 @@
 
 import { GENERAL_REASONS, SPECIFIC_REASON_MAX, SPECIFIC_REASON_MIN, SPECIFIC_REASON_MSG } from "@shared/constants";
-import { IReport } from "@shared/types";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, HydratedDocument, InferSchemaType } from "mongoose";
 
 
-
-const reportSchema = new mongoose.Schema<IReport & Document>(
+const reportSchema = new mongoose.Schema(
   {
     specificReason: {
       type: String,
@@ -50,6 +48,10 @@ const reportSchema = new mongoose.Schema<IReport & Document>(
   { timestamps: true }
 );
 
-const Report = mongoose.model('Report', reportSchema)
+export type ReportSchema = InferSchemaType<typeof reportSchema>;
+export type ReportModel = HydratedDocument<ReportSchema>;
 
-module.exports = Report;
+const Report = mongoose.model<ReportModel>('Report', reportSchema)
+
+
+export default Report;

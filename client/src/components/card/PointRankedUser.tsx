@@ -1,9 +1,9 @@
+import type { UserDTO } from "@shared/types";
 import { motion } from "framer-motion";
 import { GiAtomicSlashes } from "react-icons/gi";
-import UserHeader from "../UserIcon";
 
-const PointRanked = ({ user = {}, sort = "current" }) => {
-  const cores = user?.core?.[sort] ?? 0;
+const PointRanked = ({ user = {}, type = "current" }:{user: UserDTO; type: string;}) => {
+  const cores = user?.core?.[type] ?? 0;
   const rank = user?.rank ?? "-";
 
   // Rank-based glow colors

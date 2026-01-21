@@ -6,10 +6,9 @@ import {
   MESSAGE_MIN,
   MESSAGE_MSG,
 } from "@shared/constants";
-import { IFeedback } from "@shared/types";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, HydratedDocument, InferSchemaType } from "mongoose";
 
-const feedbackSchema = new mongoose.Schema<IFeedback & Document>(
+const feedbackSchema = new mongoose.Schema(
   {
     from: {
       type: mongoose.Schema.Types.ObjectId,
@@ -43,6 +42,9 @@ const feedbackSchema = new mongoose.Schema<IFeedback & Document>(
   }
 );
 
-const Feedback = mongoose.model("Feedback", feedbackSchema);
+export type FeedbackSchema = InferSchemaType<typeof feedbackSchema>;
+export type FeedbackModel = HydratedDocument<FeedbackSchema>;
+
+const Feedback = mongoose.model<FeedbackModel>("Feedback", feedbackSchema);
 
 export default Feedback;

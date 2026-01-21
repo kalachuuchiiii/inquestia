@@ -1,3 +1,4 @@
+import { UserBadge } from "src/types";
 
 export const USERNAME_MIN = 6;
 export const USERNAME_MAX = 24;
@@ -114,6 +115,7 @@ export const INTEREST_ENUM = [
   "literature",
   "machine learning",
   "marketing",
+  "mathematics",
   "meditation",
   "mobile development",
   "mindfulness",
@@ -142,6 +144,7 @@ export const INTEREST_ENUM = [
   "travel",
   "travel blogging",
   "vlogging",
+  "volunteering",
   "web development",
   "wine",
   "writing",
@@ -152,11 +155,14 @@ export const INTEREST_ENUM = [
   "comedy",
   "painting",
   "sculpture",
+
   "motorcycles"
 ] as const;
 
 
-export const USER_BADGES = [
+
+
+export const USER_BADGES: UserBadge[] = [
   { badge: "Newbie", pointsRequired: 0, style: "text-gray-500 bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded-lg" },
   { badge: "Survey Starter", pointsRequired: 12000, style: "text-blue-500 bg-blue-50 dark:bg-blue-950/40 px-2 py-1 rounded-lg" },
   { badge: "Curious Mind", pointsRequired: 24000, style: "text-sky-600 bg-sky-50 dark:bg-sky-900/40 px-2 py-1 rounded-lg" },
@@ -185,8 +191,6 @@ export const USER_BADGES = [
   { badge: "Survey Titan", pointsRequired: 300000, style: "text-blue-700 bg-gradient-to-r from-blue-100 to-fuchsia-100 dark:from-blue-900/40 dark:to-fuchsia-950/40 px-2 py-1 rounded-lg shadow-[0_0_16px_rgba(150,100,255,0.6)]" },
   { badge: "Insight Titan", pointsRequired: 315000, style: "text-violet-700 bg-gradient-to-r from-violet-100 to-fuchsia-100 dark:from-violet-900/40 dark:to-fuchsia-950/40 px-2 py-1 rounded-lg shadow-[0_0_18px_rgba(170,90,255,0.65)]" },
   { badge: "Community Godfather", pointsRequired: 330000, style: "text-fuchsia-600 bg-gradient-to-r from-fuchsia-100 to-pink-100 dark:from-fuchsia-900/40 dark:to-pink-950/40 px-2 py-1 rounded-lg shadow-[0_0_20px_rgba(190,70,255,0.7)] animate-pulse" },
-
-  
   { badge: "Research Deity", pointsRequired: 340000, style: "text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-violet-400 to-blue-400 font-bold shadow-[0_0_20px_rgba(150,90,255,0.8)] animate-pulse drop-shadow-lg" },
     { badge: "Survey Immortal", pointsRequired: 350000, style: "text-violet-500 bbh-sans-bartle-regular rounded-xl dark:text-violet-300 dark:shadow-[0_0_15px_rgba(130,80,255,0.45)] shadow-[0_0_15px_rgba(167,139,250,0.6)] backdrop-brightness-200 animate-pulse px-2" },
 ] as const;

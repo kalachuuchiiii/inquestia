@@ -1,5 +1,5 @@
 
-import UserIcon from '../../components/UserIcon.jsx';
+import {UserBadge} from '../../components/UserBadge.js';
 import Textarea from '../../components/html/Textarea.jsx';
 import { AnimatePresence } from 'framer-motion';
 import QuestionList from '../../components/lists/QuestionList.jsx';
@@ -46,9 +46,9 @@ const CreateSurvey = () => {
       <div className="min-h-screen py-8 px-2 md:px-0 md:py-1">
         <main className=" h-full p-1 space-y-4 rounded-lg">
           <div className="flex gap-2 items-start">
-            <UserIcon user={user}>
-              <UserIcon.Card></UserIcon.Card>
-            </UserIcon>
+            <UserBadge user={user}>
+              <UserBadge.Card></UserBadge.Card>
+            </UserBadge>
             <p className="text-xs px-3 py-1 rounded-lg text-neutral-100 bg-zinc-900 dark:text-zinc-900 dark:bg-neutral-100 ">
               New Survey
             </p>

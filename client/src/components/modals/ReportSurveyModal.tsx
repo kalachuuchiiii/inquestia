@@ -13,11 +13,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { _capitalize } from "chart.js/helpers";
+import { useParams } from "react-router-dom";
 
-const ReportSurveyModal = ({
-  surveyTitle = null,
-  surveyId = null
-}) => {
+const ReportSurveyModal = ({ surveyTitle }: { surveyTitle: string }) => {
+  const { id: surveyId } = useParams();
   const [reportForm, setReportForm] = useState({
     generalReason: "",
     specificReason: "",
@@ -58,23 +58,21 @@ const ReportSurveyModal = ({
   });
 
   return (
-    <DialogContent>
+    <DialogContent className="p-4">
       <div className="space-y-4">
         <DialogHeader className="text-base text-zinc-700 dark:text-zinc-200">
           <DialogTitle>Please confirm the issue with the survey </DialogTitle>
           <DialogDescription className="font-semibold text-blue-500">
             “{surveyTitle}”
           </DialogDescription>
-          .
         </DialogHeader>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 text-xs sm:grid-cols-3 gap-3">
           {GENERAL_REASONS.map((reason) => (
             <button
               key={reason}
               value={reason}
               name="generalReason"
-              className={`text-sm font-medium transition-all border-2 focus:outline-none focus:ring-2 focus:ring-blue-400 px-3 py-2 rounded-xl w-full shadow-sm
+              className={` font-medium text-xs transition-all border-2 focus:outline-none focus:ring-2 focus:ring-blue-400 px-3 py-2 rounded-xl w-full shadow-sm
                 ${
                   reportForm.generalReason === reason
                     ? "bg-gradient-to-br from-blue-400 via-indigo-400 to-purple-500 text-white border-blue-500 dark:from-blue-700 dark:to-cyan-700"
@@ -83,7 +81,7 @@ const ReportSurveyModal = ({
               onClick={() => handleSelectGeneralReason(reason)}
               type="button"
             >
-              {reason}
+              {_capitalize(reason.replaceAll("_", " "))}
             </button>
           ))}
         </div>
@@ -108,7 +106,6 @@ const ReportSurveyModal = ({
             !reportForm.generalReason ||
             !reportForm.specificReason.trim()
           }
-          className="inquestia-button"
         >
           Report
         </Button>

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { useSearchParams, NavLink } from "react-router-dom";
-import User from "../UserIcon.jsx";
 import UserCardPlaceholder from "../card/placeholders/UserCardPlaceholder.jsx";
 import { useInView } from "react-intersection-observer";
 import { useAppSelector } from "@/hooks/useAppSelector.js";
 import { API } from "@/lib/axios.instance.js";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { UserBadge } from "../UserBadge.js";
 
 const QueryUsers = () => {
   const [searchQuery] = useSearchParams();
@@ -61,9 +61,7 @@ const QueryUsers = () => {
             className="bg-white dark:bg-zinc-900 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 p-4 w-full flex flex-col gap-3 border border-neutral-200 dark:border-zinc-800"
           >
             <div className="flex items-center gap-4">
-              <User className="text-sm" user={user}>
-                <User.Avatar size={12} />
-              </User>
+              <UserBadge user = {user} />
               <div className="flex flex-col gap-1">
                 <span className="font-semibold text-lg text-zinc-800 dark:text-neutral-100">
                   {user.username}

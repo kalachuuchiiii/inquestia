@@ -1,10 +1,10 @@
 
 
 import React from 'react'
-import UserIcon from '../UserIcon'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { fetchApi } from '../../utils/fetchApi';
 import { formatIsoString } from '../../utils/formatIsoString';
+import { UserBadge } from '../UserBadge';
 
 const NotificationCard = ({notif = {}}) => {
   const nav = useNavigate();
@@ -27,11 +27,7 @@ const NotificationCard = ({notif = {}}) => {
           !notif.isRead ? "bg-blue-50 dark:bg-zinc-800" : ""
         }`}
       >
-        <UserIcon user={notif.sender}>
-          <UserIcon.Card>
-          
-          </UserIcon.Card>
-        </UserIcon>
+        <UserBadge user={notif.sender} />
         <button
           onClick={handleNavigate}
           className="flex gap-1 text-xs text-left"

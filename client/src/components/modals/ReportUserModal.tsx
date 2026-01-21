@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { API } from "@/lib/axios.instance";
 import { toast } from "sonner";
 import { useReportForm } from "@/hooks/useReportForm";
+import { DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 
 const ReportUserModal = ({
   username = null,
@@ -30,7 +31,12 @@ const ReportUserModal = ({
   });
 
   return (
-    <ModalStyle onClose={onClose} label="Report a User">
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle >
+          Reporting {username}
+        </DialogTitle>
+      </DialogHeader>
       <div className="space-y-4">
         <p className="text-base text-zinc-700 dark:text-zinc-200">
           Please confirm the issue with user{" "}
@@ -82,7 +88,7 @@ const ReportUserModal = ({
           Report
         </Button>
       </div>
-    </ModalStyle>
+    </DialogContent>
   );
 };
 

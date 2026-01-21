@@ -1,13 +1,14 @@
-import UserProfile from '../../components/card/UserProfileCard.jsx';
+import UserProfile from "../../components/card/UserProfileCard.jsx";
 
+import { useSelector } from "react-redux";
 
-import { useSelector } from 'react-redux';
-
-import ArrowButton from '../../components/html/ArrowButton.jsx';
-import { Outlet, NavLink } from "react-router-dom"
-import usePath from '../../hooks/usePath.js';
+import ArrowButton from "../../components/html/ArrowButton.jsx";
+import { Outlet, NavLink, Link } from "react-router-dom";
+import usePath from "../../hooks/usePath.js";
+import { Button } from "@/components/ui/button.js";
+import { ChevronRight } from "lucide-react";
 const Profile = () => {
-  const { user = {} } = useSelector(state => state.user);
+  const { user = {} } = useSelector((state) => state.user);
 
   const { isInThisPath } = usePath();
 
@@ -19,19 +20,20 @@ const Profile = () => {
             <UserProfile user={user} />
           </div>
           <div className="space-y-6 mt-5">
-            <ArrowButton
-           
-              to="/profile/edit"
-            >
-              View Account
-            </ArrowButton>
+            <Link to="/profile/edit">
+              <Button variant={"outline"}>
+                <p>View Account</p>
+                <ChevronRight />
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="flex gap-1 w-full justify-center items-center">
           <NavLink
             to="/profile"
             className={` text-center w-full  p-2 ${
-              isInThisPath("/profile") && " border-b-zinc-900 dark:border-b-neutral-100  border-b-1"
+              isInThisPath("/profile") &&
+              " border-b-zinc-900 dark:border-b-neutral-100  border-b-1"
             }`}
           >
             Posts
@@ -52,6 +54,6 @@ const Profile = () => {
       </div>
     </>
   );
-}
+};
 
-export default Profile
+export default Profile;

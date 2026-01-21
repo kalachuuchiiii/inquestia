@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
 import questionSchema from "./question";
 import {
   APPLIED_BOOSTER_MAX,
@@ -18,12 +18,11 @@ import {
   TITLE_MAX,
   TITLE_MIN,
   TITLE_MSG,
-  TOTAL_RESPONDENTS_MAX,
-  TOTAL_RESPONDENTS_MSG,
 } from "@shared/constants";
-import { SurveyDoc, SurveyFields } from "@shared/types";
+import { SurveyDTO } from "@shared/types";
+import { Document } from "mongoose";
 
-const surveySchema = new mongoose.Schema<SurveyFields>(
+const surveySchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -45,12 +44,7 @@ const surveySchema = new mongoose.Schema<SurveyFields>(
       max: [TARGET_RESPONDENTS_MAX, TARGET_RESPONDENTS_MSG.max],
       default: 12,
     },
-    totalRespondents: {
-      type: Number,
-      default: 0,
-      index: true,
-      max: [TOTAL_RESPONDENTS_MAX, TOTAL_RESPONDENTS_MSG.max],
-    },
+
     hasReachedTargetRespondents: {
       type: Boolean,
       default: false,
@@ -113,11 +107,47 @@ const surveySchema = new mongoose.Schema<SurveyFields>(
       max: APPLIED_BOOSTER_MAX,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+  }
 );
 
-const Survey = mongoose.model<SurveyDoc>("Survey", surveySchema);
+surveySchema.virtual("totalRespondents").get(function () {
+  return this.respondents.length;
+});
 
-mongoose.model("Question", questionSchema);
+surveySchema.methods.getSafeDetails = function () {
+  const safeDetails = {
+  closed: this.closed,
+    createdAt: this.createdAt,
+    description: this.description,
+    hasReachedTargetRespondents: this.hasReachedTargetRespondents,
+    isDraft: this.isDraft,
+    questions: this.questions,
+    tags: this.tags,
+    author: this.author ?? this.authorId,
+    targetRespondents: this.targetRespondents,
+    title: this.title,
+    totalRespondents: this.totalRespondents,
+    _id: this._id,
+    authorizedViewers: this.authorizedViewers,
+
+  } satisfies SurveyDTO; 
+  return safeDetails;
+};
+
+export type SurveySchema = InferSchemaType<typeof surveySchema>;
+export type SurveyMethods = {
+  totalRespondents: number;
+  getSafeDetails: () => SurveyDTO;
+};
+export type SurveyModel = HydratedDocument<SurveySchema, SurveyMethods>;
+const Survey = mongoose.model<SurveyModel>("Survey", surveySchema);
 
 export default Survey;

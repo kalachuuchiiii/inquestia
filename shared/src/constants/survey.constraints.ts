@@ -14,7 +14,7 @@ export const DESCRIPTION_MSG = {
   max: `Survey description must be at most ${DESCRIPTION_MAX} characters.`
 }
 
-export const TARGET_RESPONDENTS_MIN = 12;
+export const TARGET_RESPONDENTS_MIN = 8;
 export const TARGET_RESPONDENTS_MAX = 1000;
 export const TARGET_RESPONDENTS_MSG = {
   min: `You must have at least ${TARGET_RESPONDENTS_MIN} target respondents`,

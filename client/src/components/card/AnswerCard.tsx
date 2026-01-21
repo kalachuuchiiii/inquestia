@@ -1,4 +1,4 @@
-import UserIcon from "../UserIcon";
+
 import ArrowButton from "../html/ArrowButton";
 import { IoSparklesSharp } from "react-icons/io5";
 import { CgClose } from "react-icons/cg";
@@ -9,6 +9,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useApi } from "@/hooks/useApi";
 import { toast } from "sonner";
 import { _capitalize } from "chart.js/helpers";
+import { UserBadge } from "../UserBadge";
+import { Link } from "react-router-dom";
+import { Button } from "../ui/button";
+import { ChevronRight } from "lucide-react";
 
 const questionType = {
   select: "Choice-based",
@@ -62,7 +66,7 @@ const AnswerCard = ({
   showRedirectToAnswer = false,
   showModifyAuthenticityButton = false,
   answer = {
-    user: null,
+    respondentId: null,
     survey: null,
     type: "",
     answers: [],
@@ -99,9 +103,7 @@ const AnswerCard = ({
 
       {/* User Info */}
       <div className="flex items-start gap-3 mb-3">
-        <UserIcon user={answer.user}>
-          <UserIcon.Card size="10" />
-        </UserIcon>
+        <UserBadge user = {answer.respondentId} />
       </div>
 
       {/* Answers */}
@@ -144,24 +146,24 @@ const AnswerCard = ({
       {/* Footer Buttons */}
       <div className="flex justify-end gap-2 pt-3">
         {showRedirectToSurvey && (
-          <ArrowButton
-            className="backdrop-brightness-150 flex rounded items-center gap-2 shadow px-4 py-2"
-            to={`/survey/${answer?.survey?._id}`}
-          >
-            View Survey
-          </ArrowButton>
+           <Link to={`/survey/${answer?.survey?._id}`}>
+            <Button variant={"outline"}>
+              <p>View Survey</p>
+              <ChevronRight />
+            </Button>
+          </Link>
         )}
         {showRedirectToAnswer && (
-          <ArrowButton
-            className="backdrop-brightness-150 rounded flex items-center gap-2 shadow px-4 py-2"
-            to={`/answer/${answer?._id}`}
-          >
-            View Answer
-          </ArrowButton>
+          <Link  to={`/answer/${answer?._id}`}>
+            <Button variant={"outline"}>
+              <p>   View Answer</p>
+              <ChevronRight />
+            </Button>
+          </Link>
         )}
         {showModifyAuthenticityButton && (
           <button
-            onClick={modifyAuthenticity}
+            onClick={() => modifyAuthenticity()}
             disabled={isLoading}
             className={`inquestia-bg px-4 py-2 rounded text-white font-semibold flex items-center gap-2 transition-all duration-200 ${
               isLoading

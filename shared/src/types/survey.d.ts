@@ -1,61 +1,63 @@
 import { Document, HydratedDocument, Types } from "mongoose";
-import { TAGS_ENUM } from "@shared/constants";
 import { UserDTO } from "./user";
+import { TAGS_ENUM } from "src/constants";
 
-export interface SelectTypeQuestion {
+export interface SelectTypeQuestionDTO {
+  type: "select";
+  _id: Types.ObjectId;
+  question: string;
+  isRequired: boolean;
   multipleChoice: boolean;
-  choices: string[];  
+  choices: string[];
 }
 
-
-export type Question = {
-  _id: Types.ObjectId,
+export interface TextTypeQuestionDTO {
+  type: "text";
+  _id: string;
   question: string;
-  type: string;
   isRequired: boolean;
+}
+
+export type QuestionDTO = TextTypeQuestionDTO | SelectTypeQuestionDTO;
+
+export type SurveyDTO = {
+  _id: string;
+  author: UserDTO;
+  closed: boolean;
+  createdAt: Date;
+  description: string;
+  hasReachedTargetRespondents: boolean;
+  isDraft: boolean;
+  questions: QuestionDTO[];
+  tags: (typeof TAGS_ENUM)[number][];
+  targetRespondents: number;
+  authorizedViewers: string[] | UserDTO[];
+  title: string;
+  totalRespondents: number;
+};
+
+export type SurveyListResponse = {
+  surveys: SurveyDTO[];
+  nextPage: number | null;
+  success: boolean;
+  totalSurveys: number;
+};
+
+export type GetAuthorizedViewersResponse = {
+  success: boolean;
+  authorizedViewers: UserDTO[];
 };
 
 
 
-export type SurveyFields = Document & {
-  _id: Types.ObjectId;
-
-  title: string;
-  description: string;
-
-  targetRespondents: number;
-  totalRespondents: number;
-
-  hasReachedTargetRespondents: boolean;
-  closed: boolean;
-  isDraft: boolean;
-  isTakendown: boolean;
-
-  tags: (typeof TAGS_ENUM)[number][];
-
-  questions: Question[];
-  authorId: Types.ObjectId;     
-  respondents: Types.ObjectId[];  
-  authorizedViewers: Types.ObjectId[];
-
-  booster: number;
-
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-
-export type SurveyDTO = Omit<SurveyFields, 'respondents' | 'authorId' | 'authorizedViewers' | '_id'> & {
-  _id: string;
-  author: UserDTO;
-}
-
-export type SurveyDoc = HydratedDocument<SurveyFields, {}>;
-
-export type SurveyListResponse = {
-  surveys: SurveyDTO[],
-  nextPage: number | null;
+export type GetSurveyByIdResponse = {
+  survey: Omit<SurveyDTO, "authorizedViewers"> & {
+    authorizedViewers: UserDTO[];
+  };
   success: boolean;
-  totalSurveys: number;
-}
+};
 
+export type AuthorizeUserResponse = {
+  success: boolean;
+  message: string;
+}

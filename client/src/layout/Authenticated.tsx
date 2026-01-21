@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from '../components/SideBar.jsx';
 import NavBar from '../components/NavBar.jsx'
-import UserIcon from '../components/UserIcon.jsx'
+import {UserBadge} from '../components/UserBadge.js'
 import useWindow from '../hooks/useWindow.js'
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -37,9 +37,9 @@ const AuthenticatedLayout = () => {
               {isLargeScreen ? <NavBar.App /> : <div />}
               <NavBar.Relate gap="gap-2 md:gap-6">
                 <NavBar.Points />
-                <UserIcon user={user}>
-                  <UserIcon.Avatar size="8" />
-                </UserIcon>
+                <UserBadge user={user}>
+                  <UserBadge.Avatar size="8" />
+                </UserBadge>
                 <NavBar.NotificationBell></NavBar.NotificationBell>
               </NavBar.Relate>
             </NavBar>

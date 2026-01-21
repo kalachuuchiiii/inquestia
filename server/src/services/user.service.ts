@@ -3,11 +3,18 @@ import { NotFoundError } from "@/utils/errors/customErrorClass";
 import { Interest } from "@shared/types";
 
 export class UserService {
+
+
+  getUserByUsername = async(username: string) => {
+    const user = await User.findOne({ username }).orFail(new NotFoundError('User not found.', 'USER_NOT_FOUND'));
+    return user.getSafeDetails();
+  }
+
   getUsersWithSimilarInterests = async ({ userId }: { userId: string }) => {
     const user = await User.findById(userId)
       .orFail(new NotFoundError("User not found.", "USER_NOT_FOUND"))
       .lean();
-    const users = await User.aggregate([
+    const matchedUsers = await User.aggregate([
       { $match: { _id: { $ne: user._id } } },
       {
         $addFields: {
@@ -19,17 +26,10 @@ export class UserService {
       },
       {
         $limit: 10,
-      },
-      {
-        $project: {
-          username: 1,
-          nickname: 1,
-          avatar: 1,
-          _id: 1,
-        },
-      },
+      }
     ]);
 
+    const users = matchedUsers.map((u) => new User(u).getSafeDetails());
     return { users };
   };
   updateUserInterests = async ({

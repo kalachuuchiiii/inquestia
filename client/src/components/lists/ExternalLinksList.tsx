@@ -1,7 +1,7 @@
 import { PiShareNetworkThin } from "react-icons/pi";
 import ExternalLinkCard from "../card/ExternalLinkCard.jsx";
 
-const ExternalLinksList = ({ externalLinks = [], hideDeleteButton = false }) => {
+const ExternalLinksList = ({ externalLinks = [], hideDeleteButton = false }: {externalLinks: string[], hideDeleteButton: boolean;}) => {
   return (
     <section className="space-y-3 w-full">
       <div className="flex items-center w-full gap-1 text-base font-medium">

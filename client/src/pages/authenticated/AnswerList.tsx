@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import useAsync from "../../hooks/useAsync.js";
 import { fetchApi } from "../../utils/fetchApi.js";
@@ -10,16 +10,20 @@ import QuestionFilter from "../../components/QuestionFilter.jsx";
 import useFieldArray from "../../hooks/useFieldArray.js";
 import { Button } from "../../components/ui/button";
 import { motion } from "framer-motion";
-import { RefreshCcw } from "lucide-react";
+import { ChevronRight, RefreshCcw } from "lucide-react";
 import MultipleChoiceDataSet from "../../components/MultipleChoiceDataSet.jsx";
 import { useApi } from "@/hooks/useApi.js";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 const AnswerListPage = () => {
-   const [survey, setSurvey] = useState({});
+  const [survey, setSurvey] = useState({});
   const [totalAnswers, setTotalAnswers] = useState(0);
-  const { fieldArray: questions, modifyFieldById, getFieldById, setFieldArray } =
-    useFieldArray([]);
+  const {
+    fieldArray: questions,
+    modifyFieldById,
+    getFieldById,
+    setFieldArray,
+  } = useFieldArray([]);
   const [statistics, setStatistics] = useState([]);
   const { ref, inView } = useInView();
   const { id } = useParams();
@@ -32,46 +36,55 @@ const AnswerListPage = () => {
   // 🔹 Fetch Answers
   const api = useApi();
 
-  const { fetchNextPage: getAnswers, isPending: isLoading, data, hasNextPage } = useInfiniteQuery({
+  const {
+    fetchNextPage: getAnswers,
+    isPending: isLoading,
+    data,
+    hasNextPage,
+  } = useInfiniteQuery({
     initialPageParam: 1,
-    queryKey: ['answer-list', id],
-    queryFn: async ({pageParam}) => {
-      const res = await api.get(`/api/survey/answers/${id}?page=${pageParam}&limit=${5}`, {
-       params: {
-        filter: filterObject
-       }
-      })
+    queryKey: ["answer-list", id],
+    queryFn: async ({ pageParam }) => {
+      const res = await api.get(
+        `/api/survey/answers/${id}?page=${pageParam}&limit=${5}`,
+        {
+          params: {
+            filter: filterObject,
+          },
+        }
+      );
       setTotalAnswers(res.data.totalAnswers);
       return res;
-
     },
-    getNextPageParam: (res) => res.data.nextPage ?? null
-  })
+    getNextPageParam: (res) => res.data.nextPage ?? null,
+  });
   const answers = data?.pages.flatMap((p) => p.data.answers);
 
   // 🔹 Fetch Statistics
-  const [getStatistics, { isLoading: isLoadingSurvey }] = useAsync(async (initial = true) => {
-    const res = await fetchApi("get", `/survey/${id}/statistics`, {
-      isAuthentic,
-    });
-    if (!res.success) return;
+  const [getStatistics, { isLoading: isLoadingSurvey }] = useAsync(
+    async (initial = true) => {
+      const res = await fetchApi("get", `/survey/${id}/statistics`, {
+        isAuthentic,
+      });
+      if (!res.success) return;
 
-    setSurvey(res.survey);
-    if(initial){
-      setFieldArray(
-      res.survey.questions.map((q) => ({
-        ...q,
-        answer: q.type === "text" ? "" : [],
-        isStrict: false,
-      }))
-    );
+      setSurvey(res.survey);
+      if (initial) {
+        setFieldArray(
+          res.survey.questions.map((q) => ({
+            ...q,
+            answer: q.type === "text" ? "" : [],
+            isStrict: false,
+          }))
+        );
+      }
+      setStatistics(res.statistics);
     }
-    setStatistics(res.statistics);
-  });
+  );
 
   // 🔹 Initial load
   useEffect(() => {
-     getStatistics();
+    getStatistics();
   }, [id]);
 
   useEffect(() => {
@@ -108,8 +121,7 @@ const AnswerListPage = () => {
               Authentic Answers Filter
             </h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 max-w-2xl">
-              Choose which type of answers to display and include in
-              summaries.{" "}
+              Choose which type of answers to display and include in summaries.{" "}
               <span className="font-medium text-blue-600 dark:text-blue-400">
                 Authentic answers
               </span>{" "}
@@ -120,7 +132,7 @@ const AnswerListPage = () => {
               are marked as irrelevant or nonsense.
             </p>
           </div>
-       
+
           <div className="flex items-center gap-2">
             {options.map((opt) => (
               <button
@@ -167,21 +179,23 @@ const AnswerListPage = () => {
             {statistics?.length > 0 && (
               <>
                 <SurveyStatistics data={statistics} />{" "}
-              
               </>
             )}
 
             <div className="flex items-center justify-between w-full gap-2">
-              <button className="flex items-center gap-2" onClick={() => getStatistics(false)}>
-                <RefreshCcw  />
-                  Refresh statistics
-              </button>
-              <ArrowButton
-                to={`/survey-summary/${survey._id}`}
-                className="inquestia-button"
+              <button
+                className="flex items-center gap-2"
+                onClick={() => getStatistics(false)}
               >
-                <span className="inline-block">✨ Generate AI Summary</span>
-              </ArrowButton>
+                <RefreshCcw />
+                Refresh statistics
+              </button>
+              <Link to={`/survey-summary/${survey._id}`}>
+                <Button variant={"outline"}>
+                  <span className="inline-block">✨ Generate AI Summary</span>
+                  <ChevronRight />
+                </Button>
+              </Link>
             </div>
           </>
         )}
@@ -203,11 +217,11 @@ const AnswerListPage = () => {
               questions={survey.questions}
             />
 
-          
-
             <div className="flex md:flex-col gap-3 mt-4">
               <Button
-                className={`outline ${isFilterOn ? ' bg-blue-600 ' : ''} truncate outline-blue-400 shadow-md p-2 rounded hover:backdrop-brightness-90 flex-1 sm:flex-none `}
+                className={`outline ${
+                  isFilterOn ? " bg-blue-600 " : ""
+                } truncate outline-blue-400 shadow-md p-2 rounded hover:backdrop-brightness-90 flex-1 sm:flex-none `}
                 onClick={() => getAnswers({ turnOnFilter: true })}
               >
                 Apply Filter

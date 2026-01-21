@@ -1,11 +1,8 @@
 import mongoose, { HydratedDocument } from "mongoose";
 import { selectTypeQuestionSchema } from "./selectTypeQuestion";
 import { QUESTION_TITLE_MAX, QUESTION_TITLE_MIN, QUESTION_TITLE_MSG, QUESTION_TYPE_ENUM, QUESTION_TYPE_MSG } from "@shared/constants";
-import { Question } from "@shared/types";
 
-
-
- const questionSchema = new mongoose.Schema<HydratedDocument<Question>>({
+ const questionSchema = new mongoose.Schema({
   question: {
     type: String, 
     minlength: [QUESTION_TITLE_MIN, QUESTION_TITLE_MSG.min], 

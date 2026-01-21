@@ -5,7 +5,6 @@ export type Interest = (typeof INTEREST_ENUM)[number];
 export interface UserStreak {
   highest: number;
   current: number;
-  lastResponseTime: Date;
 }
 
 export interface UserCore {
@@ -13,23 +12,23 @@ export interface UserCore {
   current: number;
 }
 
+export interface UserBadge {
+  badge: string;
+  pointsRequired: number;
+  style: string;
+}
+
 export type UserDTO = {
   _id: string;
   username: string;
   nickname?: string | null;
+  displayName: string;
   avatar?: string;
-  avatar_public_id?: string | null;
   bio?: string | null;
-  interests: Interest[];
   externalLinks: string[];
-  isFinishedOnboarding: boolean;
-  boosterPoint: number;
-  bannedAt?: Date | null;
-  banDuration?: number | null;
   streak: UserStreak;
   core: UserCore;
-  createdAt: Date;
-  updatedAt: Date;
+  badge: UserBadge
 };
 
 export type UpdateInterestResponse = {
@@ -41,4 +40,9 @@ export type UpdateInterestResponse = {
 export type GetUsersWithSimilarInterestsResponse = {
   success: boolean;
   users: UserDTO[];
+}
+
+export type GetUserByUsernameResponse = {
+  userResult: UserDTO;
+  success: boolean;
 }

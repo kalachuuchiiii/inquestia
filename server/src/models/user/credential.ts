@@ -2,11 +2,10 @@ import { isValidEmail } from "@shared/utils";
 import mongoose, { HydratedDocument, InferSchemaType, Types } from "mongoose";
 import bcrypt from "bcryptjs";
 import { IMPLICIT_EMAIL_MSG, ROLE_ENUM } from "@shared/constants";
-import { CredentialSchema, CredentialModel } from "@/types";
 import { ENV_CONFIG } from "@/config/environmentVars";
 
 
-const credentialSchema = new mongoose.Schema<CredentialSchema>({
+const credentialSchema = new mongoose.Schema({
   role: {
     type: String,
     default: "user",
@@ -38,6 +37,12 @@ credentialSchema.methods.comparePasswords = async function (
 ) {
   return await bcrypt.compare(candidatePass + ENV_CONFIG.PEPPER, this.password);
 };
+
+export type CredentialSchema = InferSchemaType<typeof credentialSchema>;
+export type CredentialMethods = {
+  comparePasswords: (candidatePass: string) => Promise<boolean>
+}
+export type CredentialModel = HydratedDocument<CredentialSchema, CredentialMethods>;
 
 const Credential = mongoose.model<CredentialModel>(
   "Credential",

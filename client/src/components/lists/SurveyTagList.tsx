@@ -1,12 +1,13 @@
-import { capitalize } from '../../utils/capitalize.js';
+import type { TAGS_ENUM } from "@shared/constants";
+import { _capitalize } from "chart.js/helpers";
 
-const SurveyTagList = ({ tags = []}) => {
+const SurveyTagList = ({ tags = [] }:{ tags: typeof TAGS_ENUM[number][]}) => {
 
 return (
   <div className="grid shrink-1 grid-cols-3 pr-2 pl-1 gap-x-1 w-full mx-auto ">
     {tags.map((t) => (
       <p key={t} className="col-span-1 italic text-left truncate ">
-        {capitalize(t)}
+        {_capitalize(t)}
       </p>
     ))}
   </div>

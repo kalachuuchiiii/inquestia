@@ -3,7 +3,7 @@ import { formatIsoString } from "../../utils/formatIsoString";
 import SurveyCard from "../../components/card/SurveyCard";
 import { ReportCardContext } from "../../context/reportCardContext";
 import useCTX from "../../hooks/useCTX";
-import UserIcon from "../../components/UserIcon";
+import {UserBadge} from "../../components/UserBadge";
 import BanUserModal from "../../components/modals/BanUserModal";
 import { AnimatePresence } from "framer-motion";
 import PointDeductionModal from "../../components/modals/PointDeductionModal";
@@ -25,9 +25,9 @@ const ReportedCard = ({ report, children = null }) => {
       </div>
       <div className="flex items-center gap-3 mb-4">
         <div className="flex gap-3">
-          <UserIcon user = {report.reportedBy}>
-            <UserIcon.Card />
-          </UserIcon>
+          <UserBadge user = {report.reportedBy}>
+            <UserBadge.Card />
+          </UserBadge>
           <p className="text-xs  text-gray-500">Reporter</p>
         </div>
       </div>

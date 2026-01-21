@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API } from "@/lib/axios.instance.js";
-import type { SessionResponse, UserDTO } from "@shared/index.js";
+import { USER_BADGES, type SessionResponse, type UserDTO } from "@shared/index.js";
 
-const initialState: Omit<SessionResponse, "success"> & { isLoading: boolean } =
+export const initialState: Omit<SessionResponse, "success"> & { isLoading: boolean } =
   {
     user: {
       username: "",
@@ -11,6 +11,7 @@ const initialState: Omit<SessionResponse, "success"> & { isLoading: boolean } =
       avatar_public_url: null,
       _id: null,
       bio: "",
+      badge: USER_BADGES[0],
       boosterPoint: 0,
       interests: ['personal'],
       core: {

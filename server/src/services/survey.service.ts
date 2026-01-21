@@ -1,16 +1,103 @@
 import redis from "@/config/redis";
 import { SURVEY_PROJECTION } from "@/constants";
 import { EntityHelper } from "@/helper";
-import Survey from "@/models/survey/survey";
+import Survey, { SurveyModel } from "@/models/survey/survey";
 import User from "@/models/user/user";
-import { UnauthorizedError } from "@/utils/errors/customErrorClass";
-import { UpdateCustomVerificationEmailTemplateCommand } from "@aws-sdk/client-sesv2";
+import {
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+} from "@/utils/errors/customErrorClass";
 import { QueryParam } from "@shared/schemas";
-import { SurveyDoc, SurveyDTO } from "@shared/types";
+import { SurveyDTO } from "@shared/types";
 import mongoose from "mongoose";
 
-const surveyHelper = new EntityHelper(Survey);
+const surveyHelper = new EntityHelper<SurveyModel>(Survey);
 export class SurveyService {
+  revokeAuthorization = async ({
+    surveyId,
+    userId,
+    candidateUserId,
+  }: {
+    surveyId: string;
+    userId: string;
+    candidateUserId: string;
+  }) => {
+    const survey = await Survey.findOne({
+      _id: surveyId,
+      authorId: userId,
+    }).orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
+    const candidateUser = await User.findById(candidateUserId).orFail(
+      new NotFoundError("User not found.", "USER_NOT_FOUND")
+    );
+
+    if (
+      survey.authorizedViewers.every(
+        (v) => String(v) !== String(candidateUserId)
+      )
+    ) {
+      throw new BadRequestError(
+        `${candidateUser.displayName} is not yet authorized.`,
+        "NOT_YET_AUTHORIZED_AS_VIEWER"
+      );
+    }
+
+    survey.authorizedViewers = survey.authorizedViewers.filter(
+      (v) => String(v) !== String(candidateUserId)
+    );
+    return await survey.save();
+  };
+
+  authorizeUser = async ({
+    surveyId,
+    userId,
+    candidateUserId,
+  }: {
+    surveyId: string;
+    userId: string;
+    candidateUserId: string;
+  }) => {
+    const survey = await Survey.findOne({
+      _id: surveyId,
+      authorId: userId,
+    }).orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
+    const candidateUser = await User.findById(candidateUserId).orFail(
+      new NotFoundError("User not found.", "USER_NOT_FOUND")
+    );
+    if (
+      survey.authorizedViewers.some(
+        (v) => String(v) === String(candidateUserId)
+      )
+    ) {
+      throw new ConflictError(
+        `${candidateUser.displayName} is already authorized.`,
+        "ALREADY_AUTHORIZED_AS_VIEWER"
+      );
+    }
+
+    survey.authorizedViewers.push(candidateUser._id);
+    return await survey.save();
+  };
+
+  findById = async (surveyId: string) => {
+    const matchedSurvey = await Survey.findById(surveyId)
+      .populate([
+        { path: "authorId", model: "User" },
+        { path: "authorizedViewers", model: "User" },
+      ])
+      .orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
+
+    const safeSurvey = {
+      ...matchedSurvey.getSafeDetails(),
+      authorizedViewers: matchedSurvey.authorizedViewers.map((v) =>
+        new User(v).getSafeDetails()
+      ),
+    };
+
+    return safeSurvey;
+  };
+
   getSurveyList = async ({
     userId,
     limit,
@@ -47,7 +134,7 @@ export class SurveyService {
 
     const totalSurveys = await Survey.countDocuments(filterQuery);
 
-    const surveys = await Survey.aggregate<SurveyDTO>([
+    const matchedSurveys = await Survey.aggregate([
       {
         $match: {
           ...filterQuery,
@@ -96,10 +183,13 @@ export class SurveyService {
       {
         $unwind: "$author",
       },
-      {
-        $project: SURVEY_PROJECTION,
-      },
     ]);
+
+    const surveys: SurveyDTO[] = matchedSurveys.map((s) => ({
+      ...new Survey(s).getSafeDetails(),
+      author: new User(s.author).getSafeDetails(),
+    }));
+
     const nextPage = surveyHelper.getNextPage({
       page,
       limit,

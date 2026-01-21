@@ -1,31 +1,20 @@
-import UserProfile from "../UserIcon";
+import { UserBadge } from "../UserBadge";
 import Dashboard from "../Dashboard";
 import ExternalLinksList from "../lists/ExternalLinksList";
+import type { UserDTO } from "@shared/types";
 
-const UserProfileCard = ({ user = {} }) => {
+const UserProfileCard = ({ user }:{user: UserDTO}) => {
   const bio = user?.bio || "No bio yet";
   const links = user?.externalLinks || [];
 
   return (
     <div className="space-y-6">
       {/* Header Section */}
-      <UserProfile user={user} className="flex overflow-x-auto py-6 px-2 gap-4 items-center">
-        <div>
-           <UserProfile.Avatar size="20" className="text-20" />
-        </div>
-        <div className="text-left">
-          <UserProfile.Nickname className="text-base md:text-xl leading-4 " />
-          <UserProfile.Username showAt className="text-xs opacity-70" />
-          <p className="mt-2 text-xs text-gray-600 dark:text-gray-300 max-w-xs line-clamp-3">
-            {bio}
-          </p>
-        </div>
-      </UserProfile>
+      <UserBadge user={user} />
 
       {/* Dashboard */}
-   
-        <Dashboard user={user} />
-      
+
+      <Dashboard user={user} />
 
       {/* External Links */}
       {links.length > 0 && (
@@ -41,4 +30,3 @@ const UserProfileCard = ({ user = {} }) => {
 };
 
 export default UserProfileCard;
-

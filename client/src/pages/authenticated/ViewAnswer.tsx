@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useAsync from "../../hooks/useAsync";
 import { fetchApi } from "../../utils/fetchApi";
 import AnswerCard from "../../components/card/AnswerCard";
@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "@/hooks/useApi";
 import { useAppSelector } from "@/hooks/useAppSelector";
+import { Button } from "@/components/ui/button";
+import { ChevronRight } from "lucide-react";
 
 const ViewAnswer = () => {
   const { id } = useParams();
@@ -35,10 +37,14 @@ const ViewAnswer = () => {
         showRedirectToSurvey
         answer={answer}
       />
+
       {answer?.survey?.user === user?._id && (
-        <ArrowButton to={`/answer/s/${answer.survey?._id}`}>
-          View in Survey Center
-        </ArrowButton>
+        <Link to={`/answer/s/${answer.survey?._id}`}>
+          <Button variant={"outline"}>
+            <p> View in Survey Center</p>
+            <ChevronRight />
+          </Button>
+        </Link>
       )}
     </div>
   );

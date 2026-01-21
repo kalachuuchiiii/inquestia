@@ -1,18 +1,15 @@
-
 import { useQuery } from "@tanstack/react-query";
-
-import UserIcon from "../UserIcon";
 import UserCardPlaceholder from "../card/placeholders/UserCardPlaceholder";
 import ChatbotTextbox from "../AssistantWidget";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { useApi } from "@/hooks/useApi";
 import type { GetUsersWithSimilarInterestsResponse } from "@shared/types";
+import { UserBadge } from "../UserBadge";
 
 const UsersWithSimilarInterests = () => {
   const { user, accessToken } = useAppSelector((state) => state.user);
   const api = useApi();
 
-  // Fetch users with same interests using TanStack Query
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["similar-", user?._id],
     queryFn: async () => {
@@ -21,7 +18,7 @@ const UsersWithSimilarInterests = () => {
       );
       return res;
     },
-    enabled: !!user && !!accessToken, // only run query when user is available and logged in
+    enabled: !!user && !!accessToken,
   });
 
   const users = data?.data.users ?? [];
@@ -33,14 +30,9 @@ const UsersWithSimilarInterests = () => {
         <div className="w-full">
           <div className="flex items-center gap-3 px-4 py-5 h-16 border-b border-gray-200 dark:border-gray-800">
             <div className="shrink-0">
-              <UserIcon user={user}>
-                <UserIcon.Avatar size={12} />
-              </UserIcon>
+              <UserBadge user={user} displayBadge />
             </div>
-            <div className="flex flex-col truncate">
-              <p className="font-semibold truncate">{user?.username}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-            </div>
+
           </div>
 
           <h2 className="text-md my-4">Users with similar interests</h2>
@@ -62,9 +54,7 @@ const UsersWithSimilarInterests = () => {
                   key={u._id}
                   className="p-2 border-b overflow-x-auto border-neutral-200 dark:border-neutral-800"
                 >
-                  <UserIcon user={u}>
-                    <UserIcon.Card size="8" />
-                  </UserIcon>
+                  <UserBadge displayBadge user={u} />
                 </div>
               ))
             ) : (

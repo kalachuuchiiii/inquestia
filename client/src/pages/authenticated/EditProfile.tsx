@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import { HiMiniPencil, HiOutlineChevronRight } from "react-icons/hi2";
 
 import Textarea from "../../components/html/Textarea.jsx";
-import UserIcon from "../../components/UserIcon.jsx";
+import {UserBadge} from "../../components/UserBadge.js";
 import { Button } from "../../components/ui/button";
 import ExternalLinksList from "../../components/lists/ExternalLinksList.jsx";
 
@@ -94,9 +94,9 @@ const EditProfile = () => {
 
       <div className="w-full sm:w-[95%] mx-auto rounded-lg p-4">
         <div className="pt-4">
-          <UserIcon className="w-full flex justify-center items-center" user={user}>
-            <UserIcon.Avatar size="40" />
-          </UserIcon>
+          <UserBadge className="w-full flex justify-center items-center" user={user}>
+            <UserBadge.Avatar size="40" />
+          </UserBadge>
           <div className="flex justify-center items-center">
             <button onClick={() => setActiveModal("avatar")} className="text-sm pt-3">
               Change avatar

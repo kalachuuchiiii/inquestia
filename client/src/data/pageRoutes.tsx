@@ -94,7 +94,7 @@ export const pages = [
     element: <EditProfilePage />
   },
   {
-    path: "/survey/:id",
+    path: "/survey/published/:id",
     element: <AnswerSurveyPage />
   },
   {

@@ -1,4 +1,4 @@
-import { UserDoc, UserFields } from "@/types";
+
 import {
   BIO_MAX,
   BIO_MSG,
@@ -24,13 +24,12 @@ import {
   USERNAME_MSG,
   USERNAME_REGEX,
 } from "@shared/constants";
-import { Interest } from "@shared/types";
-
+import { Interest, UserBadge, UserDTO } from "@shared/types";
 
 import { isValidUrl } from "@shared/utils";
-import mongoose, { Document, InferSchemaType } from "mongoose";
+import mongoose, { Document, HydratedDocument, InferSchemaType } from "mongoose";
 
-const userSchema = new mongoose.Schema<UserFields>(
+const userSchema = new mongoose.Schema(
   {
     bannedAt: {
       type: Date,
@@ -95,7 +94,8 @@ const userSchema = new mongoose.Schema<UserFields>(
       enum: INTEREST_ENUM,
       default: ["personal"],
       validate: {
-        validator: (v: Interest[]) => v.length >= INTERESTS_MIN && v.length <= INTERESTS_MAX,
+        validator: (v: Interest[]) =>
+          v.length >= INTERESTS_MIN && v.length <= INTERESTS_MAX,
         message: INTERESTS_MSG.range,
       },
     },
@@ -137,7 +137,15 @@ const userSchema = new mongoose.Schema<UserFields>(
       max: [BOOSTER_MAX, BOOSTER_MSG.max],
     },
   },
-  { timestamps: true, virtuals: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+  }
 );
 
 userSchema.virtual("banDetails").get(function () {
@@ -151,11 +159,42 @@ userSchema.virtual("banDetails").get(function () {
   return data;
 });
 
-userSchema.virtual('badge').get(function() {
-  const badge = USER_BADGES.find((b) => this.core.current > b.pointsRequired);
+userSchema.virtual("badge").get(function () {
+  const badges = USER_BADGES.sort((a, b) => b.pointsRequired - a.pointsRequired);
+  const badge: UserBadge = badges.find((b) => (this.core?.current ?? 0) >= b.pointsRequired);
   return badge;
-})
+});
 
-const User = mongoose.model<UserDoc>("User", userSchema);
+userSchema.virtual("displayName").get(function () {
+  const displayName = this.nickname ?? this.username;
+  return displayName;
+});
+
+userSchema.methods.getSafeDetails = function () {
+  const safeDetails = {
+    username: this.username,
+    nickname: this.nickname,
+    displayName: this.displayName,
+    badge: this.badge,
+    _id: this._id,
+    bio: this.bio,
+    core: this.core,
+    streak: { current: this.streak.current, highest: this.streak.highest },
+    avatar: this.avatar,
+    externalLinks: this.externalLinks,
+  } satisfies UserDTO;
+  return safeDetails;
+};
+
+export type UserSchema = InferSchemaType<typeof userSchema>;
+export type UserMethods = { 
+  banDetails: { isBanned: boolean; remainingMS: number },
+  badge: UserBadge;
+  displayName: string;
+  getSafeDetails: () => UserDTO;
+}
+export type UserModel = HydratedDocument<UserSchema, UserMethods>;
+
+const User = mongoose.model<UserModel>("User", userSchema);
 
 export default User;

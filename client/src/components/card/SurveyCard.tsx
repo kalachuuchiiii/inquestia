@@ -2,8 +2,12 @@ import { memo, type JSX } from "react";
 import type { SurveyDTO } from "@shared/types";
 import SurveyTagList from "../lists/SurveyTagList";
 import Bar from "../html/Bar";
-import UserIcon from "../UserIcon";
-import { format, formatDate, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
+import { UserBadge } from "../UserBadge";
+import ArrowButton from "../html/ArrowButton";
+import { Button } from "../ui/button";
+import { ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const SurveyCard = memo(({ survey }: { survey: SurveyDTO }) => {
   const {
@@ -20,6 +24,11 @@ const SurveyCard = memo(({ survey }: { survey: SurveyDTO }) => {
     isDraft,
     author,
   } = survey;
+
+  const redirectTo = isDraft
+    ? `/survey/drafts/${_id}`
+    : `/survey/published/${_id}`;
+  const redirectDisplay = isDraft ? "View Draft" : "View Survey";
 
   return (
     <div className="grid grid-cols-1 grid-rows-1 place-content-center relative rounded-2xl dark:bg-zinc-900 bg-neutral-50 p-1 shadow-xl overflow-hidden">
@@ -39,9 +48,7 @@ const SurveyCard = memo(({ survey }: { survey: SurveyDTO }) => {
           </div>
         </div>
         <div className="text-xs p-2 border-t border-gray-200 dark:border-gray-800">
-          <UserIcon user={author}>
-            <UserIcon.Card />
-          </UserIcon>
+          <UserBadge displayBadge user={author} />
           <div className="opacity-80 flex items-center text-sm gap-2 py-1">
             <p>{formatDistanceToNow(createdAt.toString())}</p>
             <p>•</p>
@@ -56,8 +63,14 @@ const SurveyCard = memo(({ survey }: { survey: SurveyDTO }) => {
             <SurveyTagList tags={tags as any} />
           </div>
         </div>
-        <div className="border-t border-gray-200 dark:border-gray-800 p-2 bg-gradient-to-t from-zinc-50 dark:from-zinc-950">
+        <div className="border-t border-gray-200 flex gap-2 items-center dark:border-gray-800 p-2 bg-gradient-to-t from-zinc-50 dark:from-zinc-950">
           <Bar total={totalRespondents} target={targetRespondents} />
+          <Link to={redirectTo}>
+            <Button variant={"outline"}>
+              <p>{redirectDisplay}</p>
+              <ChevronRight />
+            </Button>
+          </Link>
         </div>
         {(closed || hasReachedTargetRespondents) && (
           <div className="absolute inset-0 flex items-center justify-center rounded-md backdrop-blur-sm bg-black/50 text-neutral-100 z-20">

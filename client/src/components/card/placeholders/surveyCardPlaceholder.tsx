@@ -39,7 +39,7 @@ return (
             </div>
             <div className="flex p-3 w-5/12 items-center">
               <div className="bg-neutral-300 dark:bg-zinc-700 rounded-lg h-2 w-10/12" />
-              <ArrowButton />
+             
             </div>
           </div>
           <div className="w-full h-1 bg-neutral-300 dark:bg-zinc-700 rounded"></div>

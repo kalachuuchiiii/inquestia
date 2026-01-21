@@ -1,10 +1,9 @@
 
 import { ANSWER_LIST_MAX, ANSWER_LIST_MIN, ANSWER_LIST_MSG, ANSWER_MAX, ANSWER_MIN, ANSWER_MSG, QUESTION_CHOICELIST_MAX, QUESTION_CHOICELIST_MIN, QUESTION_TYPE_ENUM, QUESTION_TYPE_MSG } from "@shared/constants";
-import { IAnswer } from "@shared/types";
-import mongoose, { Document } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
 
 
-const answerSchema = new mongoose.Schema<IAnswer & Document>({
+const answerSchema = new mongoose.Schema({
   surveyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Survey",
@@ -52,7 +51,10 @@ const answerSchema = new mongoose.Schema<IAnswer & Document>({
   timestamps: true
 });
 
-const Answer = mongoose.model("Answer", answerSchema);
+export type AnswerSchema = InferSchemaType<typeof answerSchema>;
+export type AnswerModel = HydratedDocument<AnswerSchema>;
+
+const Answer = mongoose.model<AnswerModel>("Answer", answerSchema);
 
 
 export default Answer;

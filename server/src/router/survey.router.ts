@@ -10,5 +10,8 @@ const authMiddleware = new AuthMiddlewares();
 surveyRouter.use(catchErrors(authMiddleware.verifyAccessToken));
 
 surveyRouter.get("/list", catchErrors(surveyController.getSurveys));
+surveyRouter.get("/find-by-id/:surveyId", catchErrors(surveyController.getSurveyById));
+surveyRouter.patch('/authorize-user/:surveyId/:candidateUserId', catchErrors(surveyController.authorizeUser));
+surveyRouter.patch('/revoke-authorization/:surveyId/:candidateUserId', catchErrors(surveyController.revokeAuthorization));
 
 export default surveyRouter;

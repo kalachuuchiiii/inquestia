@@ -53,6 +53,8 @@ export const AuthorizedViewersSchema = z
   .array(z.string())
   .max(AUTHORIZED_VIEWERS_MAX, AUTHORIZED_VIEWERS_MSG.max);
 
+export const IsDraftSchema = z.preprocess((val) => val === 'true', z.boolean());
+
 export const AppliedBoostersSchema = z
   .number()
   .int()

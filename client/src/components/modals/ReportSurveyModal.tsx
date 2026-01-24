@@ -2,7 +2,7 @@ import { useState, type ChangeEvent } from "react";
 import ModalStyle from "./ModalStyle";
 
 import { GENERAL_REASONS } from "@shared/constants";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API } from "@/lib/axios.instance";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -15,9 +15,13 @@ import {
 } from "../ui/dialog";
 import { _capitalize } from "chart.js/helpers";
 import { useParams } from "react-router-dom";
+import type { SurveyDTO } from "@shared/types";
 
-const ReportSurveyModal = ({ surveyTitle }: { surveyTitle: string }) => {
-  const { id: surveyId } = useParams();
+const ReportSurveyModal = () => {
+  const { surveyId } = useParams();
+  const queryClient = useQueryClient();
+
+  const survey = queryClient.getQueryData<SurveyDTO>(['survey', surveyId]);
   const [reportForm, setReportForm] = useState({
     generalReason: "",
     specificReason: "",
@@ -63,7 +67,7 @@ const ReportSurveyModal = ({ surveyTitle }: { surveyTitle: string }) => {
         <DialogHeader className="text-base text-zinc-700 dark:text-zinc-200">
           <DialogTitle>Please confirm the issue with the survey </DialogTitle>
           <DialogDescription className="font-semibold text-blue-500">
-            “{surveyTitle}”
+            “{survey?.title}”
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 text-xs sm:grid-cols-3 gap-3">
@@ -88,7 +92,7 @@ const ReportSurveyModal = ({ surveyTitle }: { surveyTitle: string }) => {
         <div className="space-y-2">
           <p className="text-sm text-zinc-600 dark:text-zinc-300">
             Can you tell us more about the issue with{" "}
-            <span className="font-semibold text-blue-500">{surveyTitle}</span>?
+            <span className="font-semibold text-blue-500">{survey?.title}</span>?
           </p>
           <Textarea
             placeholder="e.g., This survey contains offensive or misleading content."

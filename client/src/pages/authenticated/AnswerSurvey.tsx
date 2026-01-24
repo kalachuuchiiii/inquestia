@@ -35,6 +35,9 @@ import {
 } from "@/components/ui/alert-dialog.js";
 import ReportSurveyModal from "@/components/modals/ReportSurveyModal.js";
 import { TbReport } from "react-icons/tb";
+import { useSurveyActions } from "@/hooks/useSurveyActions.js";
+import { useParams } from "react-router-dom";
+import { AuthorActions } from "@/features/app/survey/components/AuthorActions.js";
 
 const AnswerSurvey = () => {
   const {
@@ -47,6 +50,8 @@ const AnswerSurvey = () => {
 
   const { user } = useAppSelector((state) => state.user);
   const qrParent = useRef<HTMLDivElement>(null);
+  const { deleteSurvey } = useSurveyActions();
+  const { surveyId = "" } = useParams();
 
   const downloadQr = () => {
     if (!qrParent.current) return;
@@ -75,14 +80,6 @@ const AnswerSurvey = () => {
     );
   }
 
-  // Check if user is author or authorized viewer
-  const isAuthor =
-    user._id &&
-    survey.author &&
-    String(user._id) === String(survey.author._id || survey.author);
-  const isAuthorizedViewer = survey.authorizedViewers.some((v) =>
-    typeof v === "string" ? user._id === v : user._id === v._id
-  );
   return (
     <div>
       <main className="min-h-screen ">
@@ -90,74 +87,41 @@ const AnswerSurvey = () => {
           <div className="flex gap-3 items-center">
             <UserBadge user={survey.author} displayBadge />
           </div>
-          <div>
-            {user._id === survey.author._id && (
-              <div className="space-x-4">
-                <Dialog>
-                  <DialogTrigger>
-                    <Tooltip>
-                      <TooltipContent>Authorized Viewers</TooltipContent>
-                      <TooltipTrigger>
-                        <RectangleGoggles />
-                      </TooltipTrigger>
-                    </Tooltip>
-                  </DialogTrigger>
-                  <SearchUserDialogContent survey={survey} />
-                </Dialog>
-                <AlertDialog>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you sure you want to delete this survey?
-                      </AlertDialogTitle>
-                    </AlertDialogHeader>
-                    <AlertDialogDescription>
-                      You can still recover this later
-                    </AlertDialogDescription>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <div className="flex items-center gap-4">
+            <Dialog>
+              <DialogTrigger>
+                <Tooltip>
+                  <TooltipContent>Authorized Viewers</TooltipContent>
+                  <TooltipTrigger>
+                    <RectangleGoggles />
+                  </TooltipTrigger>
+                </Tooltip>
+              </DialogTrigger>
+              <SearchUserDialogContent survey={survey} />
+            </Dialog>
 
-                      <Tooltip>
-                        <TooltipContent>Delete survey</TooltipContent>
-                        <TooltipTrigger>
-                          <Button variant="destructive">Delete</Button>
-                        </TooltipTrigger>
-                      </Tooltip>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                  <AlertDialogTrigger>
-                    <Tooltip>
-                      <TooltipContent>Delete survey</TooltipContent>
-                      <TooltipTrigger>
-                        <Trash2 />
-                      </TooltipTrigger>
-                    </Tooltip>
-                  </AlertDialogTrigger>
-                </AlertDialog>
-                <Dialog>
-                  <ReportSurveyModal surveyTitle={survey.title} />
-                  <DialogTrigger>
-                    <Tooltip>
-                      <TooltipContent>Report Survey</TooltipContent>
-                      <TooltipTrigger>
-                        <Flag />
-                      </TooltipTrigger>
-                    </Tooltip>
-                  </DialogTrigger>
-                </Dialog>
-              </div>
-            )}
+            <Dialog>
+              <ReportSurveyModal />
+              <DialogTrigger>
+                <Tooltip>
+                  <TooltipContent>Report Survey</TooltipContent>
+                  <TooltipTrigger>
+                    <Flag />
+                  </TooltipTrigger>
+                </Tooltip>
+              </DialogTrigger>
+            </Dialog>
+            {user._id === survey.author._id && <AuthorActions />}
           </div>
         </div>
         <section className="space-y-4 p-4">
           <div className="flex gap-3 lg:gap-10 justify-between w-full items-start">
             <div>
               <h1 className="text-2xl md:ml-3 font-semibold">{survey.title}</h1>
-              {survey.description && (
-                <p className="leading-relaxed text-sm opacity-70">
-                  {survey.description}
-                </p>
-              )}
+
+              <p className="leading-relaxed text-sm opacity-70">
+                {survey.description}
+              </p>
             </div>
             <div
               ref={qrParent}
@@ -185,16 +149,10 @@ const AnswerSurvey = () => {
             <div className="h-1 w-1 rounded-full bg-current opacity-50" />
             <p>{survey.questions.length} Question(s)</p>
           </div>
-          {survey.tags?.length > 0 && <SurveyTagList tags={survey.tags} />}
+          <SurveyTagList tags={survey.tags} />
         </section>
         <section className="p-4">
-          {survey.questions.length > 0 ? (
-            <AnswerQuestionList questions={survey.questions} />
-          ) : (
-            <p className="text-sm text-center opacity-60">
-              No questions available for this survey.
-            </p>
-          )}
+          <AnswerQuestionList questions={survey.questions} />
         </section>
         <div className="w-8/12 mx-auto flex flex-col items-end gap-2 p-4">
           <Button
@@ -202,7 +160,7 @@ const AnswerSurvey = () => {
             onClick={() => submitAnswer()}
             className="inquestia-button mx-auto"
           >
-            {isSubmissionPending ? "Submitting..." : "Submit Answer"}
+            Submit Answer
           </Button>
         </div>
       </main>

@@ -50,7 +50,7 @@ const surveySchema = new mongoose.Schema(
       default: false,
       index: true,
     },
-    closed: {
+    isClosed: {
       type: Boolean,
       default: false,
       index: true,
@@ -106,6 +106,10 @@ const surveySchema = new mongoose.Schema(
       index: true,
       max: APPLIED_BOOSTER_MAX,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
@@ -124,7 +128,7 @@ surveySchema.virtual("totalRespondents").get(function () {
 
 surveySchema.methods.getSafeDetails = function () {
   const safeDetails = {
-  closed: this.closed,
+    isClosed: this.isClosed,
     createdAt: this.createdAt,
     description: this.description,
     hasReachedTargetRespondents: this.hasReachedTargetRespondents,
@@ -137,8 +141,7 @@ surveySchema.methods.getSafeDetails = function () {
     totalRespondents: this.totalRespondents,
     _id: this._id,
     authorizedViewers: this.authorizedViewers,
-
-  } satisfies SurveyDTO; 
+  } satisfies SurveyDTO;
   return safeDetails;
 };
 

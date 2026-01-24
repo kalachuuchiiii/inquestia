@@ -1,5 +1,5 @@
 import { API } from "@/lib/axios.instance";
-import { resetState } from "@/state/slice/user";
+import { getSession, resetState } from "@/state/slice/user";
 import type { AppDispatch } from "@/state/store";
 import type { LoginForm, RegisterForm } from "@shared/types";
 import { useMutation } from "@tanstack/react-query";
@@ -23,6 +23,7 @@ export const useAuth = () => {
       return await p;
     },
     onSuccess: () => {
+      dispatch(getSession());
       nav("/home");
     },
   });

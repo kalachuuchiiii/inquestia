@@ -6,35 +6,82 @@ import User from "@/models/user/user";
 import {
   BadRequestError,
   ConflictError,
+  ForbiddenError,
   NotFoundError,
   UnauthorizedError,
 } from "@/utils/errors/customErrorClass";
+import { getNextPage } from "@/utils/getNextPage";
 import { QueryParam } from "@shared/schemas";
 import { SurveyDTO } from "@shared/types";
 import mongoose from "mongoose";
 
 const surveyHelper = new EntityHelper<SurveyModel>(Survey);
+type SurveyAndAuthId = { surveyId: string; myId: string };
+
 export class SurveyService {
+  reOpenSurvey = async ({ surveyId, myId }: SurveyAndAuthId) => {
+    const survey = await Survey.findById(surveyId).orFail(
+      new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND")
+    );
+    if (String(survey.authorId) !== myId) {
+      throw new UnauthorizedError(
+        "You can't re-open someone's survey.",
+        "UNAUTHORIZED_SURVEY_REOPENING"
+      );
+    }
+    survey.isClosed = false;
+    return await survey.save();
+  };
+
+  closeSurvey = async ({ surveyId, myId }: SurveyAndAuthId) => {
+    const survey = await Survey.findById(surveyId).orFail(
+      new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND")
+    );
+    if (String(survey.authorId) !== myId) {
+      throw new UnauthorizedError(
+        "You can't close someone's survey.",
+        "UNAUTHORIZED_SURVEY_CLOSURE"
+      );
+    }
+    survey.isClosed = true;
+    return await survey.save();
+  };
+
+  softDelete = async ({ surveyId, myId }: SurveyAndAuthId) => {
+    const survey = await Survey.findById(surveyId).orFail(
+      new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND")
+    );
+    if (String(survey.authorId) !== myId) {
+      throw new UnauthorizedError(
+        "You can't soft delete someone's survey.",
+        "UNAUTHORIZED_SOFT_DELETE"
+      );
+    }
+    survey.isDeleted = true;
+    return await survey.save();
+  };
+
   revokeAuthorization = async ({
     surveyId,
+    myId,
     userId,
-    candidateUserId,
   }: {
     surveyId: string;
+    myId: string;
     userId: string;
-    candidateUserId: string;
   }) => {
     const survey = await Survey.findOne({
       _id: surveyId,
-      authorId: userId,
+      authorId: myId,
+      isDeleted: false,
     }).orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
-    const candidateUser = await User.findById(candidateUserId).orFail(
+    const candidateUser = await User.findById(userId).orFail(
       new NotFoundError("User not found.", "USER_NOT_FOUND")
     );
 
     if (
       survey.authorizedViewers.every(
-        (v) => String(v) !== String(candidateUserId)
+        (v) => String(v) !== String(userId)
       )
     ) {
       throw new BadRequestError(
@@ -44,30 +91,31 @@ export class SurveyService {
     }
 
     survey.authorizedViewers = survey.authorizedViewers.filter(
-      (v) => String(v) !== String(candidateUserId)
+      (v) => String(v) !== String(userId)
     );
     return await survey.save();
   };
 
   authorizeUser = async ({
     surveyId,
+    myId,
     userId,
-    candidateUserId,
   }: {
     surveyId: string;
+    myId: string;
     userId: string;
-    candidateUserId: string;
   }) => {
     const survey = await Survey.findOne({
       _id: surveyId,
-      authorId: userId,
+      authorId: myId,
+      isDeleted: false,
     }).orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
-    const candidateUser = await User.findById(candidateUserId).orFail(
+    const candidateUser = await User.findById(userId).orFail(
       new NotFoundError("User not found.", "USER_NOT_FOUND")
     );
     if (
       survey.authorizedViewers.some(
-        (v) => String(v) === String(candidateUserId)
+        (v) => String(v) === String(userId)
       )
     ) {
       throw new ConflictError(
@@ -81,7 +129,10 @@ export class SurveyService {
   };
 
   findById = async (surveyId: string) => {
-    const matchedSurvey = await Survey.findById(surveyId)
+    const matchedSurvey = await Survey.findOne({
+      _id: surveyId,
+      isDeleted: false,
+    })
       .populate([
         { path: "authorId", model: "User" },
         { path: "authorizedViewers", model: "User" },
@@ -99,22 +150,22 @@ export class SurveyService {
   };
 
   getSurveyList = async ({
-    userId,
+    myId,
     limit,
     page,
-    skip,
-  }: { userId: string } & Omit<QueryParam, "sort">) => {
-    const user = await User.findById(userId).orFail(
+  }: { myId: string } & Omit<QueryParam, "sort" | 'skip'>) => {
+    const user = await User.findById(myId).orFail(
       new UnauthorizedError("Invalid Session.", "INVALID_SESSION")
-    ); //userid might have been tampered;
+    );
 
     const filterQuery = {
       hasReachedTargetRespondents: false,
+      isDeleted: false,
       respondents: {
-        $nin: [new mongoose.Types.ObjectId(userId)],
+        $nin: [new mongoose.Types.ObjectId(myId)],
       },
       isTakendown: false,
-      closed: false,
+      isClosed: false,
       isDraft: false,
     };
 
@@ -190,7 +241,7 @@ export class SurveyService {
       author: new User(s.author).getSafeDetails(),
     }));
 
-    const nextPage = surveyHelper.getNextPage({
+    const nextPage = getNextPage({
       page,
       limit,
       totalResources: totalSurveys,

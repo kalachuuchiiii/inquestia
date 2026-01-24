@@ -1,106 +1,144 @@
-import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
-import { changeTheme } from "../../state/slice/theme";
-import { resetState } from "../../state/slice/user";
-import type { AppDispatch, RootState } from "@/state/store";
-import { useMutation } from "@tanstack/react-query";
-import { API } from "@/lib/axios.instance";
-import { toast } from "sonner";
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import LogoutModal from "@/components/modals/LogoutModal";
 
-const SettingButton = ({
-  children,
-  onClick,
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-}) => (
-  <button
-    onClick={onClick}
-    className="w-full flex justify-between items-center px-4 py-3 rounded-xl
-               bg-neutral-100/60 dark:bg-zinc-900/60
-               border border-neutral-200 dark:border-zinc-800
-               hover:border-blue-400/50 hover:shadow-md transition"
-  >
-    <div className="flex-1 text-left font-medium">{children}</div>
-  </button>
-);
+
+import { useDispatch, useSelector } from "react-redux";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { changeTheme } from "../../state/slice/theme";
+import type { AppDispatch, RootState } from "@/state/store";
+
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemHeader,
+  ItemTitle,
+} from "@/components/ui/item";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ChevronRight } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 const SettingsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const nav = useNavigate();
-  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
   const { mode } = useSelector((state: RootState) => state.theme);
 
-  const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    dispatch(changeTheme(e.target.value));
+  const handleThemeChange = (val: string) => dispatch(changeTheme(val));
 
-  const { mutate: handleLogout, isPending } = useMutation({
-    mutationFn: async () => {
-      const promise = API.post("/api/auth/logout");
-      await toast.promise(promise, {
-        loading: "Logging you out...",
-        success: "Log out success!",
-        error: (err) => err.response.data.message || "Internal Server Error.",
-      });
-      const res = await promise;
-      return res;
-    },
-    onSuccess: (res) => {
-      if (res.data.success) {
-        dispatch(resetState());
-        setIsLogoutDialogOpen(false);
-        nav("/login");
-      }
-    },
-  });
+  const { logout, isLoggingOut } = useAuth();
 
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4 space-y-6">
+    <div className=" space-y-3 max-w-3xl mx-auto mt-20">
       {/* Theme */}
-      <div className="flex justify-between items-center p-4 rounded-xl border">
-        <span className="font-semibold">Theme</span>
-        <select value={mode} onChange={handleThemeChange}>
-          <option value="Light">Light</option>
-          <option value="Dark">Dark</option>
-        </select>
-      </div>
+      <Item >
+        <ItemContent>
+          <ItemTitle >Theme</ItemTitle>
+          <ItemDescription>Dark mode</ItemDescription>
+        </ItemContent>
+
+        <Select value={mode} onValueChange={handleThemeChange}>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Theme</SelectLabel>
+              <SelectItem value="Light">Light</SelectItem>
+              <SelectItem value="Dark">Dark</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+          <SelectTrigger>
+            <SelectValue>{mode}</SelectValue>
+          </SelectTrigger>
+        </Select>
+      </Item>
 
       {/* Navigation */}
-      <SettingButton>
-        <NavLink to="/exchange-center">Exchange Center</NavLink>
-      </SettingButton>
+      <Link  to="/exchange-center">
+      <Item>
+        <ItemContent>
+          <ItemTitle>
+            <>Exchange Center</>
+          </ItemTitle>
+          <ItemDescription>Exchange your cores for resources</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          {" "}
+          <ChevronRight />{" "}
+        </ItemActions>
+      </Item></Link>
+     <Link to="/transactions">
+       <Item>
+        <ItemContent>
+          <ItemTitle>
+            Transactions
+          </ItemTitle>
+          <ItemDescription>Monitor your exchange transactions</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          {" "}
+          <ChevronRight />{" "}
+        </ItemActions>
+      </Item>
+     </Link>
 
-      <SettingButton>
-        <NavLink to="/transactions">Transactions</NavLink>
-      </SettingButton>
-
-      <SettingButton>
-        <NavLink to="/cs">Feedback</NavLink>
-      </SettingButton>
+     <Link to="/cs"> 
+      <Item>
+        <ItemContent>
+          <ItemTitle>
+            <>Feedback</>
+          </ItemTitle>
+          <ItemDescription>Send a feedback</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          {" "}
+          <ChevronRight />{" "}
+        </ItemActions>
+      </Item></Link>
 
       {/* Logout Dialog */}
-      <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
-        <DialogTrigger asChild>
-          <SettingButton>
+      <AlertDialog>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure you want to log-out?
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>No, Cancel</AlertDialogCancel>
+            <Button
+              variant={"destructive"}
+              onClick={() => logout()}
+              disabled={isLoggingOut}
+            >
+              Yes, log me out
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+        <AlertDialogTrigger asChild>
+          <Item>
             <span className="text-red-500 font-semibold">Logout</span>
-          </SettingButton>
-        </DialogTrigger>
-        <LogoutModal />
-      </Dialog>
+          </Item>
+        </AlertDialogTrigger>
+      </AlertDialog>
     </div>
   );
 };
 
-export default SettingsPage;
+export default SettingsPage

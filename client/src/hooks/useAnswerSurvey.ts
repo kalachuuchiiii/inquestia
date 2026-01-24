@@ -1,12 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useApi } from "./useApi";
 import type { GetSurveyByIdResponse, QuestionDTO } from "@shared/types";
+import { useAppSelector } from "./useAppSelector";
 
 const useAnswerSurvey = () => {
-  const { id } = useParams();
+  const { surveyId = '' } = useParams();
   const nav = useNavigate();
+  const { accessToken } = useAppSelector(state => state.user);
   const [questionFormFields, setQuestionFormFields] = useState<QuestionDTO[]>(
     []
   );
@@ -15,7 +17,7 @@ const useAnswerSurvey = () => {
   const { data: survey, isPending: isFetchingSurveyPending, isError: isFetchingSurveyError } = useQuery({
     queryFn: async () => {
       const res = await api.get<GetSurveyByIdResponse>(
-        `/api/survey/find-by-id/${id}`
+        `/api/survey/find-by-id/${surveyId}`
       );
       setQuestionFormFields(
         res.data.survey.questions.map((f) => ({
@@ -25,7 +27,8 @@ const useAnswerSurvey = () => {
       );
       return res.data.survey;
     },
-    queryKey: ["survey", id],
+    queryKey: ["survey", surveyId],
+    enabled: !!accessToken
   });
 
   const { mutate: submitAnswer, isPending: isSubmissionPending } = useMutation({
@@ -39,6 +42,7 @@ const useAnswerSurvey = () => {
     onSuccess: () => {
       nav("/response-history");
     },
+    
   });
 
   return {

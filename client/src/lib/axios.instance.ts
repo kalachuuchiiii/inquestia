@@ -7,6 +7,6 @@ export const API = axios.create({
 })
 
 API.interceptors.response.use((res) => {
-    console.log(res.config.url, res);
+    console.log(res.config.url, res.data);
     return res;
-});
+})

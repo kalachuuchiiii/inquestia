@@ -71,9 +71,18 @@ export const BAN_MSG = {
   max: `Ban duration cannot exceed ${BAN_MAX_DAYS} years`,
 };
 
+
+
+const MAX_MB = 20;
+export const AVATAR_MAX_SIZE = MAX_MB * 1024 * 1024;
+
+
 export const AVATAR_MSG = {
   url: "Avatar must be a valid URL",
+  size: `File too large. Max (${MAX_MB}MB)`,
+  type: 'File type must be an image.'
 };
+
 
 export const AVATAR_PUBLIC_ID_MSG = {
   min: "Avatar public id is too short",
@@ -101,6 +110,7 @@ export const INTEREST_ENUM = [
   "design",
   "drawing",
   "education",
+  "environment",
   "e-sports",
   "engineering",
   "entrepreneurship",

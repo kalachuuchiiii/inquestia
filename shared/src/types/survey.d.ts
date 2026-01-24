@@ -1,10 +1,10 @@
-import { Document, HydratedDocument, Types } from "mongoose";
+
 import { UserDTO } from "./user";
 import { TAGS_ENUM } from "src/constants";
 
 export interface SelectTypeQuestionDTO {
   type: "select";
-  _id: Types.ObjectId;
+  _id: string;
   question: string;
   isRequired: boolean;
   multipleChoice: boolean;
@@ -23,7 +23,7 @@ export type QuestionDTO = TextTypeQuestionDTO | SelectTypeQuestionDTO;
 export type SurveyDTO = {
   _id: string;
   author: UserDTO;
-  closed: boolean;
+  isClosed: boolean;
   createdAt: Date;
   description: string;
   hasReachedTargetRespondents: boolean;

@@ -80,6 +80,7 @@ const userSchema = new mongoose.Schema(
         message: NICKNAME_MSG.pattern,
       },
       index: true,
+      default: null
     },
     avatar: {
       type: String,
@@ -115,7 +116,7 @@ const userSchema = new mongoose.Schema(
         index: true,
       },
     },
-    externalLinks: [
+    socialLinks: [
       {
         type: String,
         validate: {
@@ -140,7 +141,7 @@ const userSchema = new mongoose.Schema(
   {
     timestamps: true,
     toJSON: {
-      virtuals: true,
+      virtuals: true
     },
     toObject: {
       virtuals: true,
@@ -181,7 +182,7 @@ userSchema.methods.getSafeDetails = function () {
     core: this.core,
     streak: { current: this.streak.current, highest: this.streak.highest },
     avatar: this.avatar,
-    externalLinks: this.externalLinks,
+    socialLinks: this.socialLinks,
   } satisfies UserDTO;
   return safeDetails;
 };
@@ -191,6 +192,9 @@ export type UserMethods = {
   banDetails: { isBanned: boolean; remainingMS: number },
   badge: UserBadge;
   displayName: string;
+  password?: string;
+  email?: string;
+  role?: 'admin' | 'user'
   getSafeDetails: () => UserDTO;
 }
 export type UserModel = HydratedDocument<UserSchema, UserMethods>;

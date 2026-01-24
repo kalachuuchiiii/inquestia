@@ -27,7 +27,10 @@ import {
   INTEREST_ENUM,
   LINKS_MAX,
   INTERESTS_MIN,
+  AVATAR_MAX_SIZE,
+  AVATAR_MSG,
 } from "../constants/user.constraints";
+import { isBuffer } from "lodash";
 
 export const BannedAtSchema = z.date();
 export const BanDurationSchema = z
@@ -35,6 +38,17 @@ export const BanDurationSchema = z
   .int()
   .min(BAN_MIN_DAYS, BAN_MSG.min)
   .max(BAN_MAX_DAYS, BAN_MSG.max);
+
+
+  export const AvatarTypeSchema = z
+  .string().refine((file) => file.startsWith("image/"), {
+    message: AVATAR_MSG.type,
+  });
+
+  export const AvatarSizeSchema = z.number().max(AVATAR_MAX_SIZE, AVATAR_MSG.size)
+  // max size
+  
+
 
 export const UsernameSchema = z
   .string()
@@ -64,30 +78,30 @@ export const InterestListSchema = z
   .min(INTERESTS_MIN, INTERESTS_MSG.range)
   .max(INTERESTS_MAX, INTERESTS_MSG.range);
 
-export const ExternalLinkSchema = z
+export const SocialLinkSchema = z
   .string()
   .url(LINK_MSG.invalid)
   .min(LINK_MIN, LINK_MSG.min)
   .max(LINK_MAX, LINK_MSG.max);
 
-export const ExternalLinkListSchema = z.array(ExternalLinkSchema).max(LINKS_MAX);
+export const SocialLinkListSchema = z
+  .array(SocialLinkSchema)
+  .max(LINKS_MAX);
 
-export const StreakHighestSchema = z.number().int().min(STREAK_MIN)
-export const StreakCurrentSchema = z.number().int().min(STREAK_MIN)
+export const StreakHighestSchema = z.number().int().min(STREAK_MIN);
+export const StreakCurrentSchema = z.number().int().min(STREAK_MIN);
 export const StreakLastResponseTimeSchema = z.date();
 
 export const streakSchema = z.object({
   highest: StreakHighestSchema,
   current: StreakCurrentSchema,
-  lastResponseTime: StreakLastResponseTimeSchema
+  lastResponseTime: StreakLastResponseTimeSchema,
 });
-
 
 export const CoreHighestSchema = z.number().int().min(CORE_MIN).max(CORE_MAX);
 export const CoreCurrentSchema = z.number().int().min(CORE_MIN).max(CORE_MAX);
 
 export const CoreSchema = z.object({
   highest: CoreHighestSchema,
-  current: CoreCurrentSchema
-})
-
+  current: CoreCurrentSchema,
+});

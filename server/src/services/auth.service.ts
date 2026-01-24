@@ -4,7 +4,7 @@ import { REFRESH_TOKEN_COOKIE_TTL, REFRESH_TOKEN_JWT_TTL } from "@/constants";
 import { AuthHelper } from "@/helper";
 import Notification from "@/models/notification/notification";
 import Credential from "@/models/user/credential";
-import User from "@/models/user/user";
+import User, { UserModel } from "@/models/user/user";
 import {
   BadRequestError,
   ConflictError,
@@ -29,33 +29,45 @@ function generateSixDigitCode() {
 const authHelper = new AuthHelper();
 
 export class AuthService {
-
-  getUserData = async({ userId }: {userId: string}) => {
-    const user = await User.findById(userId).orFail(new NotFoundError('User not found.', 'USER_NOT_FOUND'))
-    const hasUnreadNotifications = !!(await Notification.exists({ isRead: false, receiver: userId }));
+  getUserData = async ({ myId }: { myId: string }) => {
+    const user = await User.findById(myId).orFail(
+      new NotFoundError("User not found.", "USER_NOT_FOUND")
+    );
+    const hasUnreadNotifications = !!(await Notification.exists({
+      isRead: false,
+      receiver: myId,
+    }));
+    const { email } = await Credential.findOne({ userId: user._id }).orFail(
+      new NotFoundError("Credentials not found.", "CREDENTIAL_NOT_FOUND")
+    );
 
     return {
-      user,
-      hasUnreadNotifications
-    }
-
-  }
+      user: { ...user.toObject(), email },
+      hasUnreadNotifications,
+    };
+  };
 
   register = async ({
     email,
     username,
     password,
-    code
+    code,
   }: Omit<RegisterForm, "hasAcceptedPrivacyPolicy">) => {
     const storedCode = await redis.get(`OTP ${email}`);
-    const correctCode = JSON.parse(storedCode ?? '{} ')?.code;
+    const correctCode = JSON.parse(storedCode ?? "{} ")?.code;
 
-    if(!correctCode){
-      throw new BadRequestError('Your verification code has expired', 'EXPIRED_VERIFICATION_CODE');
+    if (!correctCode) {
+      throw new BadRequestError(
+        "Your verification code has expired",
+        "EXPIRED_VERIFICATION_CODE"
+      );
     }
 
-    if(String(correctCode) !== String(code)){
-      throw new BadRequestError('Incorrect verification code.', 'INVALID_VERIFICATION_CODE');
+    if (String(correctCode) !== String(code)) {
+      throw new BadRequestError(
+        "Incorrect verification code.",
+        "INVALID_VERIFICATION_CODE"
+      );
     }
 
     const seed = Math.random().toString(36).substring(7);
@@ -69,12 +81,18 @@ export class AuthService {
       );
     }
 
-    return await runWithSession(async(session) => {
-       const createdUser = await new User({ username, avatar: avatarUrl }).save({ session });
-       const hashedPass = await authHelper.hash(password + ENV_CONFIG.PEPPER);
-       const createdCredential = await new Credential({ userId: createdUser._id, email, password: hashedPass }).save({ session });
+    return await runWithSession(async (session) => {
+      const createdUser = await new User({ username, avatar: avatarUrl }).save({
+        session,
+      });
+      const hashedPass = await authHelper.hash(password + ENV_CONFIG.PEPPER);
+      const createdCredential = await new Credential({
+        userId: createdUser._id,
+        email,
+        password: hashedPass,
+      }).save({ session });
       return [createdUser, createdCredential];
-    })
+    });
   };
 
   sendVerificationCode = async ({
@@ -129,34 +147,40 @@ export class AuthService {
   //if no credential data (old user with unpeppered pass), compare without pepper > true > create creds with peppered pass
   login = async ({ email, password }: LoginForm) => {
     let credential = await Credential.findOne({ email });
-    let user;
-    let isPasswordCorrect;
 
     if (credential) {
-      user = await User.findOne({ _id: String(credential.userId) }).orFail(
-        UserNotFound
-      );
-      isPasswordCorrect = await credential.comparePasswords(password); //pepperized
-    } else {
-      user = await User.findOne({ email }).orFail(UserNotFound);
-      const plainUser = user.toObject();
-      isPasswordCorrect = await bcrypt.compare(
-        password,
-        plainUser.password as string
-      ); //unpeppered
+      const user = await User.findOne({
+        _id: String(credential.userId),
+      }).orFail(UserNotFound);
+      const isPasswordCorrect = await credential.comparePasswords(password); //pepperized
 
-      if (isPasswordCorrect) {
-        const pepperedLegacyPass = await authHelper.hash(
-          password + ENV_CONFIG.PEPPER
-        ); //peppering
-        await new Credential({
-          email: plainUser.email,
-          password: pepperedLegacyPass,
-          role: plainUser.role,
-          userId: plainUser._id,
-        }).save();
+      if (!isPasswordCorrect)
+        throw new UnauthorizedError(
+          IMPLICIT_PASSWORD_MSG.invalid,
+          "INVALID_CREDENTIALS"
+        );
+
+      if (user.banDetails.isBanned) {
+        throw new ForbiddenError(
+          `Your account has been banned. Remaining time: ${formatMs(
+            user.banDetails.remainingMS
+          )}`,
+          "BANNED"
+        );
       }
+      const plain = user.toObject();
+      if (plain.password || plain.email) {
+        await User.updateOne({ _id: user._id }, { $unset: { password: "", email: "" } }, { strict: false });
+      }
+      return { user };
     }
+
+    const user = await User.findOne({ email }).orFail(UserNotFound);
+    const plainUser = user.toObject();
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      plainUser.password as string
+    ); //unpeppered
 
     if (!isPasswordCorrect)
       throw new UnauthorizedError(
@@ -164,17 +188,21 @@ export class AuthService {
         "INVALID_CREDENTIALS"
       );
 
-    if (user.banDetails.isBanned) {
-      throw new ForbiddenError(
-        `Your account has been banned. Remaining time: ${formatMs(
-          user.banDetails.remainingMS
-        )}`,
-        "BANNED"
-      );
-    }
+    const pepperedLegacyPass = await authHelper.hash(
+      password + ENV_CONFIG.PEPPER
+    ); //peppering
+    delete user.password;
+    delete user.email;
 
-    return {
-      user,
-    };
+    await runWithSession(async (session) => {
+      await user.save({ session });
+      await new Credential({
+        email: plainUser.email,
+        password: pepperedLegacyPass,
+        role: plainUser.role,
+        userId: plainUser._id,
+      }).save({ session });
+    });
+    return { user };
   };
 }

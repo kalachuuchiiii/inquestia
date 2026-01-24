@@ -5,16 +5,11 @@ import { UserBadge } from "../UserBadge";
 import { Button } from "../ui/button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useApi } from "@/hooks/useApi";
-import { toast } from "sonner";
 import { useParams } from "react-router-dom";
 import { DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import type {
-  AuthorizeUserResponse,
-  GetAuthorizedViewersResponse,
   GetSurveyByIdResponse,
   GetUserByUsernameResponse,
-  SurveyDTO,
-  UserDTO,
 } from "@shared/types";
 import { Item, ItemActions, ItemHeader } from "../ui/item";
 import {
@@ -24,7 +19,6 @@ import {
 } from "../ui/input-group";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -33,6 +27,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import { useSurveyActions } from "@/hooks/useSurveyActions";
 
 const SearchUserDialogContent = ({
   survey,
@@ -41,7 +36,7 @@ const SearchUserDialogContent = ({
 }) => {
   const queryClient = useQueryClient();
   const [username, setUsername] = useState("");
-  const { id: surveyId } = useParams();
+  const { surveyId = "" } = useParams();
   const api = useApi();
 
   const {
@@ -51,7 +46,7 @@ const SearchUserDialogContent = ({
   } = useQuery({
     queryFn: async () => {
       const res = await api.get<GetUserByUsernameResponse>(
-        `/api/user/get-by-username/${username}`
+        `/api/user/username/${username}`
       );
       return res.data.userResult;
     },
@@ -59,39 +54,8 @@ const SearchUserDialogContent = ({
     enabled: false,
   });
 
-  const { mutate: authorizeUser, isPending: isAuthorizingUser } = useMutation({
-    mutationFn: async () => {
-      if (!userResult) return;
-      const p = api.patch<AuthorizeUserResponse>(
-        `/api/survey/authorize-user/${surveyId}/${userResult?._id}`
-      );
-      await toast.promise(p, {
-        loading: "Authorizing user...",
-        success: (res) => res.data.message,
-        error: (err) => err.response.data.message,
-      });
-      return await p;
-    },
-    onSuccess: async (res) => {
-      await queryClient.invalidateQueries({ queryKey: ["survey", surveyId] });
-      queryClient.setQueryData([`user-result-${surveyId}`], null);
-    },
-  });
-
-  const { mutate: revokeAuthorization } = useMutation({
-    mutationFn: async (userId: string) => {
-      toast.loading("Revoking user's authorization...", {
-        id: "revoke-authorization",
-      });
-      const res = await api.patch(
-        `/api/survey/revoke-authorization/${surveyId}/${userId}`
-      );
-      toast.dismiss("revoke-authorization");
-    },
-    onSuccess: async (res) => {
-      await queryClient.invalidateQueries({ queryKey: ["survey", surveyId] });
-    },
-  });
+  const { revokeAuthorization, authorizeUser, isAuthorizingUser } =
+    useSurveyActions();
 
   return (
     <DialogContent>
@@ -123,7 +87,9 @@ const SearchUserDialogContent = ({
             <Button
               variant={"outline"}
               disabled={isAuthorizingUser}
-              onClick={() => authorizeUser()}
+              onClick={() =>
+                authorizeUser({ surveyId, userId: userResult._id })
+              }
             >
               Add
             </Button>
@@ -153,7 +119,12 @@ const SearchUserDialogContent = ({
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <Button
-                          onClick={() => revokeAuthorization(viewer._id)}
+                          onClick={() =>
+                            revokeAuthorization({
+                              surveyId,
+                              userId: viewer._id,
+                            })
+                          }
                           variant={"destructive"}
                         >
                           Remove

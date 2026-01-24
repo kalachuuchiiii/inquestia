@@ -1,4 +1,5 @@
 import { INTEREST_ENUM } from "@shared/constants";
+import { SurveyDTO } from "./survey";
 
 export type Interest = (typeof INTEREST_ENUM)[number];
 
@@ -25,24 +26,52 @@ export type UserDTO = {
   displayName: string;
   avatar?: string;
   bio?: string | null;
-  externalLinks: string[];
+  socialLinks: string[];
   streak: UserStreak;
   core: UserCore;
-  badge: UserBadge
+  badge: UserBadge;
+  email?: string;
 };
 
 export type UpdateInterestResponse = {
   success: boolean;
   interests: string[];
   message: string;
-}
+};
 
 export type GetUsersWithSimilarInterestsResponse = {
   success: boolean;
   users: UserDTO[];
-}
+};
 
 export type GetUserByUsernameResponse = {
-  userResult: UserDTO;
+  user: UserDTO;
   success: boolean;
-}
+};
+
+export type GetOwnedSurveysResponse = {
+  surveys: SurveyDTO[];
+  success: boolean;
+  nextPage: number | null;
+  totalSurveys: number;
+};
+
+export type GetSurveysSharedToMeResponse = {
+  sharedSurveys: SurveyDTO[];
+  success: boolean;
+  nextPage: number | null;
+  totalSharedSurveys: number;
+};
+
+export type UpdateMyAvatarResponse = {
+  success: boolean;
+  message: string;
+  avatarUrl: string;
+};
+
+export type GetUserSurveysReponse = {
+  success: boolean;
+  surveys: SurveyDTO[];
+  totalSurveys: number;
+  nextPage: number | null;
+};

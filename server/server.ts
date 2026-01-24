@@ -11,7 +11,7 @@ import Survey from "@/models/survey/survey";
 
 declare module "express-serve-static-core" {
   interface Request {
-    userId?: string;
+    myId?: string;
   }
 }
 

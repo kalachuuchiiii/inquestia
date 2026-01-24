@@ -6,7 +6,7 @@ export const SURVEY_PROJECTION = {
   targetRespondents: 1,
   totalRespondents: 1,
   hasReachedTargetRespondents: 1,
-  closed: 1,
+  isClosed: 1,
   tags: 1,
   question: 1,
   author: 1,

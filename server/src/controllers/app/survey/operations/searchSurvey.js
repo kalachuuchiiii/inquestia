@@ -62,7 +62,7 @@ const searchSurvey = async (req, res) => {
         $match: {
           isTakendown: false,
           hasReachedTargetRespondents: false,
-          closed: false,
+          isClosed: false,
           isDraft: false
         }
       },
@@ -94,7 +94,7 @@ const searchSurvey = async (req, res) => {
       {
         $match: {
           hasReachedTargetRespondents: false,
-          closed: false,
+          isClosed: false,
           isTakendown:false,
           isDraft: false,
           relevancy: {

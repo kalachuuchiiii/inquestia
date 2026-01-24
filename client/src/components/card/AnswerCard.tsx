@@ -4,7 +4,6 @@ import { IoSparklesSharp } from "react-icons/io5";
 import { CgClose } from "react-icons/cg";
 import { PiCertificateBold } from "react-icons/pi";
 import { useAppSelector } from "@/hooks/useAppSelector";
-import type { IAnswer } from "@shared/types";
 import { useMutation } from "@tanstack/react-query";
 import { useApi } from "@/hooks/useApi";
 import { toast } from "sonner";
@@ -19,7 +18,7 @@ const questionType = {
   text: "Open-ended",
 };
 
-const getAns = (question: string, answer: IAnswer) => {
+const getAns = (question: string, answer) => {
   if (!question) return null;
 
   const matched = answer?.answers?.find((a) => a.question === question._id);

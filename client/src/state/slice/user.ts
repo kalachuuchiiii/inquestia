@@ -1,32 +1,43 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API } from "@/lib/axios.instance.js";
-import { USER_BADGES, type SessionResponse, type UserDTO } from "@shared/index.js";
+import {
+  INTEREST_ENUM,
+  USER_BADGES,
+  type SessionResponse,
+  type UserDTO,
+} from "@shared/index.js";
 
-export const initialState: Omit<SessionResponse, "success"> & { isLoading: boolean } =
-  {
-    user: {
-      username: "",
-      nickname: "",
-      avatar: null,
-      avatar_public_url: null,
-      _id: null,
-      bio: "",
-      badge: USER_BADGES[0],
-      boosterPoint: 0,
-      interests: ['personal'],
-      core: {
-        highest: 0,
-        current: 0,
-      },
-      streak: {
-        current: 0,
-        highest: 0,
-      },
-    },
-    hasUnreadNotifications: false,
-    accessToken: "",
-    isLoading: false,
-  };
+const user: UserDTO & {
+  email: string;
+  boosterPoint: number;
+  interests: (typeof INTEREST_ENUM)[number][];
+} = {
+  username: "",
+  nickname: "",
+  avatar: undefined,
+  _id: "",
+  displayName: "",
+  email: "",
+  bio: "",
+  badge: USER_BADGES[0],
+  boosterPoint: 0,
+  interests: ["personal"],
+  core: {
+    highest: 0,
+    current: 0,
+  },
+  streak: {
+    current: 0,
+    highest: 0,
+  },
+  socialLinks: [],
+};
+export const initialState = {
+  user,
+  hasUnreadNotifications: false,
+  accessToken: "",
+  isLoading: false,
+};
 
 export const getSession = createAsyncThunk("session", async (_, thunkAPI) => {
   try {
@@ -50,7 +61,7 @@ const userSlice = createSlice({
     },
     renewAccessToken: (state, action) => {
       state.accessToken = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getSession.pending, (state) => {

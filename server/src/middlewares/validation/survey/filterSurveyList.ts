@@ -92,7 +92,7 @@ exports.filterSurveyList = (isPaginated = false, limit): RequestHandler => {
       ]);
       req.filteredData = {
         success: true,
-        answers: answers.map((ans: IAnswer) => ({ ...ans, survey })),
+        answers: answers.map((ans) => ({ ...ans, survey })),
         survey,
         totalAnswers,
         nextPage: isPaginated ? req?.getNextPage(totalAnswers) : null,

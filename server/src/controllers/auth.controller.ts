@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { ENV_CONFIG } from "@/config/environmentVars";
 import { ACCESS_TOKEN_JWT_TTL, REFRESH_TOKEN_COOKIE_TTL, REFRESH_TOKEN_JWT_TTL } from "@/constants";
 import { AuthService } from "@/services";
-import { UnauthorizedError } from "@/utils/errors/customErrorClass";
+import { BadRequestError, UnauthorizedError } from "@/utils/errors/customErrorClass";
 import { SessionTokenPayload } from "@/types";
 import { SessionResponse } from "@shared/types";
 
@@ -14,11 +14,31 @@ import { SessionResponse } from "@shared/types";
 const authService = new AuthService();
 export class AuthController {
 
+  logout: RequestHandler = async(req, res) => {
+    const refreshToken = req.cookies['refresh-token'];
+    if(!refreshToken){
+      throw new UnauthorizedError("Session not found.", 'SESSION_NOT_FOUND');
+    }
+     res.clearCookie('refresh_token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: REFRESH_TOKEN_COOKIE_TTL,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'Logged out successfully!'
+    })
+
+
+  }
+
   refresh: RequestHandler = async(req, res) => {
     const refreshToken = req.cookies['refresh_token'];
     if(!refreshToken)throw new UnauthorizedError('No session found.', 'NO_SESSION_FOUND');
     const payload = await jwt.verify(refreshToken, ENV_CONFIG.JWT_SECRET) as SessionTokenPayload;
-    const accessToken = await jwt.sign({ userId: payload.userId }, ENV_CONFIG.JWT_SECRET, { expiresIn: ACCESS_TOKEN_JWT_TTL });
+    const accessToken = await jwt.sign({ myId: payload.myId }, ENV_CONFIG.JWT_SECRET, { expiresIn: ACCESS_TOKEN_JWT_TTL });
     return res.status(200).json({
       success: true,
       accessToken
@@ -32,9 +52,9 @@ export class AuthController {
     }
 
     const payload = await jwt.verify(refreshToken, ENV_CONFIG.JWT_SECRET) as SessionTokenPayload;
-    const userId = payload.userId;
-    const { user, hasUnreadNotifications } = await authService.getUserData({ userId });
-    const accessToken = await jwt.sign({ userId: userId }, ENV_CONFIG.JWT_SECRET, {
+    const myId = payload.myId;
+    const { user, hasUnreadNotifications } = await authService.getUserData({ myId });
+    const accessToken = await jwt.sign({ myId: myId }, ENV_CONFIG.JWT_SECRET, {
       expiresIn: ACCESS_TOKEN_JWT_TTL
     })
 
@@ -73,7 +93,7 @@ export class AuthController {
     const { email, password } = LoginFormSchema.strip().parse(req.body);
     const { user } = await authService.login({ email, password });
 
-    const token = await jwt.sign({ userId: user._id }, ENV_CONFIG.JWT_SECRET, {
+    const token = await jwt.sign({ myId: user._id }, ENV_CONFIG.JWT_SECRET, {
       expiresIn: REFRESH_TOKEN_JWT_TTL,
     });
     

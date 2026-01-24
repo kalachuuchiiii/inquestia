@@ -16,7 +16,6 @@
   "license": "ISC",
   "dependencies": {
     "@types/lodash": "^4.17.21",
-    "@types/mongoose": "^5.11.96",
     "@types/node": "^25.0.8",
     "lodash": "^4.17.21",
     "typescript": "^5.9.3",

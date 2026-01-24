@@ -9,7 +9,7 @@ exports.allowedSurveyFields = {
   tags: 1,
   booster: 1,
   hasReachdTargetRespondents: 1,
-  closed: 1,
+  isClosed: 1,
   user: {
     username: 1, 
     nickname: 1, 

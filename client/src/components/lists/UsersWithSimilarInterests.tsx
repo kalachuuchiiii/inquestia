@@ -14,7 +14,7 @@ const UsersWithSimilarInterests = () => {
     queryKey: ["similar-", user?._id],
     queryFn: async () => {
       const res = await api.get<GetUsersWithSimilarInterestsResponse>(
-        "/api/user/similar-interests"
+        "/api/user/me/similar-interests"
       );
       return res;
     },

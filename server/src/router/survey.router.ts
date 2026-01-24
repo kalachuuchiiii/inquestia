@@ -11,7 +11,10 @@ surveyRouter.use(catchErrors(authMiddleware.verifyAccessToken));
 
 surveyRouter.get("/list", catchErrors(surveyController.getSurveys));
 surveyRouter.get("/find-by-id/:surveyId", catchErrors(surveyController.getSurveyById));
-surveyRouter.patch('/authorize-user/:surveyId/:candidateUserId', catchErrors(surveyController.authorizeUser));
-surveyRouter.patch('/revoke-authorization/:surveyId/:candidateUserId', catchErrors(surveyController.revokeAuthorization));
+surveyRouter.patch('/authorize-user/:surveyId/:userId', catchErrors(surveyController.authorizeUser));
+surveyRouter.patch('/revoke-authorization/:surveyId/:userId', catchErrors(surveyController.revokeAuthorization));
+surveyRouter.patch('/soft-delete/:surveyId', catchErrors(surveyController.softDelete));
+surveyRouter.patch('/close-survey/:surveyId', catchErrors(surveyController.closeSurvey));
+surveyRouter.patch('/reopen-survey/:surveyId', catchErrors(surveyController.reOpenSurvey));
 
 export default surveyRouter;

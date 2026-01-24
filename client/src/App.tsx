@@ -5,8 +5,8 @@ import { getSession } from "./state/slice/user";
 import NavBar from "./components/NavBar";
 import { useDispatch } from "react-redux";
 import Footer from "./components/Footer";
-import Profile from "./pages/authenticated/Profile";
-import UserSurveyList from "./components/lists/UserSurveyList";
+import Profile from "./pages/authenticated/MyProfile";
+import UserSurveyList from "./components/lists/MySurveys";
 import UserDraftList from "./components/lists/UserDraftsList";
 import SearchPage from "./pages/authenticated/SearchPage";
 import QuerySurvey from "./components/lists/QuerySurvey";
@@ -28,17 +28,10 @@ function App() {
   const nav = useNavigate();
   const { user = {}, accessToken } = useAppSelector((state) => state.user);
 
-  const checkSession = async () => {
-    const res = await dispatch(getSession());
-
-    if (res.type === "session/fulfilled") {
-      nav("/home");
-    }
-  };
-
   useEffect(() => {
-    checkSession();
+    dispatch(getSession());
   }, [dispatch]);
+
 
   return (
     <div className=" w-full  flex flex-col justify-between  scrollbar-none space-y-4 ">
@@ -54,10 +47,6 @@ function App() {
               />
             );
           })}
-          <Route path="/profile" element={<Profile />}>
-            <Route index path="/profile" element={<UserSurveyList />} />
-            <Route path="/profile/drafts" element={<UserDraftList />} />
-          </Route>
           <Route path="/browse" element={<SearchPage />}>
             <Route index path="/browse/users" element={<QueryUsers />} />
             <Route path="/browse" element={<QuerySurvey />} />

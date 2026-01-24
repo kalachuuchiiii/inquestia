@@ -51,6 +51,8 @@ const answerSchema = new mongoose.Schema({
   timestamps: true
 });
 
+
+
 export type AnswerSchema = InferSchemaType<typeof answerSchema>;
 export type AnswerModel = HydratedDocument<AnswerSchema>;
 

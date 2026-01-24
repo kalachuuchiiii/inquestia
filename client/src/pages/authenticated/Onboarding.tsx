@@ -28,7 +28,6 @@ const Onboarding = () => {
       const p = api.patch<UpdateInterestResponse>("/api/user/interests", {
         interests: selectedInterests,
       });
-      console.log('hey')
       await toast.promise(p, {
         loading: "Updating your interests...",
         success: (res) => res.data.message,

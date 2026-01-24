@@ -8,7 +8,6 @@ import jwt from "jsonwebtoken";
 export class AuthMiddlewares {
   verifyAccessToken: RequestHandler = async (req, res, next) => {
     const authHeader = req.headers.authorization ?? "";
-
     if (!authHeader.startsWith("Bearer ")) {
       throw new UnauthorizedError(TOKEN_MSG.invalid, "INVALID_TOKEN");
     }
@@ -18,7 +17,7 @@ export class AuthMiddlewares {
       token,
       ENV_CONFIG.JWT_SECRET
     )) as SessionTokenPayload;
-    req.userId = payload.userId;
+    req.myId = payload.myId;
     next();
   };
 }

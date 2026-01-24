@@ -11,55 +11,55 @@ import { Dialog } from "@/components/ui/dialog.js";
 import ReportSurveyModal from "@/components/modals/ReportSurveyModal.js";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { API } from "@/lib/axios.instance.js";
+import type {
+  GetUserByUsernameResponse,
+  GetUserSurveysReponse,
+} from "@shared/index.js";
+import { YouReachedTheEnd } from "@/components/YouReachedTheEnd.js";
+import { Item, ItemContent, ItemTitle } from "@/components/ui/item.js";
 
 const ViewProfilePage = () => {
   const { username } = useParams();
-  const [totalUserSurvey, setTotalUserSurvey] = useState(null);
-  const [isReporting, setIsReporting] = useState(false);
 
   const { data: userProfile, isPending: isLoading } = useQuery({
-    queryKey: ["user_profile", username],
+    queryKey: ["user-profile", username],
     queryFn: async () => {
-      const res = await API.get(`/api/user`, {
-        params: {
-          filter: {
-            username,
-          },
-        },
-      });
-      return res.data.userProfile;
+      const res = await API.get<GetUserByUsernameResponse>(
+        `/api/user/username/${username}`
+      );
+      return res.data.user;
     },
   });
 
   const {
     data,
-    fetchNextPage: getUserSurvey,
+    fetchNextPage: getUserSurveys,
     hasNextPage,
     isFetchingNextPage: isFetchingSurvey,
   } = useInfiniteQuery({
-    queryKey: ["user_surveys", username],
+    queryKey: ["user-surveys", username],
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await API.get(
-        `/api/users/survey-list/${userProfile._id}?page=${pageParam}`
+      const res = await API.get<GetUserSurveysReponse>(
+        `/api/user/surveys/${userProfile?._id}?page=${pageParam}&limit=4`
       );
-      setTotalUserSurvey(res.data.totalSurveys);
-      return res;
+      return res.data;
     },
-    getNextPageParam: (res) => res.data.nextPage,
-    enabled: !!userProfile._id,
+    getNextPageParam: (res) => res.nextPage,
+    enabled: !!userProfile?._id,
   });
 
-  const userSurveys = data?.pages.flatMap((d) => d.data.surveys) ?? [];
+  const userSurveys = data?.pages.flatMap((d) => d.surveys) ?? [];
+  const totalUserSurvey = data?.pages?.[0]?.totalSurveys ?? 0;
 
   const { ref, inView } = useInView();
 
   useEffect(() => {
     if (!inView || isFetchingSurvey || !hasNextPage) return;
-    getUserSurvey();
+    getUserSurveys();
   }, [inView, ref]);
 
-  if (isLoading) {
+  if (isLoading || !userProfile) {
     return (
       <LoadingDisplay>
         <p>Loading...</p>
@@ -69,44 +69,33 @@ const ViewProfilePage = () => {
 
   return (
     <>
-      <Dialog open={isReporting}>
+      <Dialog>
         <ReportSurveyModal />
       </Dialog>
       <div className="p-3 w-full">
         <div className="space-y-4 md:flex flex-col justify-between p-3 gap-2 items-start w-full">
-          {userProfile && (
-            <div className="w-full">
-              <UserCard user={userProfile} />
-            </div>
-          )}
-          <button
-            className="p-2 flex gap-2 items-center"
-            onClick={() => setIsReporting((prev) => !prev)}
-          >
-            <GoReport size={26} /> <p>Report</p>
-          </button>
+          <div className="w-full">
+            <UserCard user={userProfile} />
+          </div>
         </div>
-        {userSurveys?.length > 0 ? (
-          <>
-            <div className="p-3 my-2 w-full text-left">
-              <p>Surveys ({totalUserSurvey})</p>
-            </div>
-            <div>
-              {userSurveys.map((s) => {
-                return <SurveyCard key={s._id} survey={s} />;
-              })}
-            </div>
-          </>
-        ) : (
-          <p className="text-center w-full">No surveys yet.</p>
-        )}
+
+        <Item className="p-3 my-2 w-full text-left">
+          <ItemContent>
+            <ItemTitle>
+              Surveys ({totalUserSurvey})
+            </ItemTitle>
+          </ItemContent>
+        </Item>
+        <div>
+          {userSurveys.map((s) => {
+            return <SurveyCard key={s._id} survey={s} />;
+          })}
+        </div>
+
         {isFetchingSurvey ? (
           <SurveyCardPlaceholder />
         ) : (
-          !hasNextPage &&
-          userSurveys.length > 0 && (
-            <div className="w-full text-center p-2">You've reached the end</div>
-          )
+          !hasNextPage && userSurveys.length > 0 && <YouReachedTheEnd />
         )}
         <div ref={ref} />
       </div>

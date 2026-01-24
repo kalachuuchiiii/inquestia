@@ -31,7 +31,7 @@ const submitAnswer = async(req, res, _, commit) => {
   }
 
   if (
-    surveyData.closed ||
+    surveyData.isClosed ||
     surveyData.hasReachedTargetRespondents ||
     surveyData.respondents.length >= surveyData.targetRespondents ||
     survey?.isTakendown

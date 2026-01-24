@@ -7,15 +7,15 @@ import axios from "axios";
 
 export class AssistantService {
 
-  restartConversation = async({ userId}: {userId: string}) => {
-    const user = await User.exists({ _id: userId }).orFail(new NotFoundError('User not found.', 'USER_NOT_FOUND'));
+  restartConversation = async({ myId}: {myId: string}) => {
+    const user = await User.exists({ _id: myId }).orFail(new NotFoundError('User not found.', 'USER_NOT_FOUND'));
     const conversationKey = `conversation:${user._id}`;
     await redis.del(conversationKey);
     return { success: true };
   }
 
-  getConversation = async ({ userId }: { userId: string }) => {
-    const user = await User.exists({ _id: userId }).orFail(
+  getConversation = async ({ myId }: { myId: string }) => {
+    const user = await User.exists({ _id: myId }).orFail(
       new NotFoundError("User not found.", "USER_NOT_FOUND")
     );
     const conversationKey = `conversation:${user._id}`;
@@ -27,13 +27,13 @@ export class AssistantService {
   };
 
   sendMessage = async ({
-    userId,
+    myId,
     prompt,
   }: {
-    userId: string;
+    myId: string;
     prompt: string;
   }) => {
-    const user = await User.exists({ _id: userId }).orFail(
+    const user = await User.exists({ _id: myId }).orFail(
       new NotFoundError("User not found.", "USER_NOT_FOUND")
     );
 

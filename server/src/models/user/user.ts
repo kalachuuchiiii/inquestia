@@ -114,7 +114,7 @@ const userSchema = new mongoose.Schema(
         type: Number,
         default: CORE_MIN,
         index: true,
-      },
+      }
     },
     socialLinks: [
       {

@@ -11,31 +11,34 @@ import { useState } from "react";
 import type { TextInput } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import _ from "lodash";
 
 export const UpdateNicknameDialogContent = () => {
   const { updateNickname, isUpdatingNickname } = useAccountActions();
   const { user } = useAppSelector((state) => state.user);
-  const [username, setNickname] = useState(user.nickname);
+  const [nickname, setNickname] = useState<string>(user.nickname ?? "");
 
   const handleSetNickname = (e: TextInput) => {
     setNickname(e.target.value);
   };
 
+  const hasNoDifference = _.isEqual(user.nickname, nickname);
+
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Update your username</DialogTitle>
+        <DialogTitle>Update your nickname</DialogTitle>
         <DialogDescription>Your display name</DialogDescription>
       </DialogHeader>
       <Input
-        value={username}
+        value={nickname}
         onChange={handleSetNickname}
         placeholder="Hometownhero"
       />
       <DialogFooter>
         <Button
-          onClick={() => updateNickname(username)}
-          disabled={isUpdatingNickname}
+          onClick={() => updateNickname(nickname)}
+          disabled={isUpdatingNickname || hasNoDifference}
           className="inquestia-button"
         >
           Save

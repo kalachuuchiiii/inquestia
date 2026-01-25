@@ -1,13 +1,13 @@
 {
-    "name": "inquestia",
-    "private": true,
-    "workspaces": [
-        "@inquestia/server",
-        "@inquestia/shared",
-        "@inquestia/client"
-    ],
-    "dependencies": {
-        "@types/mongoose": "^5.11.96",
-        "zod": "^4.3.5"
-    }
+  "name": "inquestia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.1"
 }

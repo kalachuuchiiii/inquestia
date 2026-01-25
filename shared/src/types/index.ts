@@ -1,9 +1,6 @@
-export type * from "./answer.d";
-export type * from "./survey.d";
-export type * from "./feedback.d";
-export type * from "./report.d";
-export type * from "./notification.d";
-export type * from "./credential.d";
-export type * from "./transaction.d";
-export type * from "./user.d";
-export type * from './assistant.d';
+
+export type * from "./survey";
+export type * from "./report";
+export type * from "./credential";
+export type * from "./user";
+export type * from './assistant';

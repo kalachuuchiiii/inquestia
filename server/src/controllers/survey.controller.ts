@@ -1,11 +1,37 @@
 import { ObjectIdSchema } from "@/schemas";
 import { SurveyService } from "@/services";
-import { QueryParamParser } from "@shared/schemas";
+import { BadRequestError } from "@/utils/errors/customErrorClass";
+import { QueryParamParser, SurveyFormSchema } from "@shared/schemas";
 import { AuthorizeUserResponse, SurveyListResponse } from "@shared/types";
 import { RequestHandler } from "express";
 
 const surveyService = new SurveyService();
 export class SurveyController {
+
+  saveMySurveyAsDraft: RequestHandler = async(req, res) => {
+    const survey = SurveyFormSchema.parse(req.body.survey);
+    const myId = ObjectIdSchema.parse(req.myId);
+
+    if(!survey.isDraft){
+      throw new BadRequestError("You must save it as a draft first.", 'SAVE_PUBLISHED_ERROR')
+    }
+
+    await surveyService.upsertSurvey({ survey, myId });
+   
+    
+  }
+
+
+  createMySurvey: RequestHandler = async(req, res) => {
+    const survey = SurveyFormSchema.parse(req.body.survey);
+    const myId = ObjectIdSchema.parse(req.myId);
+
+    if(survey.isDraft){
+      throw new BadRequestError("You can't publish a draft survey", 'PUBLISH_DRAFT_ERROR')
+    }
+
+  }
+
   reOpenSurvey: RequestHandler = async (req, res) => {
     const surveyId = ObjectIdSchema.parse(req.params.surveyId);
     const myId = ObjectIdSchema.parse(req.myId);

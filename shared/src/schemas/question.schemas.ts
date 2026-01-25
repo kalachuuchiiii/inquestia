@@ -31,3 +31,28 @@ export const QuestionChoiceListSchema = z
   .array(QuestionChoiceSchema)
   .min(QUESTION_CHOICELIST_MIN, QUESTION_CHOICELIST_MSG.range)
   .max(QUESTION_CHOICELIST_MAX, QUESTION_CHOICELIST_MSG.range);
+
+   const BaseQuestionSchema = {
+    question: QuestionTitleSchema,
+    _id: z.string().optional(),
+    isRequired: z.boolean()
+  }
+
+  const TextTypeQuestionSchema = z.object({
+    ...BaseQuestionSchema,
+    type: z.literal('text')
+  })
+
+ const SelectTypeQuestionSchema = z.object({
+    ...BaseQuestionSchema,
+    choices: QuestionChoiceListSchema,
+    multipleChoice: z.boolean(),
+    type: z.literal('select')
+  })
+
+ export const QuestionsSchema = z.array(
+  z.discriminatedUnion("type", [
+    TextTypeQuestionSchema,
+    SelectTypeQuestionSchema,
+  ])
+);

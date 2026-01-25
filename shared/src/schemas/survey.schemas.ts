@@ -20,6 +20,7 @@ import {
   APPLIED_BOOSTER_MIN,
   APPLIED_BOOSTER_MAX,
 } from "../constants";
+import { QuestionsSchema } from "./question.schemas";
 
 export const TagSchema = z.enum(TAGS_ENUM);
 
@@ -60,3 +61,16 @@ export const AppliedBoostersSchema = z
   .int()
   .min(APPLIED_BOOSTER_MIN)
   .max(APPLIED_BOOSTER_MAX);
+
+  export const SurveyFormSchema = z.object({
+    title: TitleSchema,
+    description: DescriptionSchema,
+    targetRespondents: TargetRespondentsSchema,
+    booster: AppliedBoostersSchema,
+    tags: TagsSchema,
+    questions: QuestionsSchema,
+    isDraft: z.boolean(),
+    _id: z.string().optional()
+  })
+
+  type x = z.infer<typeof SurveyFormSchema>

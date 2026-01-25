@@ -5,13 +5,15 @@ export const TITLE_MAX = 250;
 export const TITLE_MSG = {
   min: `Survey title must be at least ${TITLE_MIN} characters.`,
   max: `Survey title must be at most ${TITLE_MAX} characters.`,
+  range: `Survey title must be ${TITLE_MIN}-${TITLE_MAX} characters.`
 };
 
 export const DESCRIPTION_MIN = 22;
 export const DESCRIPTION_MAX = 1000;
 export const DESCRIPTION_MSG = {
   min: `Survey description must be at least ${DESCRIPTION_MIN} characters.`,
-  max: `Survey description must be at most ${DESCRIPTION_MAX} characters.`
+  max: `Survey description must be at most ${DESCRIPTION_MAX} characters.`,
+  range: `Survey description must be ${DESCRIPTION_MIN}-${DESCRIPTION_MAX} characters.`
 }
 
 export const TARGET_RESPONDENTS_MIN = 8;

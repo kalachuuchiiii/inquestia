@@ -11,14 +11,49 @@ import {
   UnauthorizedError,
 } from "@/utils/errors/customErrorClass";
 import { getNextPage } from "@/utils/getNextPage";
+import { runWithSession } from "@/utils/runWithSession";
 import { QueryParam } from "@shared/schemas";
-import { SurveyDTO } from "@shared/types";
+import { SurveyDTO, SurveyForm } from "@shared/types";
 import mongoose from "mongoose";
 
 const surveyHelper = new EntityHelper<SurveyModel>(Survey);
 type SurveyAndAuthId = { surveyId: string; myId: string };
 
 export class SurveyService {
+  upsertSurvey = async ({
+    survey,
+    myId,
+  }: {
+    survey: SurveyForm;
+    myId: string;
+  }) => {
+    const user = await User.findById(myId).orFail(
+      new NotFoundError("User not found.", "USER_NOT_FOUND")
+    );
+
+    const surveyId = survey._id;
+    if (!surveyId) {
+      return await runWithSession(async (session) => {
+        const newSurvey = await new Survey({ ...survey, authorId: myId }).save({
+          session,
+        });
+        if (user.core) {
+          user.core.current += 100;
+          user.core.highest = Math.max(user.core.current, user.core.highest);
+          await user.save({ session });
+        }
+        return newSurvey;
+      });
+    }
+
+    const existingSurvey = await Survey.findByIdAndUpdate(
+      { _id: survey._id, authorId: myId },
+      { ...survey, isDraft: false }
+    ).orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
+
+    return existingSurvey;
+  };
+
   reOpenSurvey = async ({ surveyId, myId }: SurveyAndAuthId) => {
     const survey = await Survey.findById(surveyId).orFail(
       new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND")
@@ -79,11 +114,7 @@ export class SurveyService {
       new NotFoundError("User not found.", "USER_NOT_FOUND")
     );
 
-    if (
-      survey.authorizedViewers.every(
-        (v) => String(v) !== String(userId)
-      )
-    ) {
+    if (survey.authorizedViewers.every((v) => String(v) !== String(userId))) {
       throw new BadRequestError(
         `${candidateUser.displayName} is not yet authorized.`,
         "NOT_YET_AUTHORIZED_AS_VIEWER"
@@ -113,11 +144,7 @@ export class SurveyService {
     const candidateUser = await User.findById(userId).orFail(
       new NotFoundError("User not found.", "USER_NOT_FOUND")
     );
-    if (
-      survey.authorizedViewers.some(
-        (v) => String(v) === String(userId)
-      )
-    ) {
+    if (survey.authorizedViewers.some((v) => String(v) === String(userId))) {
       throw new ConflictError(
         `${candidateUser.displayName} is already authorized.`,
         "ALREADY_AUTHORIZED_AS_VIEWER"
@@ -153,7 +180,7 @@ export class SurveyService {
     myId,
     limit,
     page,
-  }: { myId: string } & Omit<QueryParam, "sort" | 'skip'>) => {
+  }: { myId: string } & Omit<QueryParam, "sort" | "skip">) => {
     const user = await User.findById(myId).orFail(
       new UnauthorizedError("Invalid Session.", "INVALID_SESSION")
     );

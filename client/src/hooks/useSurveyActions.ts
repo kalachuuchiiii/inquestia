@@ -1,13 +1,45 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApi } from "./useApi";
 import { toast } from "sonner";
-import type { AuthorizeUserResponse, SurveyDTO } from "@shared/types";
+import type {
+  AuthorizeUserResponse,
+  SurveyDTO,
+  SurveyForm,
+} from "@shared/types";
 import { useNavigate } from "react-router-dom";
 
 export const useSurveyActions = () => {
   const api = useApi();
   const queryClient = useQueryClient();
   const nav = useNavigate();
+
+  const { mutate: saveAsDraft, isPending: isSavingAsDraft } = useMutation({
+    mutationFn: async (survey: SurveyForm) => {  //will check ._id, if exist, update, else create ne wone 
+      const p = api.post("/api/survey-draft", {
+        survey,
+      });
+      await toast.promise(p, {
+        loading: "Saving as draft...",
+        success: (res) => res.data.message,
+        error: (err) => err.response.data.message,
+      });
+      return await p;
+    },
+  });
+
+  const { mutate: createSurvey, isPending: isCreatingSurvey } = useMutation({
+    mutationFn: async (survey: SurveyForm) => { //will check whether isDraft, if no, reject else create
+      const p = api.post("/api/survey", {
+        survey,
+      });
+      await toast.promise(p, {
+        loading: "Creating survey...",
+        success: (res) => res.data.message,
+        error: (err) => err.response.data.message,
+      });
+      return await p;
+    },
+  });
 
   const { mutate: deleteSurvey } = useMutation({
     mutationFn: async (id: string) => {
@@ -85,17 +117,17 @@ export const useSurveyActions = () => {
       return await p;
     },
     onSuccess: async (_, surveyId) => {
-      queryClient.setQueryData<SurveyDTO>(['survey', surveyId], (old) => {
-        if(!old)return;
+      queryClient.setQueryData<SurveyDTO>(["survey", surveyId], (old) => {
+        if (!old) return;
         return {
           ...old,
-          isClosed: true
-        }
-      })
+          isClosed: true,
+        };
+      });
     },
   });
 
-   const { mutate: reOpenSurvey, isPending: isReOpeningSurvey } = useMutation({
+  const { mutate: reOpenSurvey, isPending: isReOpeningSurvey } = useMutation({
     mutationFn: async (surveyId: string) => {
       const p = api.patch(`/api/survey/reopen-survey/${surveyId}`);
       await toast.promise(p, {
@@ -106,13 +138,13 @@ export const useSurveyActions = () => {
       return await p;
     },
     onSuccess: async (_, surveyId) => {
-      queryClient.setQueryData<SurveyDTO>(['survey', surveyId], (old) => {
-        if(!old)return;
+      queryClient.setQueryData<SurveyDTO>(["survey", surveyId], (old) => {
+        if (!old) return;
         return {
           ...old,
-          isClosed: false
-        }
-      })
+          isClosed: false,
+        };
+      });
     },
   });
 
@@ -125,5 +157,9 @@ export const useSurveyActions = () => {
     reOpenSurvey,
     isReOpeningSurvey,
     authorizeUser,
+    createSurvey,
+    isCreatingSurvey,
+    saveAsDraft,
+    isSavingAsDraft
   };
 };

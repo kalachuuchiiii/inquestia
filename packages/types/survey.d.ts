@@ -1,10 +1,7 @@
 
 
 import z from "zod";
-import { INTEREST_ENUM } from "@inquestia/constants";
 import { UserDTO } from "./user";
-import { SurveyFormSchema } from "@inquestia/schemas";
-
 import { AnswerFormFields } from "./answer";
 export interface SelectTypeQuestionDTO {
     type: "select";
@@ -31,7 +28,6 @@ export type SurveyDTO = {
     hasReachedTargetRespondents: boolean;
     isDraft: boolean;
     questions: QuestionDTO[];
-    tags: typeof INTEREST_ENUM[number][];
     targetRespondents: number;
     authorizedViewers: string[] | UserDTO[];
     title: string;

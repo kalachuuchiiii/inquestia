@@ -1,5 +1,4 @@
 
-import type { INTEREST_ENUM } from "node_modules/@inquestia/constants";
 import { SurveyDTO } from "./survey";
 
 export interface UserStreak {

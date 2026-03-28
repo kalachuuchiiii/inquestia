@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs"
+    
+  },
+  "include": [
+    "client/src",
+    "server/server.js",
+    "server/src"
+  ]
+}

@@ -1,10 +1,8 @@
 
 
 import z from "zod";
-import { INTEREST_ENUM } from "@inquestia/constants";
-import { UserDTO } from "./user";
-import { SurveyFormSchema } from "@inquestia/schemas";
 
+import { UserDTO } from "./user";
 import { AnswerFormFields } from "./answer";
 export interface SelectTypeQuestionDTO {
     type: "select";

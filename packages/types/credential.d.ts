@@ -1,5 +1,4 @@
-import { ROLE_ENUM } from "../constants";
-export type Role = readonly typeof ROLE_ENUM[number];
+
 export type CredentialDTO = {
     role: Role;
     password: string;

@@ -1,5 +1,5 @@
 
-export type Role = readonly typeof ROLE_ENUM[number];
+
 export type CredentialDTO = {
     role: Role;
     password: string;

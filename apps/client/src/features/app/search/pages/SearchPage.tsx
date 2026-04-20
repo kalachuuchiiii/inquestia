@@ -114,7 +114,7 @@ const SearchPage = () => {
             Try typing keywords
           </EmptyDescription>
          </EmptyHeader>
-        </Empty>}
+        </Empty>} 
      
     </div>
   );

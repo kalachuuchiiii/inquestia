@@ -41,7 +41,7 @@ export const useAuth = () => {
     },
     onSuccess: () => {
       dispatch(resetState());
-      nav("/login");
+      nav("/sign-in");
     },
   });
 

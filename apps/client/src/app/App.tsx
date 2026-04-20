@@ -27,7 +27,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className=" mx-auto min-h-screen ">
+    <div className=" min-h-screen w-full  ">
       <Toaster position="top-center" />
       <AppRouter />
     </div>

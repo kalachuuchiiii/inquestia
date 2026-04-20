@@ -33,8 +33,7 @@ const AssistantPage = () => {
 
   return (
     <div>
-   
-   
+
       <div className="flex flex-col  outline rounded-xl oveflow-hidden p-2 justify-between shadow-md relative   rounded-xl mx-auto md:w-full flex-col md:my-10 ">
         <header className="p-4 flex justify-between  items-center border-b border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/30 backdrop-blur-md shadow-sm">
           <div className="flex items-center gap-2 text-xl font-semibold">

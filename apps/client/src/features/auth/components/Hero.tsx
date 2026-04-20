@@ -9,9 +9,9 @@ interface HeroProps {
 
 const Hero = ({ header, subheader, text }: HeroProps) => {
   return (
-    <div className="space-y-4 flex items-center w-full justify-center h-full ">
+    <div className="space-y-4  flex items-center w-full justify-center h-full ">
       <div className="mb-10">
-        <AppIcon className="invert size-40" /> 
+        <AppIcon className=" size-40" /> 
       </div>
        <header className="space-y-2 w-8/12">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
@@ -21,7 +21,7 @@ const Hero = ({ header, subheader, text }: HeroProps) => {
         {subheader}
         
       </p>
-      <p className="text-sm sm:text-base leading-relaxed">
+      <p className="text-sm sm:text-base hidden lg:block leading-relaxed">
         {text}
         
       </p>

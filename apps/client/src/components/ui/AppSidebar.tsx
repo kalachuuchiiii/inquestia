@@ -7,8 +7,8 @@ const AppSidebar = () => {
   const isMobile = useIsMobile();
   const { user } = useAppSelector((state) => state.user);
   return (
-    <div className=" sticky top-0 w-3/12  ">
-      <div className="rounded relative  w-full scrollbar-none  bottom-0 z-50">
+    <div className=" sticky top-0 lg:w-3/12 z-200   ">
+      <div className="rounded relative   w-full scrollbar-none  bottom-0 z-100">
        {
         !isMobile && ( <div className="flex items-center gap-3 pb-8 py-4 border-b border-gray-200 dark:border-gray-800">
        
@@ -21,8 +21,8 @@ const AppSidebar = () => {
           </UserBadge>
         </div>)
        }
-        <aside className=" overflow-y-auto h-screen w-full scrollbar-none dark:bg-zinc-950  ">
-          <nav className=" w-full flex items-start  h-full mx-auto  scrollbar-none">
+        <aside className=" overflow-y-auto h-screen  w-full dark:bg-zinc-950  ">
+          <nav className=" w-full flex items-start overflow-scroll">
             <SidebarNav />
           </nav>
         </aside>

@@ -21,9 +21,9 @@ const LandingPage = () => {
         <div className="max-w-7xl  w-full invert dark:invert-0 p-1 mx-auto flex items-center justify-between   ">
           <h1 className="flex items-center w-fit">
             <AppIcon className="size-20" />
-            <p className="font-bold text-2xl -translate-x-1">Inquestia</p>
+            <p className="font-bold text-2xl -translate-x-1 hidden lg:block">Inquestia</p>
           </h1>
-          <div className="text-sm  lg:text-lg lg:px-4 px-2  space-x-4 ">
+          <div className="text-sm  lg:text-lg flex items-center lg:px-4 px-2  space-x-4 ">
             <NavLink className={"font-light"} to={"/documentation"}>
               Documentation
             </NavLink>

@@ -53,13 +53,13 @@ const Wave = () => {
 export const AuthLayout = ({ hero, children }: AuthLayoutInterface) => {
   return (
     <div>
-      <div className="h-screen flex items-center">
-        <div className="bg-zinc-900 h-full w-8/12 text-white">{hero}</div>
-        <div className=" h-full relative  flex items-center justify-center w-8/12  shadow-md">
+      <div className="h-screen flex flex-col my-15 lg:my-0 lg:flex-row  items-center">
+        <div className="lg:bg-zinc-900  h-full w-full lg:w-8/12 text-white">{hero}</div>
+        <div className=" h-full relative  flex items-center justify-center w-full lg:w-8/12  shadow-md">
           <div className="w-full h-full flex items-end absolute -bottom-[28vh]">
             <Wave />
           </div>
-          <main className=" p-6 w-6/12 bg-white/[0.12] backdrop-blur-[10px] backdrop-saturate-[111%] border border-white/[0.05] rounded-[2rem] shadow-xl shadow-indigo-500/10 ">
+          <main className=" p-6  lg:w-6/12 bg-white/[0.12] backdrop-blur-[10px] backdrop-saturate-[111%] border border-white/[0.05] rounded-[2rem] shadow-xl shadow-indigo-500/10 ">
             {children}
           </main>
         </div>

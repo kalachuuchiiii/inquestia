@@ -23,7 +23,7 @@ function NavItem({ to, label, children }: NavItemProps) {
   return (
     <NavLink
       to={to}
-      className="flex py-5 px-3 w-full  pr-4  items-center gap-4 group"
+      className="flex py-5 px-3 w-full  pr-4  items-center gap-4 "
     >
       {children}
       {!isMobile && (
@@ -37,9 +37,10 @@ function NavItem({ to, label, children }: NavItemProps) {
 
 export default function SidebarNav() {
   return (
-    <div className="flex w-full flex-row lg:pb-60 fixed lg:relative  dark:bg-background  bottom-0 lg:flex-col  gap-4">
+    <div className=" w-full lg:pb-60 fixed w-3/12 lg:relative inset-x-0  bottom-0  gap-4">
       {/* Create */}
-      <NavItem to="/create" label="Create">
+     <div className="w-full flex lg:flex-col flex-row w-full overflow-x-auto dark:bg-zinc-950 bg-neutral-100 ">
+       <NavItem to="/create" label="Create">
         <div className="flex items-center  justify-center rounded-xl transition-all duration-300 ease-out hover:scale-105 dark:hover:shadow-blue-900/40 inquestia-button">
           <GoPlus className="size-10" />
         </div>
@@ -114,6 +115,7 @@ export default function SidebarNav() {
           <TbSettings2 size={22} />
         </div>
       </NavItem>
+     </div>
     </div>
   );
 }

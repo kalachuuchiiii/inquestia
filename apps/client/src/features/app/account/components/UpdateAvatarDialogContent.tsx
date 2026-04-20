@@ -33,14 +33,14 @@ export const UpdateAvatarDialogContent = () => {
   };
 
   return (
-    <DialogContent>
+    <DialogContent className="w-full">
       <DialogHeader>
         <DialogTitle>Update your avatar</DialogTitle>
         <DialogDescription>1x1 image</DialogDescription>
       </DialogHeader>
-      <div className="flex items-center  justify-between w-full">
+      <div className="flex items-center  justify-center w-full">
         <div className="flex flex-col justify-center items-center gap-2">
-          <Avatar className="size-35  avatar-ring">
+          <Avatar className="size-25 lg:size-35  avatar-ring">
             <AvatarImage src={user.avatar} />
             <AvatarFallback>Your avatar</AvatarFallback>
           </Avatar>
@@ -50,23 +50,23 @@ export const UpdateAvatarDialogContent = () => {
         </div>
         <ArrowRight className="size-10" />
         <div className="flex flex-col justify-center items-center gap-2">
-          <Avatar className="size-45 avatar-ring">
+          <Avatar className="size-25 lg:size-45 avatar-ring">
             <AvatarImage src={avatarFile} />
             <AvatarFallback>New avatar</AvatarFallback>
           </Avatar>
           <Input
-            className="w-60"
+            className="w-30 lg:w-60"
             onChange={handleSetAvatar}
             type="file"
             accept="image/*"
           />
         </div>
       </div>
-      <DialogFooter>
+      <DialogFooter >
         <Button
           onClick={() => updateAvatar(formData)}
           disabled={!avatarFile || isUpdatingAvatar}
-          className="inquestia-button  mt-4"
+          className="inquestia-button w-full mt-4"
         >
           Upload Avatar
         </Button>

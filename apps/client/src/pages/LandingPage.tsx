@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { AppIcon } from "@/components/ui/AppIcon";
 import bot from "/bot.png";
@@ -49,7 +49,8 @@ const LandingPage = () => {
                 An opportunity for simplified data collection
               </h3>
             </main>
-            <Button className="w-46">Get Started</Button>
+            <Link to={'/sign-up'}>
+             <Button className="w-46">Get Started</Button></Link>
           </header>
         </div>
       </div>

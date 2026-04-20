@@ -15,15 +15,17 @@ const AuthenticatedLayout = () => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex flex-col  h-screen ">
+    <div className="flex flex-col  h-screen  ">
       <AppNavigationBar />
 
-      <div className="flex flex-row  max-w-450 mb-20 lg:m-0 lg:px-3 py-5 overflow-x-hidden  overflow-y-auto  ">
+      <div className="flex flex-row w-full max-w-450 mb-20 lg:m-0 lg:px-3 py-5 overflow-x-hidden  overflow-y-auto  ">
         {!!accessToken && <AppSidebar />}
 
-       <div className="lg:w-10/12 w-full  ">
+       <div className="lg:w-10/12  w-full px-4  ">
          <TooltipProvider>
-          <Outlet />
+         
+            <Outlet />
+        
         </TooltipProvider>
        </div>
 

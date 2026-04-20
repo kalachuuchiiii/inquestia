@@ -54,7 +54,7 @@ export const AuthLayout = ({ hero, children }: AuthLayoutInterface) => {
   return (
     <div>
       <div className="h-screen flex flex-col my-15 lg:my-0 lg:flex-row  items-center">
-        <div className="lg:bg-zinc-900  h-full w-full lg:w-8/12 text-white">{hero}</div>
+        <div className=" h-full w-full lg:w-8/12 text-white">{hero}</div>
         <div className=" h-full relative  flex items-center justify-center w-full lg:w-8/12  shadow-md">
           <div className="w-full h-full flex items-end absolute -bottom-[28vh]">
             <Wave />

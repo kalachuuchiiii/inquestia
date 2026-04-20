@@ -13,7 +13,7 @@ const Hero = ({ header, subheader, text }: HeroProps) => {
       <div className="mb-10">
         <AppIcon className=" size-40" /> 
       </div>
-       <header className="space-y-2 w-8/12">
+       <header className="space-y-2 text-zinc-950 dark:text-neutral-100 w-8/12">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
          {header}
       </h1>

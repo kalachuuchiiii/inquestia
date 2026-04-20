@@ -15,6 +15,7 @@ import { useAppSelector } from "@/hooks/useAppSelector.js";
 import { Button } from "@/components/ui/button.js";
 import { Item } from "@/components/ui/item.js";
 import { useInView } from "react-intersection-observer";
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 
 const SearchPage = () => {
   const [searchQuery] = useSearchParams();
@@ -103,7 +104,18 @@ const SearchPage = () => {
           ))}
           <div ref={surveyRef} />
         </TabsContent>
-      </Tabs>
+
+      </Tabs> {surveys?.length === 0 || users?.length === 0 && <Empty>
+         <EmptyHeader>
+          <EmptyTitle>
+            Search 
+          </EmptyTitle>
+          <EmptyDescription>
+            Try typing keywords
+          </EmptyDescription>
+         </EmptyHeader>
+        </Empty>}
+     
     </div>
   );
 };

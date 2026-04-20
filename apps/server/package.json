@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch server.ts",
     "start": "node dist/server.cjs",
-    "build": "tsup server.ts --dts"
+    "build": "tsup"
   },
   "keywords": [],
   "author": "",

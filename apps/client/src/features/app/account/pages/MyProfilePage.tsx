@@ -12,7 +12,7 @@ const MyProfilePage = () => {
   return (
     <>  
       <div className=" space-y-3 py-4 md:py-0">
-        <div className=" p-6 bg-white shadow-md  space-y-3 rounded-lg">
+        <div className=" p-6  shadow-md  space-y-3 rounded-lg">
           <div className="space-y-4">
             <UserProfile user={user} />
           </div>

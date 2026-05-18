@@ -300,6 +300,6 @@ export const USER_BADGES: Badge[] = [
     badge: "Survey Immortal",
     pointsRequired: 350000,
     style:
-      "text-violet-300 dark:text-violet-300 px-4 py-1 rounded-full font-extrabold bg-violet-500/[0.09] [text-shadow:0_0_12px_rgba(167,139,250,1),0_0_24px_rgba(167,139,250,0.80),0_0_48px_rgba(167,139,250,0.40),0_0_80px_rgba(139,92,246,0.20)] drop-shadow-[0_0_6px_rgba(167,139,250,0.50)]",
+      "text-violet-950 dark:text-violet-300 px-4 py-1 rounded-full font-extrabold bg-violet-500/[0.09] [text-shadow:0_0_12px_rgba(167,139,250,1),0_0_24px_rgba(167,139,250,0.80),0_0_48px_rgba(167,139,250,0.40),0_0_80px_rgba(139,92,246,0.20)] drop-shadow-[0_0_6px_rgba(167,139,250,0.50)]",
   },
 ] as const;

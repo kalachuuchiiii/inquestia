@@ -100,8 +100,13 @@ const CloseEndedForm = ({ ...props }: QuestionFormProps) => {
   const { register, watch } = surveyForm;
   const type = watch(`questions.${idx}.type`);
 
+  const handleAddChoice = () => {
+    addChoice(idx, choice);
+    setChoice("");
+  };
+
   return question.type === "close_ended" && type === "close_ended" ? (
-    <Card className="bg-zinc-925">
+    <Card className=" bg-neutral-100 dark:bg-zinc-925">
       <QuestionFormBaseUI {...props} />
       <CardFooter>
         <div className="flex flex-col gap-2 w-full">
@@ -120,25 +125,30 @@ const CloseEndedForm = ({ ...props }: QuestionFormProps) => {
           <InputGroup>
             <InputGroupInput
               value={choice}
+              onKeyDown={(e) =>
+                !e.shiftKey &&
+                e.key === "Enter" &&
+                choice.trim() &&
+                handleAddChoice()
+              }
               onChange={(e) => setChoice(e.target.value)}
               placeholder="Create a new choice"
             />
-            <InputGroupButton onClick={() => addChoice(idx, choice)}>
+            <InputGroupButton onClick={() => handleAddChoice()}>
               <Plus />
             </InputGroupButton>
           </InputGroup>
           <div className=" divide-y-1 grid grid-cols-2 gap-2">
             {question.choices.map((c) => (
-              <div className="flex items-center hover:opacity-50 transition-all duration-200 justify-between">
+              <Button
+                variant={"outline"}
+                className="w-full flex items-center justify-between"
+              >
                 <p>{c}</p>
-                <Button
-                  onClick={() => removeChoice(idx, c)}
-                  variant={"outline"}
-                >
-                  {" "}
-                  <X />{" "}
+                <Button onClick={() => handleAddChoice()} variant={"ghost"}>
+                  <X />
                 </Button>
-              </div>
+              </Button>
             ))}
           </div>
         </div>
@@ -153,7 +163,7 @@ export const QuestionForm = ({ ...props }: QuestionFormProps) => {
   const { type } = props.question;
 
   return type === "open_ended" ? (
-    <Card className="bg-zinc-925">
+    <Card className=" bg-neutral-100 bg-zinc-925">
       <QuestionFormBaseUI {...props} />
     </Card>
   ) : (

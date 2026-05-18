@@ -85,16 +85,15 @@ export const AnswerCard = ({ answer }: { answer: Answer }) => {
                             Choice-based question
                           </CardDescription>
                         </div>
-                        <div className="space-y-2">
+                        <div className=" grid grid-cols-2 gap-1 ">
                           {q.choices.map((c) => (
-                            <div
-                              className={`${
-                                q.answers.includes(c) &&
-                                "rounded-lg  outline outline-white/40"
-                              } py-1.5 px-3`}
+                            <Button
+                              variant={
+                                q.answers.includes(c) ? "default" : "outline"
+                              }
                             >
                               {c}
-                            </div>
+                            </Button>
                           ))}
                         </div>
                       </CardHeader>

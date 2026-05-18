@@ -1,9 +1,7 @@
-import logger from "@/config/logger";
 import Survey from "@/models/survey/survey";
-import User from "@/models/user/user";
 import { ObjectIdSchema } from "@/schemas";
 import { SurveyService } from "@/services";
-import { BadRequestError } from "@/utils/customErrorClass";
+
 import { getNextPage } from "@/utils/getNextPage";
 import {
   QueryParamParser,

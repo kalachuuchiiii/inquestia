@@ -11,14 +11,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { useSurveyActions } from "@/features/app/survey/hooks/useSurveyActions";
 import type { Survey, User } from "@inquestia/schemas";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   EllipsisVerticalIcon,
   Eye,
@@ -38,7 +32,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { QRCodeCanvas } from "qrcode.react";
 import { BsDownload } from "react-icons/bs";
-import { Separator } from "@/components/ui/separator";
 import { useRef } from "react";
 
 export const SurveyActions = ({
@@ -140,8 +133,8 @@ export const SurveyActions = ({
                   ) : (
                     <AlertDialog>
                       <AlertDialogTrigger>
-                        <Button variant={"outline"}>
-                          <UnlockKeyhole />
+                        <Button variant={"ghost"}>
+                          <UnlockKeyhole /> Reopen
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>

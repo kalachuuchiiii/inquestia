@@ -18,18 +18,19 @@ export const useAnswerFormController = () => {
     control: answerForm.control,
     name: "responses",
   });
-  const { append, update } = responsesForm;
+  const { update } = responsesForm;
 
   const toggleChoiceAt = (idx: number, choice: string) => {
     const values = watch(`responses.${idx}`);
     if (values.type !== "close_ended") return;
-    const { choices, numberOfAnswersAllowed, answers } = values;
+    const { answers, numberOfAnswersAllowed } = values;
 
     let tempAnswers = [];
     if (answers.includes(choice)) {
       tempAnswers = answers.filter((a) => a !== choice);
     } else {
       tempAnswers = [...answers, choice];
+      if (tempAnswers.length > numberOfAnswersAllowed) return;
     }
 
     update(idx, {

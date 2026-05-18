@@ -58,7 +58,7 @@ export const AnswerFormCard = ({ ...props }: AnswerFormCardProps) => {
     response.type === "close_ended" ? response.answers : response.answer;
 
   return question.type === "open_ended" && response.type === "open_ended" ? (
-    <Card className="bg-zinc-925">
+    <Card className="dark:bg-zinc-925 bg-neutral-100">
       <QuestionAnswerBaseUI {...props} />
       <CardFooter>
         <Textarea
@@ -71,7 +71,7 @@ export const AnswerFormCard = ({ ...props }: AnswerFormCardProps) => {
     </Card>
   ) : (
     question.type === "close_ended" && response.type === "close_ended" && (
-      <Card className="bg-zinc-925">
+      <Card className="dark:bg-zinc-925 bg-neutral-100">
         <QuestionAnswerBaseUI {...props} />
 
         <CardFooter className="flex flex-col items-start gap-2">

@@ -38,7 +38,7 @@ export const useSurveyActions = () => {
       const p = api.post("/api/survey", {
         survey,
       });
-      await toast.promise(p, {
+      toast.promise(p, {
         loading: "Creating survey...",
         success: (res) => res.data.message,
         error: (err) => err.response.data.message,

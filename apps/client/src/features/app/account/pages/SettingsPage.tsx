@@ -62,7 +62,7 @@ const SettingsPage = () => {
               <SelectItem value="true">Dark</SelectItem>
             </SelectGroup>
           </SelectContent>
-          <SelectTrigger>
+          <SelectTrigger className="bg-white">
             <SelectValue>{isDark ? "Dark" : "Light"}</SelectValue>
           </SelectTrigger>
         </Select>

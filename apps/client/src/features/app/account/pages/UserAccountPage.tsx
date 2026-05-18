@@ -87,7 +87,7 @@ const UserAccountPage = () => {
         </div>
 
         {isFetchingSurvey ? (
-          <SurveyCardPlaceholder />
+          <LoadingDisplay />
         ) : (
           !hasNextPage && userSurveys.length > 0 && <YouReachedTheEnd />
         )}

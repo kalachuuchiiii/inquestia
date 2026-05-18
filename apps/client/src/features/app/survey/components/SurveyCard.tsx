@@ -58,7 +58,7 @@ const SurveyCard = memo(({ survey }: { survey: Survey }) => {
 
   return (
     <Link to={redirectTo}>
-      <Card className="px-4 bg-zinc-925 h-full w-full">
+      <Card className="px-4 bg-neutral-100 dark:bg-zinc-925 h-full w-full">
         <div className="flex gap-4  w-full h-full">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -71,7 +71,7 @@ const SurveyCard = memo(({ survey }: { survey: Survey }) => {
                     height: `${booster * 20 || 3}%`,
                   }}
                 />
-                <div className="flex place-self-center col-span-1 row-span-1 col-start-1 row-start-1  z-20 flex-col pixelify-sans lg:text-2xl text-white h-full items-center justify-center font-bold ">
+                <div className="flex place-self-center col-span-1 row-span-1 col-start-1 row-start-1  z-20 flex-col pixelify-sans lg:text-2xl text-violet-950 dark:text-white h-full items-center justify-center font-bold ">
                   {boostWords[booster]?.map((letter, idx) => (
                     <p className="leading-5" key={`${letter}.${idx}`}>
                       {letter}

@@ -32,9 +32,10 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
+import LoadingDisplay from "@/components/ui/LoadingDisplay";
 
 const MySurveys = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams();
   const [surveyStatus, setSurveyStatus] = useState<SurveyStatus>("published");
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -98,7 +99,7 @@ const MySurveys = () => {
         {surveys && surveys.map((survey) => <SurveyCard survey={survey} />)}
       </div>
       {isFetchingNextPage ? (
-        <Placeholder />
+        <LoadingDisplay />
       ) : (
         !hasNextPage && <YouReachedTheEnd />
       )}

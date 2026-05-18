@@ -5,7 +5,7 @@ export const catchErrors = (fn: RequestHandler): RequestHandler => {
     try {
       return await fn(req, res, next);
     } catch (e: unknown) {
-      next(e);
+      return next(e);
     }
   };
 

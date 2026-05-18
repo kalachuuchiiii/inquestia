@@ -1,9 +1,7 @@
 import api from "@/lib/axios.instance";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-
 import { useSurveyAnswers } from "../hooks/useSurveyAnswers";
-
 import { Button } from "@/components/ui/button";
 import { RefreshCcw, X } from "lucide-react";
 import SurveyStatistics from "@/features/app/analytics/components/SurveyStatistics";
@@ -43,22 +41,14 @@ const SurveyAnswersPage = () => {
       >
         <div>
           <div className="p-2">
-            <div className="flex mb-6 flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="flex mb-6 flex-col lg:flex-row justify-between items-start  gap-4">
               <div className="flex-1">
-                <h1 className="lg:text-3xl font-bold tracking-tighter leading-4 text-lg mb-2">
+                <h1 className="lg:text-3xl font-bold tracking-tighter text-lg mb-2">
                   {survey?.title}
                 </h1>
                 <p className="text-base">{survey?.description}</p>
               </div>
               <div className="flex gap-2">
-                <Button
-                  onClick={() => fetchStatistics()}
-                  disabled={isPending}
-                  variant="outline"
-                >
-                  <RefreshCcw className="w-4 h-4" />
-                  Refresh
-                </Button>
                 <Link to={`/ai-summary/${survey?._id}`}>
                   <Button>
                     <img src="/star.gif" className="lg:size-6" /> AI Summary
@@ -67,7 +57,7 @@ const SurveyAnswersPage = () => {
               </div>
             </div>
           </div>
-          {statistics.length > 0 && (
+          {statistics && statistics.length > 0 && (
             <div className="mt-6 mb-3">
               <SurveyStatistics data={statistics} />
             </div>

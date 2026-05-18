@@ -77,7 +77,7 @@ export class UserService {
     const user = await User.findById(myId).orFail(
       new NotFoundError("User not found.", "USER_NOT_FOUND")
     );
-    const { avatar_public_id } = user;
+    const { avatarPublicId } = user;
     const { public_id, secure_url } = await cloudinary.uploader.upload(
       filePath,
       {
@@ -94,10 +94,10 @@ export class UserService {
       }
     );
 
-    if (avatar_public_id) {
-      await cloudinary.uploader.destroy(avatar_public_id);
+    if (avatarPublicId) {
+      await cloudinary.uploader.destroy(avatarPublicId);
     }
-    user.avatar_public_id = public_id;
+    user.avatarPublicId = public_id;
     user.avatar = secure_url;
     await user.save();
     return secure_url;

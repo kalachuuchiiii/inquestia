@@ -1,15 +1,9 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { useLeaderboard } from "../hooks/useLeaderboards";
 import { UserBadge } from "@/components/ui/UserBadge";
 import { Item, ItemActions } from "@/components/ui/item";
-import { GiAtomicSlashes } from "react-icons/gi";
 import millify from "millify";
+import LoadingDisplay from "@/components/ui/LoadingDisplay";
 
 const rankColorsStyle = [
   `
@@ -57,7 +51,10 @@ const LeaderboardsPage = () => {
         </div>
       </div>
       <CardContent className="space-y-2">
-        {leaderboard &&
+        {isFetchingLeaderboard ? (
+          <LoadingDisplay>Fetching leaderboard...</LoadingDisplay>
+        ) : (
+          leaderboard &&
           leaderboard.map((u, idx) => (
             <Item
               className={` ${rankColorsStyle[idx]} rounded-lg flex items-center justify-between`}
@@ -77,7 +74,8 @@ const LeaderboardsPage = () => {
                 <img src="/point.gif" className="size-8" />
               </ItemActions>
             </Item>
-          ))}
+          ))
+        )}
       </CardContent>
     </div>
   );

@@ -54,13 +54,15 @@ const UsersWithSimilarInterests = () => {
                   user={u}
                   className="flex items-center justify-between"
                 >
-                  <div className="flex items-start gap-4">
-                    <UserBadge.Avatar className="size-10" />
-                    <div className="flex flex-col items-start justify-start">
-                      <UserBadge.Nickname className="truncate leading-4" />
-                      <UserBadge.Username className="truncate" />
-                      <UserBadge.Badge />
-                    </div>
+                  <div className="flex flex-col items-start gap-4">
+                    <header className="flex items-start gap-4">
+                      <UserBadge.Avatar className="size-10" />
+                      <div className="flex flex-col items-start justify-start">
+                        <UserBadge.Nickname className="truncate leading-4" />
+                        <UserBadge.Username className="truncate" />
+                      </div>
+                    </header>
+                    <UserBadge.Badge />
                   </div>
                 </UserBadge>
               </div>

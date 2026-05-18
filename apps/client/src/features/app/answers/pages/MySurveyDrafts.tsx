@@ -6,22 +6,23 @@ import { SurveyForm } from "@/features/app/survey/components/SurveyForm.js";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import api from "@/lib/axios.instance";
+import { useAccount } from "../../account/hooks/useAccount";
 
 const MySurveyDrafts = () => {
-  const { user, accessToken } = useAppSelector((state) => state.user);
+  const { data: user } = useAccount();
   const { surveyId } = useParams();
   const surveyControls = useSurveyForm();
-  const { setSurveyForm } = surveyControls;
-  const { data } = useQuery({
+  const { surveyForm } = surveyControls;
+  useQuery({
     queryFn: async () => {
       const res = await api.get(`/api/survey/${surveyId}`);
-      setSurveyForm(res.data.survey);
+      surveyForm.reset(res.data.survey);
     },
     queryKey: ["survey", surveyId],
-    enabled: !!accessToken,
+    enabled: !!user,
   });
 
-  return <SurveyForm {...surveyControls} />;
+  return <SurveyForm footer={<></>} {...surveyControls} />;
 };
 
 export default MySurveyDrafts;

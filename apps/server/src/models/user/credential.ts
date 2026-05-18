@@ -1,9 +1,12 @@
 import { isValidEmail } from "@inquestia/utils";
-import mongoose, { HydratedDocument, InferSchemaType, Types, type Model } from "mongoose";
+import mongoose, {
+  HydratedDocument,
+  InferSchemaType,
+  Types,
+  type Model,
+} from "mongoose";
 import bcrypt from "bcryptjs";
-import { IMPLICIT_EMAIL_MSG, ROLE_ENUM } from "@inquestia/constants";
-import { ENV_CONFIG } from "@/config/env";
-
+import { ROLE_ENUM } from "@inquestia/constants";
 
 const credentialSchema = new mongoose.Schema({
   role: {
@@ -18,7 +21,7 @@ const credentialSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: isValidEmail,
-      message: IMPLICIT_EMAIL_MSG.invalid,
+      message: `Invalid Credentials`,
     },
   },
   password: {
@@ -38,15 +41,6 @@ credentialSchema.methods.comparePasswords = async function (
   return await bcrypt.compare(candidatePass, this.password);
 };
 
-export type CredentialSchema = InferSchemaType<typeof credentialSchema>;
-export type CredentialMethods = {
-  comparePasswords: (candidatePass: string) => Promise<boolean>
-}
-export type CredentialModel = Model<HydratedDocument<CredentialSchema, CredentialMethods>>;
-
-const Credential = mongoose.model<CredentialSchema, CredentialModel>(
-  "Credential",
-  credentialSchema
-);
+const Credential = mongoose.model("Credential", credentialSchema);
 
 export default Credential;

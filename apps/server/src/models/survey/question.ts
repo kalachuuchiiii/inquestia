@@ -1,32 +1,45 @@
-import mongoose, { HydratedDocument } from "mongoose";
-import { selectTypeQuestionSchema } from "./selectTypeQuestion";
-import { QUESTION_TITLE_MAX, QUESTION_TITLE_MIN, QUESTION_TITLE_MSG, QUESTION_TYPE_ENUM, QUESTION_TYPE_MSG } from "@inquestia/constants";
+import mongoose from "mongoose";
+import { closeEndedSchema } from "./closeEndedQuestion";
+import {
+  QUESTION_TITLE_MAX,
+  QUESTION_TITLE_MIN,
+  QUESTION_TYPE_ENUM,
+} from "@inquestia/constants";
 
- const questionSchema = new mongoose.Schema({
-  question: {
-    type: String, 
-    minlength: [QUESTION_TITLE_MIN, QUESTION_TITLE_MSG.min], 
-    maxlength: [QUESTION_TITLE_MAX, QUESTION_TITLE_MSG.max],
-    required: true
-  }, 
-  type: {
-    type: String, 
-    required: true,
-    enum: {
-      values: QUESTION_TYPE_ENUM,
-      message: QUESTION_TYPE_MSG.enum
-    }
-  }, 
-  isRequired: {
-    type: Boolean, 
-    default: false
+const questionSchema = new mongoose.Schema(
+  {
+    question: {
+      type: String,
+      minlength: [
+        QUESTION_TITLE_MIN,
+        `Question must be at least ${QUESTION_TITLE_MIN} characters`,
+      ],
+      maxlength: [
+        QUESTION_TITLE_MAX,
+        `Question must be at least ${QUESTION_TITLE_MAX} characters`,
+      ],
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: {
+        values: QUESTION_TYPE_ENUM,
+        message: `Invalid question type`,
+      },
+    },
+    isRequired: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    collection: "questions",
+    discriminatorKey: "type",
+    _id: true,
   }
-}, {
-  collection: 'questions',
-  discriminatorKey: 'type',
-  _id: true
-});
+);
 
-questionSchema.discriminator('select', selectTypeQuestionSchema)
+questionSchema.discriminator("close_ended", closeEndedSchema);
 
 export default questionSchema;

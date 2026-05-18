@@ -5,79 +5,61 @@ import { ObjectIdSchema } from "@/schemas";
 import { SurveyService } from "@/services";
 import { BadRequestError } from "@/utils/customErrorClass";
 import { getNextPage } from "@/utils/getNextPage";
-import { QueryParamParser, SurveyFormSchema } from "@inquestia/schemas";
-import { AuthorizeUserResponse, GetSurveyByIdResponse, SurveyListResponse } from "@inquestia/types";
+import {
+  QueryParamParser,
+  SurveyFormSchema,
+  SurveySchema,
+} from "@inquestia/schemas";
 import { RequestHandler } from "express";
 import z from "zod";
 
 const surveyService = new SurveyService();
 export class SurveyController {
-
-  searchSurveys: RequestHandler = async(req, res) => {
-      const query = z.string().min(1).parse(req.query.q);
-      const { skip, limit, page } = QueryParamParser.parse(req.query);
-      const surveyQuery = { $or: [
+  searchSurveys: RequestHandler = async (req, res) => {
+    const query = z.string().min(1).parse(req.query.q);
+    const { skip, limit, page } = QueryParamParser.parse(req.query);
+    const surveyQuery = {
+      $or: [
         { description: { $regex: query, $options: "i" } },
-        { title: { $regex: query, $options: "i" } } ,
-        { tags: {
-          $in: [query]
-        }}
-        ]};
-  
-      const [surveys, totalSurveys] = await Promise.all([
-        Survey.find(surveyQuery).skip(skip).limit(limit).populate('authorId').lean(),
-        Survey.countDocuments(surveyQuery)
-      ])
+        { title: { $regex: query, $options: "i" } },
+        {
+          tags: {
+            $in: [query],
+          },
+        },
+      ],
+    };
 
-      
-  
-      const nextPage = getNextPage({ page, limit, totalResources: totalSurveys });
-  
-      return res.status(200).json({
-        success: true,
-        surveys: surveys.map((s) => ({
-          ...new Survey(s).getSafeDetails(),
-          author: new User(s.authorId).getSafeDetails()
-        })),
-        totalSurveys,
-        nextPage
-      })
-    }
-  
+    const [surveys, totalSurveys] = await Promise.all([
+      Survey.find(surveyQuery)
+        .skip(skip)
+        .limit(limit)
+        .populate("authorId")
+        .lean(),
+      Survey.countDocuments(surveyQuery),
+    ]);
 
-  saveMySurveyAsDraft: RequestHandler = async(req, res) => {
-    const survey = SurveyFormSchema.parse(req.body.survey);
-    const myId = ObjectIdSchema.parse(req.myId);
+    const nextPage = getNextPage({ page, limit, totalResources: totalSurveys });
 
-   const result = await surveyService.upsertSurveyDraft({ survey, myId });
-   logger.info('saved as draft', result);
     return res.status(200).json({
       success: true,
-      result,
-      message: 'Saved as draft!'
-    })
-   
-    
-  }
+      surveys: z.array(SurveySchema).parse(surveys),
+      totalSurveys,
+      nextPage,
+    });
+  };
 
-
-  createMySurvey: RequestHandler = async(req, res) => {
+  createMySurvey: RequestHandler = async (req, res) => {
     const survey = SurveyFormSchema.parse(req.body.survey);
     const myId = ObjectIdSchema.parse(req.myId);
-    
-    if(survey.isDraft){
-      throw new BadRequestError("You can't publish a draft survey", 'PUBLISH_DRAFT_ERROR')
-    }
 
-      await surveyService.upsertSurvey({ survey, myId });
+    await surveyService.createSurvey({ form: survey, myId });
 
-     return res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: 'Survey created!'
-    })
-   
-
-  }
+      message: "Survey created!",
+    });
+  };
 
   reOpenSurvey: RequestHandler = async (req, res) => {
     const surveyId = ObjectIdSchema.parse(req.params.surveyId);
@@ -137,7 +119,7 @@ export class SurveyController {
       myId,
     });
 
-    const response: AuthorizeUserResponse = {
+    const response = {
       success: true,
       message: `Authorized successfully!`,
     };
@@ -145,16 +127,36 @@ export class SurveyController {
     return res.status(200).json(response);
   };
 
-  //  GET /api/survey/find-by-id/:surveyId
+  getSurveyDraftById: RequestHandler = async (req, res) => {
+    const surveyId = ObjectIdSchema.parse(req.params.surveyId);
+    const myId = ObjectIdSchema.parse(req.myId);
+    const survey = await surveyService.getDraft({ surveyId, myId });
+    const cleanSurvey = SurveySchema.parse(survey);
+    return res.status(200).json({
+      survey: cleanSurvey,
+    });
+  };
+
+  saveSurveyById: RequestHandler = async (req, res) => {
+    const surveyId = ObjectIdSchema.parse(req.params.surveyId);
+    const form = SurveyFormSchema.parse(req.body.form);
+    const myId = ObjectIdSchema.parse(req.myId);
+    const result = await surveyService.saveSurvey({ surveyId, form, myId });
+    return res.status(200).json({
+      message: "Survey saved successfully!",
+    });
+  };
+
+  //  GET /api/survey/:surveyId
   getSurveyById: RequestHandler = async (req, res) => {
     const surveyId = ObjectIdSchema.parse(req.params.surveyId);
     const { safeSurvey, responses } = await surveyService.findById(surveyId);
-   
-    const response: GetSurveyByIdResponse = {
+
+    const response = {
       success: true,
       survey: safeSurvey,
-      responses
-    }
+      responses,
+    };
     return res.status(200).json(response);
   };
 
@@ -163,11 +165,12 @@ export class SurveyController {
     const myId = ObjectIdSchema.parse(req.myId);
     const { nextPage, surveys, totalSurveys } =
       await surveyService.getSurveyList({ page, limit, myId });
+    const cleanSurveys = z.array(SurveySchema).parse(surveys);
 
-    const response: SurveyListResponse = {
+    const response = {
       success: true,
       nextPage,
-      surveys,
+      surveys: cleanSurveys,
       totalSurveys,
     };
     return res.status(200).json(response);
@@ -181,7 +184,7 @@ export class SurveyController {
 
     return res.status(200).json({
       success: true,
-      ...result
+      ...result,
     });
   };
 }

@@ -1,49 +1,56 @@
 import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
 import questionSchema from "./question";
 import {
-  APPLIED_BOOSTER_MAX,
-  APPLIED_BOOSTER_MIN,
+  BOOSTER_MAX,
+  BOOSTER_MIN,
   AUTHORIZED_VIEWERS_MAX,
-  AUTHORIZED_VIEWERS_MSG,
   DESCRIPTION_MAX,
   DESCRIPTION_MIN,
-  DESCRIPTION_MSG,
   QUESTIONS_MAX,
   QUESTIONS_MIN,
   TAGS_ENUM,
   TAGS_MAX,
   TAGS_MIN,
-  TAGS_MSG,
-  TARGET_RESPONDENTS_MAX,
-  TARGET_RESPONDENTS_MIN,
-  TARGET_RESPONDENTS_MSG,
+  RESPONDENT_COUNT_MAX,
+  RESPONDENT_COUNT_MIN,
   TITLE_MAX,
   TITLE_MIN,
-  TITLE_MSG,
+  SURVEY_STATUS_ENUM,
 } from "@inquestia/constants";
-import { SurveyDTO } from "@inquestia/types";
 
 const surveySchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      minlength: [TITLE_MIN, TITLE_MSG.min],
-      maxlength: [TITLE_MAX, TITLE_MSG.max],
+      minlength: [TITLE_MIN, `Title must be at least ${TITLE_MIN}`],
+      maxlength: [TITLE_MAX, `Title must be at most ${TITLE_MAX}`],
       required: true,
       index: true,
     },
     description: {
       type: String,
-      minlength: [DESCRIPTION_MIN, DESCRIPTION_MSG.min],
+      minlength: [
+        DESCRIPTION_MIN,
+        `Description must be at least ${DESCRIPTION_MIN}`,
+      ],
       index: true,
-      maxlength: [DESCRIPTION_MAX, DESCRIPTION_MSG.max],
+      maxlength: [
+        DESCRIPTION_MAX,
+        `Description must be at least ${DESCRIPTION_MAX}`,
+      ],
       required: true,
     },
     targetRespondents: {
       type: Number,
-      min: [TARGET_RESPONDENTS_MIN, TARGET_RESPONDENTS_MSG.min],
-      max: [TARGET_RESPONDENTS_MAX, TARGET_RESPONDENTS_MSG.max],
-      default: 12,
+      min: [
+        RESPONDENT_COUNT_MIN,
+        `Respondent count must be at least ${RESPONDENT_COUNT_MIN}`,
+      ],
+      max: [
+        RESPONDENT_COUNT_MAX,
+        `Respondent count must be at most ${RESPONDENT_COUNT_MAX}`,
+      ],
+      default: RESPONDENT_COUNT_MIN,
     },
 
     hasReachedTargetRespondents: {
@@ -61,18 +68,18 @@ const surveySchema = new mongoose.Schema(
       validate: {
         validator: (val: string[]) =>
           val.length >= TAGS_MIN && val.length <= TAGS_MAX,
-        message: TAGS_MSG.range,
+        message: `You can only select ${TAGS_MIN}-${TAGS_MAX} tags`,
       },
       required: true,
     },
     questions: {
       type: [questionSchema],
       validate: {
-        validator: function(arr: any[]) {
+        validator: function (arr: any[]) {
           return arr.length <= QUESTIONS_MAX && arr.length >= QUESTIONS_MIN;
         },
-        message: 'Survey must contain 1-20 questions.'
-      }
+        message: "Survey must contain 1-20 questions.",
+      },
     },
     authorId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -99,7 +106,7 @@ const surveySchema = new mongoose.Schema(
       default: [],
       validate: {
         validator: (val: string[]) => val.length <= AUTHORIZED_VIEWERS_MAX,
-        message: AUTHORIZED_VIEWERS_MSG.max,
+        message: `You can only authorize ${AUTHORIZED_VIEWERS_MAX}`,
       },
       index: true,
     },
@@ -110,10 +117,14 @@ const surveySchema = new mongoose.Schema(
     },
     booster: {
       type: Number,
-      default: APPLIED_BOOSTER_MIN,
-      min: APPLIED_BOOSTER_MIN,
+      default: BOOSTER_MIN,
+      min: BOOSTER_MIN,
       index: true,
-      max: APPLIED_BOOSTER_MAX,
+      max: BOOSTER_MAX,
+    },
+    status: {
+      type: String,
+      enum: SURVEY_STATUS_ENUM,
     },
     isDeleted: {
       type: Boolean,
@@ -132,35 +143,9 @@ const surveySchema = new mongoose.Schema(
 );
 
 surveySchema.virtual("totalRespondents").get(function () {
-  return this.respondents.length;
+  return this.respondents?.length ?? 0;
 });
 
-surveySchema.methods.getSafeDetails = function () {
-  const safeDetails = {
-    isClosed: this.isClosed,
-    createdAt: this.createdAt,
-    description: this.description,
-    hasReachedTargetRespondents: this.hasReachedTargetRespondents,
-    isDraft: this.isDraft,
-    questions: this.questions,
-    tags: this.tags,
-    author: this.author ?? this.authorId,
-    targetRespondents: this.targetRespondents,
-    title: this.title,
-    totalRespondents: this.totalRespondents,
-    _id: this._id,
-    authorizedViewers: this.authorizedViewers,
-    booster: this.booster
-  } satisfies SurveyDTO;
-  return safeDetails;
-};
-
-export type SurveySchema = InferSchemaType<typeof surveySchema>;
-export type SurveyMethods = {
-  totalRespondents: number;
-  getSafeDetails: () => SurveyDTO;
-};
-export type SurveyModel = HydratedDocument<SurveySchema, SurveyMethods>;
-const Survey = mongoose.model<SurveyModel>("Survey", surveySchema);
-
+const Survey = mongoose.model("Survey", surveySchema);
+export type ISurvey = InferSchemaType<typeof surveySchema>;
 export default Survey;

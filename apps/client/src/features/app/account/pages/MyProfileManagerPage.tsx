@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button.js";
-import { useAppSelector } from "@/hooks/useAppSelector.js";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
 import {
   EyeOffIcon,
@@ -24,9 +24,10 @@ import { UpdateAvatarDialogContent } from "@/features/app/account/components/Upd
 import { UpdateSocialLinksDialogContent } from "@/features/app/account/components/UpdateSocialLinksDialogContent.js";
 import { UpdatePasswordOTPForm } from "@/features/auth/components/UpdatePasswordOTPForm.js";
 import { useUpdatePassword } from "@/features/auth/hooks/useUpdatePassword.js";
+import { useAccount } from "../hooks/useAccount";
 
 const MyProfileManagerPage = () => {
-  const { user } = useAppSelector((state) => state.user);
+  const { data: user } = useAccount();
   const updatePasswordControl = useUpdatePassword();
   if (!user) return;
   return (
@@ -102,7 +103,7 @@ const MyProfileManagerPage = () => {
           <ItemContent>
             <ItemTitle>
               <div className="flex items-center gap-2">
-                <MailCheckIcon /> <p>{user.email}</p>
+                <MailCheckIcon /> <p>{user.credential.email}</p>
               </div>
             </ItemTitle>
             <ItemDescription>Verified Email</ItemDescription>

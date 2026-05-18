@@ -5,15 +5,14 @@ import Chart from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import SliderButton from "../../../../components/SliderButton";
 import { Card } from "../../../../components/ui/card";
+import { useAppSelector } from "@/hooks/useAppSelector";
 
-/** Question choice option with statistics */
 interface Choice {
   choice: string;
   percentage: number;
   count: number;
 }
 
-/** Survey question data with select-type choices - matches assistant controller return type */
 interface SelectTypeQuestion {
   questionId: string;
   question: string;
@@ -22,54 +21,35 @@ interface SelectTypeQuestion {
   createdAt: Date;
 }
 
-/** Chart type options for display */
 type ChartType = "bar" | "pie" | "doughnut";
 
-/** Props for the SurveyStatistics component */
 interface SurveyStatisticsProps {
   data: SelectTypeQuestion[] | null;
 }
 
-/** Chart type configuration */
 const chartTypes = [
   { label: "Bar", value: "bar" as const },
   { label: "Pie", value: "pie" as const },
   { label: "Doughnut", value: "doughnut" as const },
 ];
 
-// ✅ Register Chart.js plugins
 Chart.register(ChartDataLabels);
 
 const SurveyStatistics = ({ data }: SurveyStatisticsProps) => {
   const [current, setCurrent] = useState<number>(0);
   const [chartType, setChartType] = useState<ChartType>("bar");
   const chartRef = useRef<any>(null);
+  const { isDark } = useAppSelector((state) => state.theme);
 
-
-  /**
-   * Navigate to the next question
-   * Prevents going beyond the last question
-   */
   const handleNext = (): void => {
     if (!data) return;
     setCurrent((prev) => (prev === data.length - 1 ? prev : prev + 1));
   };
 
-  /**
-   * Navigate to the previous question
-   * Prevents going below the first question
-   */
   const handlePrev = (): void => {
     setCurrent((prev) => (prev === 0 ? prev : prev - 1));
   };
 
-  /**
-   * Generate chart data from question statistics
-   * Maps question choices to chart dataset format
-   * 
-   * @param {SelectTypeQuestion} questionData - The question data to visualize
-   * @returns Chart.js compatible data object
-   */
   const truncateLabel = (text: string, maxLength: number = 50): string => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
@@ -92,16 +72,12 @@ const SurveyStatistics = ({ data }: SurveyStatisticsProps) => {
           "#34d399",
           "#f87171",
         ],
-        borderColor: "#ffffff",
+        borderColor: isDark ? "#000" : "#ffffff",
         borderWidth: 2,
       },
     ],
   });
 
-  /**
-   * Download the current chart as a PNG image
-   * Uses the chart reference to generate a base64 image
-   */
   const handleDownload = (): void => {
     if (!chartRef.current) return;
     const url = chartRef.current?.canvas?.toDataURL() || "";
@@ -111,25 +87,22 @@ const SurveyStatistics = ({ data }: SurveyStatisticsProps) => {
     link.click();
   };
 
-  /**
-   * Chart configuration options
-   * Includes styling, data labels, and responsive behavior
-   */
   const chartOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
     indexAxis: "x" as const,
     plugins: {
       legend: {
-        labels: { color: "#000" },
+        labels: { color: isDark ? "#fff" : "#000" },
       },
       datalabels: {
-        color: "#000",
+        color: isDark ? "#fff" : "#000",
         anchor: chartType === "bar" ? ("end" as const) : ("center" as const),
         align: chartType === "bar" ? ("top" as const) : ("center" as const),
         font: { weight: "bold" as const, size: 12 },
         formatter: (value: number, context: any): string => {
-          const count = context.chart.data.datasets[0].counts[context.dataIndex];
+          const count =
+            context.chart.data.datasets[0].counts[context.dataIndex];
           return `${value.toFixed(1)}% (${count})`;
         },
       },
@@ -138,18 +111,18 @@ const SurveyStatistics = ({ data }: SurveyStatisticsProps) => {
       chartType === "bar"
         ? {
             x: {
-              ticks: { color: "#000" },
-              grid: { color: "#ddd" },
+              ticks: { color: isDark ? "#fff" : "#000" },
+              grid: { color: isDark ? "#fff" : "#000" },
             },
             y: {
-              ticks: { color: "#000" },
-              grid: { color: "#ddd" },
+              ticks: { color: isDark ? "#fff" : "#000" },
+              grid: { color: isDark ? "#fff" : "#000" },
             },
           }
         : undefined,
   };
 
-   const renderChart = (): any => {
+  const renderChart = (): any => {
     if (!data || data.length === 0) {
       return <div className="text-center">No data available</div>;
     }
@@ -180,7 +153,7 @@ const SurveyStatistics = ({ data }: SurveyStatisticsProps) => {
   };
 
   return (
-    <Card >
+    <Card className="bg- w-full">
       {data ? (
         data.length > 0 ? (
           <div className="flex flex-col items-center w-full">
@@ -216,7 +189,7 @@ const SurveyStatistics = ({ data }: SurveyStatisticsProps) => {
             </div>
 
             {/* Chart Container */}
-            <div className="w-full md:w-8/12 bg-white rounded-xl p-4 shadow-inner border border-gray-200">
+            <div className="w-full md:w-8/12 dark:bg-zinc-925 bg-white rounded-xl p-4 shadow-inner border border-gray-200">
               <div className="relative h-64 sm:h-80 md:h-96">
                 {renderChart()}
               </div>
@@ -245,4 +218,3 @@ const SurveyStatistics = ({ data }: SurveyStatisticsProps) => {
 };
 
 export default SurveyStatistics;
-

@@ -5,7 +5,6 @@ import Survey from "@/models/survey/survey";
 import User from "@/models/user/user";
 import { conversationStore } from "@/store/ConversationStore";
 import { NotFoundError } from "@/utils/customErrorClass";
-import type { ConversationMessage } from "@inquestia/types";
 import axios from "axios";
 
 export class AssistantService {
@@ -25,13 +24,12 @@ export class AssistantService {
     const survey = await Survey.findOne({ authorId: myId, _id: surveyId })
       .populate("questions")
       .orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
-          const query = {
+    const query = {
       surveyId: survey._id,
     } as any;
 
     if (isAuthentic !== null) {
       query.isAuthentic = isAuthentic;
-      
     }
 
     const answers = await Answer.find(query).lean();
@@ -44,9 +42,9 @@ export class AssistantService {
         answer.responses
           .filter((r: any) => String(r.questionId) === String(question._id))
           .map((r: any) => {
-            if (r.type === "text") {
+            if (r.type === "open_ended") {
               return r.answer;
-            } else if (r.type === "select") {
+            } else if (r.type === "close_ended") {
               return r.answers.join(", ");
             }
             return "";
@@ -96,7 +94,7 @@ export class AssistantService {
       new NotFoundError("User not found.", "USER_NOT_FOUND")
     );
     const conversationKey = `conversation:${user._id}`;
-     conversationStore.delete(conversationKey);
+    conversationStore.delete(conversationKey);
     return { success: true };
   };
 
@@ -119,14 +117,15 @@ export class AssistantService {
 
     const conversationKey = `conversation:${user._id}`;
 
-    const promptObject: ConversationMessage = {
+    const promptObject = {
       //user prompt
       content: prompt,
       role: "user",
     };
 
-    const conversation = conversationStore.get(conversationKey)?.conversation ?? []; //messages;
-    const updatedConversation: ConversationMessage[]  = [...conversation, { ...promptObject }]; //messages including the prompt
+    const conversation =
+      conversationStore.get(conversationKey)?.conversation ?? []; //messages;
+    const updatedConversation = [...conversation, { ...promptObject }]; //messages including the prompt
 
     const response = await axios.post(
       "https://api.groq.com/openai/v1/chat/completions",
@@ -148,13 +147,13 @@ export class AssistantService {
     const responseContent: string =
       response.data?.choices?.[0]?.message?.content ?? "Internal Server Error."; //ai's response (string);
 
-     conversationStore.set(
-      conversationKey,
-      {
-        createdAt: new Date(),
-        conversation: [...updatedConversation, { content: responseContent, role: 'system'}]
-      }
-    ); //saving the entire conversation in redis;
+    conversationStore.set(conversationKey, {
+      createdAt: new Date(),
+      conversation: [
+        ...updatedConversation,
+        { content: responseContent, role: "system" },
+      ],
+    }); //saving the entire conversation in redis;
 
     return {
       responseContent,

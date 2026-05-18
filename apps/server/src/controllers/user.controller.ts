@@ -2,10 +2,7 @@ import cloudinary from "@/config/cloudinary";
 import User from "@/models/user/user";
 import { ObjectIdSchema } from "@/schemas";
 import { UserService } from "@/services";
-import {
-  BadRequestError,
-  NotFoundError,
-} from "@/utils/customErrorClass";
+import { NotFoundError } from "@/utils/customErrorClass";
 import { getNextPage } from "@/utils/getNextPage";
 import {
   AvatarSizeSchema,
@@ -16,60 +13,52 @@ import {
   NicknameSchema,
   QueryParamParser,
   SocialLinkListSchema,
+  SurveySchema,
+  SurveyStatusSchema,
   UsernameSchema,
+  UserSchema,
 } from "@inquestia/schemas";
-import {
-  GetLeaderboardResponse,
-  GetOwnedSurveysResponse,
-  GetSurveysSharedToMeResponse,
-  GetUserByUsernameResponse,
-  GetUserSurveysReponse,
-  GetUsersWithSimilarInterestsResponse,
-  UpdateInterestResponse,
-  UpdateMyAvatarResponse,
-} from "@inquestia/types";
 import { RequestHandler } from "express";
 import z from "zod";
 
 const userService = new UserService();
 
 export class UserController {
-
-  searchUsers: RequestHandler = async(req, res) => {
+  searchUsers: RequestHandler = async (req, res) => {
     const query = z.string().min(1).parse(req.query.q);
     const { skip, limit, page } = QueryParamParser.parse(req.query);
-    const userQuery = { $or: [
-      { username: { $regex: query, $options: "i" } },
-      { nickname: { $regex: query, $options: "i" } } 
-      ]};
+    const userQuery = {
+      $or: [
+        { username: { $regex: query, $options: "i" } },
+        { nickname: { $regex: query, $options: "i" } },
+      ],
+    };
 
     const [users, totalUsers] = await Promise.all([
       User.find(userQuery).skip(skip).limit(limit).lean(),
-      User.countDocuments(userQuery)
-    ])
+      User.countDocuments(userQuery),
+    ]);
 
     const nextPage = getNextPage({ page, limit, totalResources: totalUsers });
 
     return res.status(200).json({
       success: true,
-      users: users.map((u) => new User(u).getSafeDetails()),
+      users: z.array(UserSchema).parse(users),
       totalUsers,
-      nextPage
-    })
-  }
+      nextPage,
+    });
+  };
 
-
-  getLeaderboards: RequestHandler = async(req, res) => {
-    const myId = ObjectIdSchema.parse(req.myId);
-    
+  getLeaderboards: RequestHandler = async (req, res) => {
     const leaderboard = await userService.getLeaderboards();
-    const response: GetLeaderboardResponse = {
-      leaderboard,
-      message: '',
-      success: true
+
+    const cleanLeaderboard = z.array(UserSchema).parse(leaderboard);
+    const response = {
+      leaderboard: cleanLeaderboard,
+      success: true,
     };
-    return res.status(200).json(response)
-  }
+    return res.status(200).json(response);
+  };
 
   getUserSurveys: RequestHandler = async (req, res) => {
     const { skip, page, limit } = QueryParamParser.parse(req.query);
@@ -77,8 +66,10 @@ export class UserController {
 
     const { surveys, totalSurveys, nextPage } =
       await userService.getUserSurveys({ skip, page, limit, userId });
-    const response: GetUserSurveysReponse = {
-      surveys,
+    const cleanSurveys = z.array(SurveySchema).parse(surveys);
+
+    const response = {
+      surveys: cleanSurveys,
       totalSurveys,
       nextPage,
       success: true,
@@ -112,7 +103,7 @@ export class UserController {
     const filePath = `data:${file.mimetype};base64,${avatar}`;
 
     const avatarUrl = await userService.updateMyAvatar({ filePath, myId });
-    const response: UpdateMyAvatarResponse = {
+    const response = {
       success: true,
       avatarUrl,
       message: "Your avatar was updated!",
@@ -133,7 +124,7 @@ export class UserController {
   updateMyNickname: RequestHandler = async (req, res) => {
     const nickname = NicknameSchema.parse(req.body.nickname);
     const myId = ObjectIdSchema.parse(req.myId);
-    const data = await userService.updateMyNickname({ nickname, myId });
+    await userService.updateMyNickname({ nickname, myId });
     return res.status(200).json({
       success: true,
       message: "Your nickname was updated!",
@@ -143,7 +134,8 @@ export class UserController {
   updateMyUsername: RequestHandler = async (req, res) => {
     const username = UsernameSchema.parse(req.body.username);
     const myId = ObjectIdSchema.parse(req.myId);
-    const data = await userService.updateMyUsername({ username, myId });
+    await userService.updateMyUsername({ username, myId });
+
     return res.status(200).json({
       success: true,
       message: "Your username was updated!",
@@ -154,9 +146,10 @@ export class UserController {
     const myId = ObjectIdSchema.parse(req.myId);
     const { skip, page, limit } = QueryParamParser.parse(req.query);
 
-    const { sharedSurveys, totalSharedSurveys, nextPage } =
+    const { surveys, totalSharedSurveys, nextPage } =
       await userService.getSurveysSharedToMe({ myId, skip, page, limit });
-    const response: GetSurveysSharedToMeResponse = {
+    const sharedSurveys = z.array(SurveySchema).parse(surveys);
+    const response = {
       sharedSurveys,
       totalSharedSurveys,
       nextPage,
@@ -168,16 +161,19 @@ export class UserController {
   getMySurveys: RequestHandler = async (req, res) => {
     const myId = ObjectIdSchema.parse(req.myId);
     const { skip, page, limit } = QueryParamParser.parse(req.query);
-    const isDraft = IsDraftSchema.parse(req.query.isDraft);
+    const status = SurveyStatusSchema.parse(req.query.status);
 
-    const { surveys, nextPage, totalSurveys } = await userService.getMySurveys({
+    const result = await userService.getMySurveys({
       myId,
       skip,
+      status,
       page,
       limit,
-      isDraft,
     });
-    const response: GetOwnedSurveysResponse = {
+    const { nextPage, totalSurveys } = result;
+
+    const surveys = z.array(SurveySchema).parse(result.surveys);
+    const response = {
       surveys,
       nextPage,
       totalSurveys,
@@ -191,8 +187,9 @@ export class UserController {
     const username = UsernameSchema.parse(req.params.username);
     const user = await userService.getUserProfileByUsername(username);
 
-    const response: GetUserByUsernameResponse = {
-      user: user,
+    const cleanUser = UserSchema.parse(user);
+    const response = {
+      user: cleanUser,
       success: true,
     };
 
@@ -203,7 +200,7 @@ export class UserController {
     const interests = InterestListSchema.parse(req.body.interests);
     const myId = ObjectIdSchema.parse(req.myId);
     const data = await userService.updateUserInterests({ myId, interests });
-    const response: UpdateInterestResponse = {
+    const response = {
       success: true,
       interests: data.interests,
       message: "Interests updated successfully!",
@@ -213,10 +210,11 @@ export class UserController {
 
   getUsersWithSimilarInterests: RequestHandler = async (req, res) => {
     const myId = ObjectIdSchema.parse(req.myId);
-    const { users } = await userService.getUsersWithSimilarInterests({
+    const result = await userService.getUsersWithSimilarInterests({
       myId,
     });
-    const response: GetUsersWithSimilarInterestsResponse = {
+    const users = z.array(UserSchema).parse(result);
+    const response = {
       users,
       success: true,
     };

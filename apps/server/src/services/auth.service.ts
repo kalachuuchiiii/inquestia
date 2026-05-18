@@ -1,26 +1,24 @@
-import { ENV_CONFIG } from "@/config/env";
 import gmail from "@/config/gmail";
-
-import { createRawEmail } from '@/utils/createRawEmail';
-import { REFRESH_TOKEN_COOKIE_TTL, REFRESH_TOKEN_JWT_TTL } from "@/constants";
+import { createRawEmail } from "@/utils/createRawEmail";
 import { AuthHelper } from "@/helper";
 import Credential from "@/models/user/credential";
-import User, { UserModel } from "@/models/user/user";
+import User from "@/models/user/user";
 import { OTPStore } from "@/store/OTPStore";
 import { verifiedEntriesStore } from "@/store/VerifiedOTPEntryStore";
 import {
   BadRequestError,
   ConflictError,
-  ForbiddenError,
   NotFoundError,
   UnauthorizedError,
 } from "@/utils/customErrorClass";
 import { runWithSession } from "@/utils/runWithSession";
-import { IMPLICIT_PASSWORD_MSG } from "@inquestia/constants";
-import { ExplicitEmailSchema } from "@inquestia/schemas";
-import { LoginForm, RegisterForm } from "@inquestia/types";
-import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import {
+  UserSchema,
+  type LoginForm,
+  type RegisterForm,
+} from "@inquestia/schemas";
+import { Types } from "mongoose";
 
 const UserNotFound = new NotFoundError("User not found.", "USER_NOT_FOUND");
 
@@ -53,7 +51,9 @@ export class AuthService {
       new NotFoundError("User not found.", "USER_NOT_FOUND")
     );
 
-    const credential = await Credential.findOne({ userId: myId }).orFail(new NotFoundError('Credentials not found.', 'CREDENTIAL_NOT_FOUND'));
+    const credential = await Credential.findOne({ userId: myId }).orFail(
+      new NotFoundError("Credentials not found.", "CREDENTIAL_NOT_FOUND")
+    );
 
     const hashedPass = await authHelper.hash(newPassword);
     credential.password = hashedPass;
@@ -135,15 +135,32 @@ export class AuthService {
   };
 
   getUserData = async ({ myId }: { myId: string }) => {
-    const user = await User.findById(myId).orFail(
-      new NotFoundError("User not found.", "USER_NOT_FOUND")
-    );
-    const { email } = await Credential.findOne({ userId: user._id }).orFail(
-      new NotFoundError("Credentials not found.", "CREDENTIAL_NOT_FOUND")
-    );
+    const pipeline = [
+      {
+        $match: {
+          _id: new Types.ObjectId(myId),
+        },
+      },
+      {
+        $lookup: {
+          from: "credentials",
+          localField: "_id",
+          foreignField: "userId",
+          as: "credential",
+        },
+      },
+      {
+        $unwind: "$credential",
+      },
+    ];
+    const [user] = await User.aggregate(pipeline);
+
+    if (!user) {
+      new UnauthorizedError("Invalid session", "INVALID_SESSION");
+    }
 
     return {
-      user: { ...user.toObject(), email }
+      user,
     };
   };
 
@@ -205,7 +222,7 @@ export class AuthService {
     const raw = createRawEmail(
       email,
       "Your Verification Code for Inquestia.ask",
-       `<div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+      `<div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
       <strong><h1>Inquestia.Ask</h1></strong>
       <p>Hello,</p>
       <p>We received a request to verify your account on <strong>Inquestia.ask</strong>.</p>
@@ -219,15 +236,15 @@ export class AuthService {
       <br>
       <p>Thank you,<br>Inquestia.ask</p>
     </div>`
-    )
+    );
 
     await gmail.users.messages.send({
-      userId: 'me',
+      userId: "me",
       requestBody: {
-        raw
-      }
-    })
- 
+        raw,
+      },
+    });
+
     const key = `register:request:${email}`;
     OTPStore.setOTP(key, code);
 
@@ -235,29 +252,21 @@ export class AuthService {
   };
 
   login = async ({ email, password }: LoginForm) => {
-    let credential = await Credential.findOne({ email }).orFail(new NotFoundError("Credentials not found.", 'CREDENTIAL_NOT_FOUND'));
+    let credential = await Credential.findOne({ email }).orFail(
+      new NotFoundError("Credentials not found.", "CREDENTIAL_NOT_FOUND")
+    );
 
-      const user = await User.findOne({
-        _id: String(credential.userId),
-      }).orFail(UserNotFound);
-      const isPasswordCorrect = await credential.comparePasswords(password); 
+    const user = await User.findOne({
+      _id: String(credential.userId),
+    }).orFail(UserNotFound);
+    const isPasswordCorrect = await (credential as any).comparePasswords(
+      password
+    );
 
-      if (!isPasswordCorrect)
-        throw new UnauthorizedError(
-          IMPLICIT_PASSWORD_MSG.invalid,
-          "INVALID_CREDENTIALS"
-        );
+    if (!isPasswordCorrect)
+      throw new UnauthorizedError(`Invalid credentials`, "INVALID_CREDENTIALS");
 
-      if (user.banDetails.isBanned) {
-        throw new ForbiddenError(
-          `Your account has been banned. Remaining time: ${formatMs(
-            user.banDetails.remainingMS
-          )}`,
-          "BANNED"
-        );
-      }
-      const plain = user.toObject();
-      return { user };
-
+    const plain = user.toObject();
+    return { user };
   };
 }

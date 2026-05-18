@@ -7,15 +7,14 @@ import { useNavigate } from "react-router-dom";
 import SurveyCardPlaceholder from "@/features/app/survey/components/ui/SurveyCardPlaceholder.js";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import api from "@/lib/axios.instance";
-import type { SurveyListResponse } from "@inquestia/types";
 import { useAppSelector } from "@/hooks/useAppSelector.js";
+import type { Survey } from "@inquestia/schemas";
+import { useAccount } from "../../account/hooks/useAccount";
+import { Separator } from "@/components/ui/separator";
 
 const MyFeedPage = () => {
-  const {
-    user,
-    accessToken,
-  } = useAppSelector((state) => state.user);
-  
+  const { data: user } = useAccount();
+
   const {
     data,
     isPending: isLoading,
@@ -23,15 +22,17 @@ const MyFeedPage = () => {
     fetchNextPage,
   } = useInfiniteQuery({
     queryFn: async ({ pageParam }) => {
-      const res = await api.get<SurveyListResponse>(
-        `/api/survey?page=${pageParam}&limit=${5}`
-      );
+      const res = await api.get<{
+        nextPage: number | undefined;
+        surveys: Survey[];
+        totalSurveys: number;
+      }>(`/api/survey?page=${pageParam}&limit=${5}`);
       return res;
     },
     queryKey: ["survey-list"],
     initialPageParam: 1,
     getNextPageParam: (res) => res.data.nextPage,
-    enabled: !!accessToken,
+    enabled: !!user,
   });
 
   const surveys = data?.pages.flatMap((p) => p.data.surveys) ?? [];
@@ -44,7 +45,7 @@ const MyFeedPage = () => {
     fetchNextPage();
   }, [inView]);
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return (
       <LoadingDisplay>
         <div className="flex gap-2 items-center">
@@ -55,11 +56,12 @@ const MyFeedPage = () => {
   }
 
   return (
-    <div >
-      <div className=" space-y-6">
+    <div>
+      <div className=" px-4 pb-4">
         <Dashboard user={user} />
       </div>
-      <div className="space-y-3 min-h-screen">
+      <Separator className="my-6" />
+      <div className="flex flex-col gap-2 min-h-screen">
         {surveys?.length > 0 ? (
           surveys.map((survey) => (
             <SurveyCard survey={survey} key={survey._id} />

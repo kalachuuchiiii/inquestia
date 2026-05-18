@@ -6,13 +6,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type {
-  GetSurveyByIdResponse,
-  GetUserByUsernameResponse,
-} from "@inquestia/types";
+
 import { Item, ItemActions, ItemHeader } from "@/components/ui/item";
 import {
   InputGroup,
@@ -35,15 +33,23 @@ import { isAxiosError } from "axios";
 import { getSuccessMsg } from "@/utils/getSuccessMsg";
 import { getErrMsg } from "@/utils/getErrMsg";
 import api from "@/lib/axios.instance";
+import type { Survey, User } from "@inquestia/schemas";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { Search, Users } from "lucide-react";
+import { useAccount } from "../../account/hooks/useAccount";
 
-const SearchUserDialogContent = ({
-  survey,
-}: {
-  survey: GetSurveyByIdResponse["survey"];
-}) => {
+const SearchUserDialogContent = ({ survey }: { survey: Survey }) => {
   const queryClient = useQueryClient();
   const [username, setUsername] = useState("");
   const { surveyId = "" } = useParams();
+  const { data: user } = useAccount();
+
+  const isMine = user?._id === survey.author?._id;
 
   const {
     data: userResult,
@@ -51,9 +57,7 @@ const SearchUserDialogContent = ({
     isLoading: isSearchingUser,
   } = useQuery({
     queryFn: async () => {
-      const p = api.get<GetUserByUsernameResponse>(
-        `/api/user/username/${username}`
-      );
+      const p = api.get<{ user: User }>(`/api/user/username/${username}`);
 
       toast.promise(p, {
         loading: "Searching...",
@@ -64,6 +68,7 @@ const SearchUserDialogContent = ({
       const result = await p;
       return result.data.user;
     },
+    retry: false,
     queryKey: [`user-result-${surveyId}`],
     enabled: false,
   });
@@ -73,28 +78,44 @@ const SearchUserDialogContent = ({
 
   return (
     <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Who would you like to share this survey with?</DialogTitle>
-      </DialogHeader>
+      {isMine && (
+        <>
+          <DialogHeader className="mb-4">
+            <DialogTitle>
+              Who would you like to share this survey with?
+            </DialogTitle>
+            <DialogDescription>
+              Sharing this survey to a person would mean they would be able to
+              see and monitor the answer of this!
+            </DialogDescription>
+          </DialogHeader>
 
-      <InputGroup>
-        <InputGroupInput
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Type username..."
-        />
-        <InputGroupButton
-          onClick={() => searchUser()}
-          disabled={isSearchingUser}
-          className="p-4"
-          variant={"outline"}
-        >
-          <CiSearch className="size-7" />
-        </InputGroupButton>
-      </InputGroup>
+          <InputGroup>
+            <InputGroupInput
+              value={username}
+              onKeyDown={(e) =>
+                !e.shiftKey &&
+                e.key === "Enter" &&
+                username.trim() &&
+                searchUser()
+              }
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Type username..."
+            />
+            <InputGroupButton
+              onClick={() => searchUser()}
+              disabled={isSearchingUser}
+              className="p-4"
+              variant={"ghost"}
+            >
+              <CiSearch className="size-5" />
+            </InputGroupButton>
+          </InputGroup>
+        </>
+      )}
       <div>
         {userResult && (
-          <div className="p-3 flex items-center justify-between">
+          <div className=" flex items-center justify-between">
             <div className=" place-content-center">
               <UserBadge
                 user={userResult}
@@ -120,61 +141,72 @@ const SearchUserDialogContent = ({
             </Button>
           </div>
         )}
-        <div className="pl-2 py-5  border-t-1 border-t-black/10 ">
-          <p className="text-xs my-2">Shared with</p>
-          <div>
-            {survey.authorizedViewers.length > 0 &&
-              survey.authorizedViewers.map((viewer) => (
-                <AlertDialog key={viewer._id}>
-                  <Item className="grid w-full grid-cols-12">
-                    <ItemHeader className="col-start-1 place-content-center col-span-8 ">
-                      <UserBadge
-                        user={viewer}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-4">
-                          <UserBadge.Avatar className="size-10" />
-                          <div className="flex flex-col ">
-                            <UserBadge.Nickname className="font-semibold lg:text-lg" />
-                            <UserBadge.Username className="lg:text-base" />
-                          </div>
+        <div className="  border-t-1 border-t-black/10 ">
+          <p className="text-sm my-2">
+            These users are authorized to view the answers of this survey
+          </p>
+          <div className="py-2">
+            {survey && (survey.authorizedViewers?.length ?? 0) > 0 ? (
+              survey.authorizedViewers?.map((viewer) => (
+                <div className="flex items-center justify-between ">
+                  <header>
+                    <UserBadge
+                      user={viewer}
+                      className="flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-4">
+                        <UserBadge.Avatar className="size-10" />
+                        <div className="flex flex-col ">
+                          <UserBadge.Nickname className="font-semibold lg:text-lg" />
+                          <UserBadge.Username className="lg:text-base" />
                         </div>
-                      </UserBadge>
-                    </ItemHeader>
+                      </div>
+                    </UserBadge>
+                  </header>
 
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you sure you want to remove {viewer.displayName}{" "}
-                          as your survey's viewer?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This will notify {viewer.displayName}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <Button
-                          onClick={() =>
-                            revokeAuthorization({
-                              surveyId,
-                              userId: viewer._id,
-                            })
-                          }
-                          variant={"destructive"}
-                        >
-                          Remove
-                        </Button>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                    <ItemActions className="place-content-center col-start-9 col-span-4">
-                      <AlertDialogTrigger>
-                        <Button variant={"outline"}>Remove</Button>
-                      </AlertDialogTrigger>
-                    </ItemActions>
-                  </Item>
-                </AlertDialog>
-              ))}
+                  {isMine && (
+                    <aside>
+                      <AlertDialog key={viewer._id}>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you sure you want to remove {viewer.username}{" "}
+                              as your survey's viewer?
+                            </AlertDialogTitle>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <Button
+                              onClick={() =>
+                                revokeAuthorization({
+                                  surveyId,
+                                  userId: viewer._id,
+                                })
+                              }
+                              variant={"destructive"}
+                            >
+                              Remove
+                            </Button>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                        <AlertDialogTrigger>
+                          <Button variant={"outline"}>Remove</Button>
+                        </AlertDialogTrigger>
+                      </AlertDialog>
+                    </aside>
+                  )}
+                </div>
+              ))
+            ) : (
+              <Empty>
+                <EmptyHeader>
+                  <EmptyMedia>
+                    <Users />
+                  </EmptyMedia>
+                  <EmptyTitle>This survey is not shared with anyone</EmptyTitle>
+                </EmptyHeader>
+              </Empty>
+            )}
           </div>
         </div>
       </div>

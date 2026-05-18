@@ -1,51 +1,40 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios.instance";
 import { toast } from "sonner";
-import type {
-  AuthorizeUserResponse,
-  SurveyDTO,
-  SurveyForm,
-} from "@inquestia/types";
-import { useNavigate } from "react-router-dom";
-import { SurveyFormSchema } from "@inquestia/schemas";
+
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  SurveyFormSchema,
+  type Survey,
+  type SurveyForm,
+} from "@inquestia/schemas";
 import { getSuccessMsg } from "@/utils/getSuccessMsg";
 import { getErrMsg } from "@/utils/getErrMsg";
 
 export const useSurveyActions = () => {
   const queryClient = useQueryClient();
   const nav = useNavigate();
+  const { surveyId = "" } = useParams();
 
-  const { mutate: saveAsDraft, isPending: isSavingAsDraft } = useMutation({
-    mutationFn: async (survey: SurveyForm) => {
-      //will check ._id, if exist, update, else create ne wone
-      const p = new Promise((resolve, reject) => {
-        try {
-          SurveyFormSchema.parse(survey);
-          resolve(
-            api.post(`/api/survey/drafts`, {
-              survey: {
-                ...survey,
-                boost: 0,
-                isDraft: true
-              }
-            })
-          );
-        } catch (e) {
-          reject(e);
-        }
+  const { mutate: saveSurvey, isPending: isSavingSurvey } = useMutation({
+    mutationFn: async (form: SurveyForm) => {
+      const p = api.patch(`/api/survey/${surveyId}/save`, {
+        form,
       });
-      await toast.promise(p, {
-        loading: "Saving as draft...",
+      toast.promise(p, {
+        loading: "Saving survey...",
         success: getSuccessMsg,
         error: getErrMsg,
       });
       return await p;
     },
+    onSuccess: () => {
+      nav("/my-profile");
+    },
   });
 
   const { mutate: createSurvey, isPending: isCreatingSurvey } = useMutation({
     mutationFn: async (survey: SurveyForm) => {
-      //will check whether isDraft, if no, reject else create
       const p = api.post("/api/survey", {
         survey,
       });
@@ -55,6 +44,9 @@ export const useSurveyActions = () => {
         error: (err) => err.response.data.message,
       });
       return await p;
+    },
+    onSuccess: () => {
+      nav("/my-profile");
     },
   });
 
@@ -70,7 +62,7 @@ export const useSurveyActions = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["survey-list"] });
-      nav("/home");
+      nav("/feed");
     },
   });
 
@@ -82,9 +74,7 @@ export const useSurveyActions = () => {
       surveyId: string;
       userId: string;
     }) => {
-      const p = api.patch<AuthorizeUserResponse>(
-        `/api/survey/${surveyId}/authorize/${userId}`
-      );
+      const p = api.patch(`/api/survey/${surveyId}/authorize/${userId}`);
       await toast.promise(p, {
         loading: "Authorizing user...",
         success: (res) => res.data.message,
@@ -111,9 +101,7 @@ export const useSurveyActions = () => {
       toast.loading("Revoking user's authorization...", {
         id: "revoke-authorization",
       });
-      const res = await api.patch(
-        `/api/survey/${surveyId}/revoke/${userId}`
-      );
+      const res = await api.patch(`/api/survey/${surveyId}/revoke/${userId}`);
       toast.dismiss("revoke-authorization");
     },
     onSuccess: async (_, params) => {
@@ -134,7 +122,7 @@ export const useSurveyActions = () => {
       return await p;
     },
     onSuccess: async (_, surveyId) => {
-      queryClient.setQueryData<SurveyDTO>(["survey", surveyId], (old) => {
+      queryClient.setQueryData<Survey>(["survey", surveyId], (old) => {
         if (!old) return;
         return {
           ...old,
@@ -155,7 +143,7 @@ export const useSurveyActions = () => {
       return await p;
     },
     onSuccess: async (_, surveyId) => {
-      queryClient.setQueryData<SurveyDTO>(["survey", surveyId], (old) => {
+      queryClient.setQueryData<Survey>(["survey", surveyId], (old) => {
         if (!old) return;
         return {
           ...old,
@@ -174,10 +162,10 @@ export const useSurveyActions = () => {
     reOpenSurvey,
     isReOpeningSurvey,
     authorizeUser,
+    saveSurvey,
+    isSavingSurvey,
     createSurvey,
     isCreatingSurvey,
-    saveAsDraft,
-    isSavingAsDraft,
     queryClient,
   };
 };

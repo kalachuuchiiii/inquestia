@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { changeTheme } from "@/state/slice/theme";
 import type { AppDispatch, RootState } from "@/state/store";
-
 import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -19,7 +19,6 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
-  ItemHeader,
   ItemTitle,
 } from "@/components/ui/item";
 import {
@@ -32,26 +31,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ChevronRight } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { capitalize } from "lodash";
 
 const SettingsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const nav = useNavigate();
-
   const { isDark } = useSelector((state: RootState) => state.theme);
-
   const handleThemeChange = (val: string) => dispatch(changeTheme(val));
-
   const { logout, isLoggingOut } = useAuth();
 
   return (
-    <div className=" space-y-3 max-w-3xl mx-auto mt-20">
-      {/* Theme */}
+    <div className="">
+      <header className="mb-6">
+        <h1 className="text-3xl tracking-tighter font-bold">Settings</h1>
+        <p className="opacity-75">Options for your account</p>
+      </header>
       <Item>
         <ItemContent>
-          <ItemTitle>Theme</ItemTitle>
-          <ItemDescription>Color of the interface/UI</ItemDescription>
+          <ItemTitle className="text-lg tracking-tighter font-semibold">
+            Theme
+          </ItemTitle>
+          <ItemDescription className="text-base">
+            Color of the interface/UI
+          </ItemDescription>
         </ItemContent>
 
         <Select value={String(isDark)} onValueChange={handleThemeChange}>
@@ -63,52 +63,71 @@ const SettingsPage = () => {
             </SelectGroup>
           </SelectContent>
           <SelectTrigger>
-            <SelectValue>{isDark ? 'Dark' : 'Light'}</SelectValue>
+            <SelectValue>{isDark ? "Dark" : "Light"}</SelectValue>
           </SelectTrigger>
         </Select>
       </Item>
 
       {/* Navigation */}
-      <Link to="/boost-market">
-        <Item>
-          <ItemContent>
-            <ItemTitle>
-              <>Exchange Center</>
-            </ItemTitle>
-            <ItemDescription>Exchange your cores for resources</ItemDescription>
-          </ItemContent>
-          <ItemActions>
-            {" "}
-            <ChevronRight />{" "}
-          </ItemActions>
-        </Item>
-      </Link>
 
-      {/* Logout Dialog */}
-      <AlertDialog>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Are you sure you want to log-out?
-            </AlertDialogTitle>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>No, Cancel</AlertDialogCancel>
-            <Button
-              variant={"destructive"}
-              onClick={() => logout()}
-              disabled={isLoggingOut}
-            >
-              Yes, log me out
+      <Item>
+        <ItemContent>
+          <ItemTitle className="text-lg font-semibold tracking-tighter">
+            <>Exchange Center</>
+          </ItemTitle>
+          <ItemDescription className="text-base ">
+            Exchange your cores for resources
+          </ItemDescription>
+        </ItemContent>
+        <Link to="/boost-market">
+          <ItemActions>
+            <Button variant={"outline"}>
+              Purchase boosts <ChevronRight />
             </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-        <AlertDialogTrigger asChild>
-          <Item>
-            <span className="text-red-500 font-semibold">Logout</span>
-          </Item>
-        </AlertDialogTrigger>
-      </AlertDialog>
+          </ItemActions>
+        </Link>
+      </Item>
+
+      <Item>
+        <ItemContent>
+          <ItemTitle className="text-lg font-semibold tracking-tighter">
+            <>Sign out</>
+          </ItemTitle>
+          <ItemDescription className="text-base ">
+            Log out your account
+          </ItemDescription>
+        </ItemContent>
+
+        <ItemActions>
+          <AlertDialog>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Are you sure you want to sign-out?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  You'll need to sign in again
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <main className="flex items-center gap-2 justify-end">
+                <AlertDialogCancel>No, Cancel</AlertDialogCancel>
+                <Button
+                  variant={"destructive"}
+                  onClick={() => logout()}
+                  disabled={isLoggingOut}
+                >
+                  Yes, sign me out
+                </Button>
+              </main>
+            </AlertDialogContent>
+            <AlertDialogTrigger asChild>
+              <Button variant={"destructive"}>
+                <span>Sign Out</span>
+              </Button>
+            </AlertDialogTrigger>
+          </AlertDialog>
+        </ItemActions>
+      </Item>
     </div>
   );
 };

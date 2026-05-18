@@ -15,11 +15,20 @@ import { useAppSelector } from "@/hooks/useAppSelector.js";
 import { Button } from "@/components/ui/button.js";
 import { Item } from "@/components/ui/item.js";
 import { useInView } from "react-intersection-observer";
-import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { useAccount } from "../../account/hooks/useAccount";
+import { Search } from "lucide-react";
+import type { User } from "@inquestia/schemas";
 
 const SearchPage = () => {
   const [searchQuery] = useSearchParams();
-  const { accessToken } = useAppSelector((state) => state.user);
+  const { data: user } = useAccount();
 
   const {
     data: userData,
@@ -27,7 +36,10 @@ const SearchPage = () => {
     hasNextPage: doesUsersHaveNextPage,
   } = useInfiniteQuery({
     queryFn: async ({ pageParam }) => {
-      const res = await api.get(
+      const res = await api.get<{
+        nextPage: number | undefined;
+        users: User[];
+      }>(
         `/api/user/search?q=${searchQuery.get("q")}&page=${pageParam}&limit=${6}`
       );
       return res;
@@ -35,7 +47,7 @@ const SearchPage = () => {
     queryKey: ["search/user", searchQuery.get("q")],
     getNextPageParam: (res) => res.data.nextPage,
     initialPageParam: 1,
-    enabled: !!accessToken && !!searchQuery.get("q"),
+    enabled: !!user && !!searchQuery.get("q"),
   });
 
   const {
@@ -52,7 +64,7 @@ const SearchPage = () => {
     queryKey: ["search/survey", searchQuery.get("q")],
     getNextPageParam: (res) => res.data.nextPage,
     initialPageParam: 1,
-    enabled: !!accessToken && !!searchQuery.get("q"),
+    enabled: !!user && !!searchQuery.get("q"),
   });
 
   const surveys = surveyData?.pages.flatMap((p) => p.data.surveys);
@@ -71,51 +83,65 @@ const SearchPage = () => {
   }, [userInView, userRef]);
 
   return (
-    <div className="space-y-3 py-6 md:py-1 w-11/12 mx-auto p-1">
+    <div className="space-y-3 pb-6   p-1">
       <SearchBar />
-      <Tabs defaultValue="users">
+      <Tabs defaultValue="users" className="w-full">
         <TabsList>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="surveys">Surveys</TabsTrigger>
         </TabsList>
-        <TabsContent value="users" className="space-y-2">
-          {users?.map((u) => (
-            <Item className="flex items-center justify-between">
-              <UserBadge user={u} className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <UserBadge.Avatar className="size-10" />
-                  <div className="flex flex-col ">
-                    <UserBadge.Nickname className="font-semibold lg:text-lg" />
-                    <UserBadge.Username className="lg:text-base" />
+        <TabsContent value="users" className="space-y-2 w-full">
+          {users && users?.length > 0 ? (
+            users?.map((u) => (
+              <Item className="flex items-center justify-between">
+                <UserBadge
+                  user={u}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-4">
+                    <UserBadge.Avatar className="size-10" />
+                    <div className="flex flex-col ">
+                      <UserBadge.Nickname className="font-semibold lg:text-lg" />
+                      <UserBadge.Username className="lg:text-base" />
+                    </div>
+                    <UserBadge.Badge />
                   </div>
-                  <UserBadge.Badge />
-                </div>
-              </UserBadge>
-              <Link to={`/users/${u.username}`}>
-                <Button variant={"outline"}>View profile</Button>
-              </Link>
-            </Item>
-          ))}
+                </UserBadge>
+                <Link to={`/users/${u.username}`}>
+                  <Button variant={"outline"}>View profile</Button>
+                </Link>
+              </Item>
+            ))
+          ) : (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia>
+                  <Search />
+                </EmptyMedia>
+                <EmptyTitle>Search</EmptyTitle>
+                <EmptyDescription>Try typing keywords</EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          )}
           <div ref={userRef} />
         </TabsContent>
         <TabsContent value="surveys">
-          {surveys?.map((s) => (
-            <SurveyCard survey={s} />
-          ))}
+          {surveys && surveys?.length > 0 ? (
+            surveys?.map((s) => <SurveyCard survey={s} />)
+          ) : (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia>
+                  <Search />
+                </EmptyMedia>
+                <EmptyTitle>Search</EmptyTitle>
+                <EmptyDescription>Try typing keywords</EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          )}
           <div ref={surveyRef} />
         </TabsContent>
-
-      </Tabs> {surveys?.length === 0 || users?.length === 0 && <Empty>
-         <EmptyHeader>
-          <EmptyTitle>
-            Search 
-          </EmptyTitle>
-          <EmptyDescription>
-            Try typing keywords
-          </EmptyDescription>
-         </EmptyHeader>
-        </Empty>} 
-     
+      </Tabs>{" "}
     </div>
   );
 };

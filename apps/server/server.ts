@@ -3,19 +3,15 @@ import express, { type Application } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDatabase } from "@/config/connectDatabase";
-import { mainRouter } from "@/router";
+import { mainRouter } from "./src/router";
 import { errorHandler } from "@/utils/errorHandler";
-import Survey from "@/models/survey/survey";
-import gmail from "@/config/gmail";
-import { createRawEmail } from "@/utils/createRawEmail";
-import User from "@/models/user/user";
-import Credential from "@/models/user/credential";
 import logger from "@/config/logger";
 
 declare global {
   namespace Express {
     interface Request {
       myId?: string;
+      accessToken?: string;
     }
   }
 }
@@ -34,7 +30,7 @@ app.use(
 
 app.set("trust proxy", 1);
 
-app.use('/api', mainRouter);
+app.use("/api", mainRouter);
 app.use(errorHandler);
 
 app.get("/", (_, res) => {
@@ -44,8 +40,6 @@ app.get("/", (_, res) => {
 const PORT = process.env.PORT || 5000;
 
 connectDatabase();
-
-
 
 app.listen(PORT, async () => {
   try {

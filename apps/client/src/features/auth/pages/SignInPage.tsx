@@ -1,29 +1,26 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { PASSWORD_MAX } from "@inquestia/constants";
-import { type LoginForm } from "@inquestia/types";
 import { useAuth } from "@/features/auth/hooks/useAuth.js";
 import { Button } from "@/components/ui/button.js";
 import type { TextInput } from "@/types/input.js";
 import { AuthLayout } from "@/features/auth/components/AuthLayout.js";
-import { Input } from "@/components/ui/input.js";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group.js";
 import { MdEmail } from "react-icons/md";
-import { CgPassword } from "react-icons/cg";
 import { Key } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { AppIcon } from "@/components/ui/AppIcon.js";
-import Hero from "../components/Hero";
+
+import type { LoginForm } from "@inquestia/schemas";
 
 const SignInPage = () => {
   const [loginForm, setLoginForm] = useState<LoginForm>({
     email: "",
     password: "",
   });
-  const { login, isLoggingIn } = useAuth();
+  const { login } = useAuth();
 
   const handleChange = (e: TextInput) => {
     const { name, value } = e.target;
@@ -33,31 +30,23 @@ const SignInPage = () => {
     }));
   };
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await login(loginForm);
+    login(loginForm);
   };
 
   return (
-    <AuthLayout
-      hero={
-        <Hero
-          header="Welcome Back!"
-          subheader="Ready to dive back in? Sign in to unlock everything."
-          text="Access personalized dashboards, track your progress, and continue where
-        you left off. We’re excited to have you back on board!"
-        />
-      }
-    >
+    <AuthLayout>
       <form
         onSubmit={handleLogin}
-        className="flex h-full w-full items-start flex-col gap-2 items-center"
+        className="flex h-full p-3 w-full items-start flex-col gap-3 items-center"
       >
-        <div className="my-2">
-          <h1 className="text-xl">Login</h1>
-          <p className="opacity-50"> at Inquestia</p>
+        <div className="my-2 flex w-full   flex-col items-center">
+          <img src={"/inka.gif"} className="size-8" />
+          <h1 className="text-2xl">Login at</h1>
+          <p className="text-5xl font-bold"> Inquestia</p>
         </div>
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col gap-1 w-full">
           <label className=" text-sm">Email</label>
           <InputGroup>
             <InputGroupAddon>
@@ -95,11 +84,10 @@ const SignInPage = () => {
           </div>
         </div>
         <footer className="flex flex-col w-full gap-2 my-4">
-          <Button type="submit" className="inquestia-button w-fit">
+          <Button type="submit" className="btn w-fit">
             Log me in!
           </Button>
           <div className="text-xs  gap-1 cursor-pointer ">
-           
             <p>
               Doesnt' have an account?{" "}
               <NavLink

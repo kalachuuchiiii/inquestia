@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import LoadingDisplay from "@/components/ui/LoadingDisplay.jsx";
 import { Link } from "react-router-dom";
@@ -7,11 +7,12 @@ import { ChevronRight } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import api from "@/lib/axios.instance";
 import { useAppSelector } from "@/hooks/useAppSelector.js";
-import type { GetMyAnswersResponse } from "@inquestia/types";
 import { AnswerCard } from "@/features/app/answers/components/MyAnswerCard.js";
+import type { Answer, AnswerForm } from "@inquestia/schemas";
+import { useAccount } from "../../account/hooks/useAccount";
 
 const MyResponsesPage = () => {
-  const { accessToken } = useAppSelector((state) => state.user);
+  const { data: user } = useAccount();
   const {
     fetchNextPage: getMyAnswers,
     data,
@@ -19,15 +20,16 @@ const MyResponsesPage = () => {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await api.get<GetMyAnswersResponse>(
-        `/api/answers/me?page=${pageParam}`
-      );
+      const res = await api.get<{
+        nextPage: number | undefined;
+        answers: Answer[];
+      }>(`/api/answers/me?page=${pageParam}`);
       return res.data;
     },
     initialPageParam: 1,
     getNextPageParam: (res) => res.nextPage,
     queryKey: ["my-answers"],
-    enabled: !!accessToken,
+    enabled: !!user,
   });
 
   const { ref, inView } = useInView();
@@ -40,14 +42,14 @@ const MyResponsesPage = () => {
   const answers = data?.pages.flatMap((p) => p.answers) ?? [];
 
   return (
-    <div className="p-6 w-full  mx-auto">
+    <div className=" w-full  mx-auto">
       {answers?.length > 0 && (
         <div className="space-y-6">
-          <div className="flex flex-col items-start text-center">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
+          <div className="flex flex-col items-start ">
+            <h1 className="inter font-bold text-3xl tracking-tighter">
               Your Response Records
             </h1>
-            <p className=" text-zinc-600 dark:text-zinc-400 mt-1">
+            <p>
               A history of all the surveys you’ve contributed to. Keep track of
               your answers and revisit surveys anytime!
             </p>

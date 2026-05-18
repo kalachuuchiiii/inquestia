@@ -6,14 +6,10 @@ import userRouter from "./user.router";
 import assistantRouter from "./assistant.router";
 import answersRouter from "./answers.router";
 
-
 export const mainRouter: Router = Router();
 
-mainRouter.use('/auth', authRouter);
-mainRouter.use('/survey', surveyRouter);
-mainRouter.use('/user', userRouter);
-mainRouter.use('/assistant', assistantRouter);
-mainRouter.use('/answers', answersRouter);
-
-
-export default mainRouter;
+mainRouter.use("/auth", authRouter);
+mainRouter.use("/survey", surveyRouter);
+mainRouter.use("/user", userRouter);
+mainRouter.use("/assistant", assistantRouter);
+mainRouter.use("/answers", answersRouter);

@@ -1,34 +1,67 @@
 import { useIsMobile } from "@/hooks/use-mobile";
-import SidebarNav from "./SidebarNav";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { UserBadge } from "./UserBadge";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarTrigger,
+} from "./sidebar";
+import { categories } from "@/data/sidebarCategories";
+import { Link } from "react-router-dom";
+import { useAccount } from "@/features/app/account/hooks/useAccount";
 
 const AppSidebar = () => {
   const isMobile = useIsMobile();
-  const { user } = useAppSelector((state) => state.user);
+  const { data: user } = useAccount();
 
   return (
-    <div className=" sticky top-0 lg:w-3/12  scrollbar-none z-50   ">
-      <div className="rounded relative   w-full scrollbar-none  bottom-0">
-       {
-        !isMobile && ( <div className="flex items-center gap-3 pb-8 py-4 border-b border-gray-200 dark:border-gray-800">
-       
-          <UserBadge user={user} className="flex items-center gap-2">
+    <Sidebar className="sticky top-0 pt-15 dark:bg-zinc-950">
+      <SidebarHeader>
+        {user && (
+          <UserBadge user={user} className="flex p-3 items-center gap-4">
             <UserBadge.Avatar className="size-14" />
             <div>
               <UserBadge.Nickname className="text-xl font-semibold" />
-              <UserBadge.Username/>
+              <UserBadge.Username />
             </div>
           </UserBadge>
-        </div>)
-       }
-        <aside className=" overflow-y-auto scrollbar-none h-screen  w-full dark:bg-zinc-950  ">
-          <nav className=" w-full flex items-start scrollbar-none overflow-scroll">
-            <SidebarNav />
-          </nav>
-        </aside>
-      </div>
-    </div>
+        )}
+      </SidebarHeader>
+      <SidebarContent className="p-2 list-none">
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-sm">Assistant</SidebarGroupLabel>
+
+          <Link to={"/inka"}>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                <img src="/inka.gif" /> <p className="text-lg ">Inka</p>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </Link>
+        </SidebarGroup>
+        {categories.map(({ name, routes }) => {
+          return (
+            <SidebarGroup key={name}>
+              <SidebarGroupLabel className="text-sm">{name}</SidebarGroupLabel>
+              {routes.map(({ to, label, icon: Icon }) => (
+                <Link to={to} key={to}>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton>
+                      <Icon /> <p className="text-lg">{label}</p>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </Link>
+              ))}
+            </SidebarGroup>
+          );
+        })}
+      </SidebarContent>
+    </Sidebar>
   );
 };
 

@@ -3,13 +3,10 @@
     /* Environment */
     "target": "esnext",
     "module": "commonjs",
-    "moduleResolution": "node",
     "types": ["node"],
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
-
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     /* Output */

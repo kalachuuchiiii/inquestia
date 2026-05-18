@@ -1,11 +1,6 @@
-import axios from "axios";
+import axios, { type AxiosError } from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
-  withCredentials: true,
-});
-
-const refreshAPI = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
   withCredentials: true,
 });
@@ -13,21 +8,26 @@ const refreshAPI = axios.create({
 //""
 
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalResponse = error?.config;
+  (response) => {
+    return response;
+  },
+  async (error: AxiosError) => {
     try {
+      const originalResponse = error?.config;
       const response = error?.response;
-      const hasRetried = originalResponse._retry;
-      const isTokenInvalid =
-        response?.data?.code === "EXPIRED_TOKEN" ||
-        response?.data?.code === "INVALID_TOKEN";
-
-      if (hasRetried || !isTokenInvalid) {
+      if (!response || !originalResponse) {
         return Promise.reject(error);
       }
 
-      const { data } = await refreshAPI.post<{
+      const hasRetried = (originalResponse as any)._retry;
+      const hasRefreshed = originalResponse.url?.includes("/auth/refresh");
+      const isUnauthorized = response?.status === 401;
+
+      if (hasRetried || (hasRefreshed && !isUnauthorized)) {
+        return Promise.reject(error);
+      }
+
+      const { data } = await api.post<{
         success: boolean;
         accessToken: string;
       }>("/api/auth/refresh");
@@ -37,12 +37,11 @@ api.interceptors.response.use(
       if (isRefreshSuccess) {
         api.defaults.headers.common["Authorization"] =
           `Bearer ${data.accessToken}`;
-        originalResponse._retry = true;
+        (originalResponse as any)._retry = true;
         return api(originalResponse);
       }
       return Promise.reject(error);
     } catch (e: any) {
-      console.log("err", e.response);
       return Promise.reject(e);
     }
   }

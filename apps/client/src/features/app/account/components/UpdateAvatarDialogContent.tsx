@@ -8,22 +8,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useAppSelector } from "@/hooks/useAppSelector";
-import { ArrowRight, ArrowRightLeft } from "lucide-react";
-import { useRef, useState, type ChangeEvent } from "react";
+
+import { ArrowRight } from "lucide-react";
+import { useState, type ChangeEvent } from "react";
 import { useAccountActions } from "../hooks/useAccountActions";
 import { toast } from "sonner";
+import { useAccount } from "../hooks/useAccount";
 
 export const UpdateAvatarDialogContent = () => {
   const [formData] = useState(new FormData());
   const [avatarFile, setAvatarFile] = useState<undefined | string>(undefined);
-  const { user } = useAppSelector((state) => state.user);
+  const { data: user } = useAccount();
 
   const { updateAvatar, isUpdatingAvatar } = useAccountActions();
-  
+
   const handleSetAvatar = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? undefined;
-    if (!file){
+    if (!file) {
       toast.info("Missing file.");
       return;
     }
@@ -41,7 +42,7 @@ export const UpdateAvatarDialogContent = () => {
       <div className="flex items-center  justify-center w-full">
         <div className="flex flex-col justify-center items-center gap-2">
           <Avatar className="size-25 lg:size-35  avatar-ring">
-            <AvatarImage src={user.avatar} />
+            <AvatarImage src={user?.avatar} />
             <AvatarFallback>Your avatar</AvatarFallback>
           </Avatar>
           <Button disabled variant={"outline"}>
@@ -62,7 +63,7 @@ export const UpdateAvatarDialogContent = () => {
           />
         </div>
       </div>
-      <DialogFooter >
+      <DialogFooter>
         <Button
           onClick={() => updateAvatar(formData)}
           disabled={!avatarFile || isUpdatingAvatar}

@@ -11,26 +11,25 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { useAppSelector } from "@/hooks/useAppSelector";
 import { SocialLinkSchema } from "@inquestia/schemas";
 import { Plus, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
 import _ from "lodash";
 import { useAccountActions } from "../hooks/useAccountActions";
+import { useAccount } from "../hooks/useAccount";
 
 export const UpdateSocialLinksDialogContent = () => {
-  const { user, accessToken } = useAppSelector((state) => state.user);
+  const { data: user } = useAccount();
   const [socialLinksList, setSocialLinksList] = useState<string[]>(
-    user.socialLinks
+    user?.socialLinks ?? []
   );
   const [socialLink, setSocialLink] = useState<string>("");
   const { updateSocialLinks, isUpdatingSocialLinks } = useAccountActions();
 
   useEffect(() => {
     if (socialLinksList.length > 0) return;
-    setSocialLinksList(user.socialLinks);
-  }, [accessToken]);
+    setSocialLinksList(user?.socialLinks ?? []);
+  }, [user?._id]);
 
   const handleAddSocialLink = () => {
     const parsed = SocialLinkSchema.safeParse(socialLink);
@@ -46,7 +45,7 @@ export const UpdateSocialLinksDialogContent = () => {
     );
   };
 
-  const isOldAndNewEqual = _.isEqual(user.socialLinks, socialLinksList);
+  const isOldAndNewEqual = _.isEqual(user?.socialLinks, socialLinksList);
 
   return (
     <DialogContent>

@@ -1,17 +1,11 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { getSession } from "@/state/slice/user";
-import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { Toaster } from "sonner";
-import type { AppDispatch } from "@/state/store";
 import AppRouter from "./AppRouter";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
-  const dispatch = useDispatch<AppDispatch>();
-  const nav = useNavigate();
   const { isDark } = useAppSelector((state) => state.theme);
-  const { user = {}, accessToken } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     if (!isDark) {
@@ -22,14 +16,12 @@ function App() {
     document.documentElement.classList.add("dark");
   }, [isDark]);
 
-  useEffect(() => {
-    dispatch(getSession());
-  }, [dispatch]);
-
   return (
-    <div className=" min-h-screen overflow-hidden  w-full  ">
+    <div className=" min-h-screen   w-full  ">
       <Toaster position="top-center" />
-      <AppRouter />
+      <TooltipProvider>
+        <AppRouter />
+      </TooltipProvider>
     </div>
   );
 }

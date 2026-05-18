@@ -2,77 +2,104 @@ import { z } from "zod";
 import {
   TITLE_MIN,
   TITLE_MAX,
-  TITLE_MSG,
   DESCRIPTION_MIN,
   DESCRIPTION_MAX,
-  DESCRIPTION_MSG,
-  TARGET_RESPONDENTS_MIN,
-  TARGET_RESPONDENTS_MAX,
-  TARGET_RESPONDENTS_MSG,
-  TOTAL_RESPONDENTS_MAX,
-  TOTAL_RESPONDENTS_MSG,
   TAGS_ENUM,
   TAGS_MIN,
   TAGS_MAX,
-  TAGS_MSG,
   AUTHORIZED_VIEWERS_MAX,
-  AUTHORIZED_VIEWERS_MSG,
-  APPLIED_BOOSTER_MIN,
-  APPLIED_BOOSTER_MAX,
-  BOOSTER_MSG,
-  APPLIED_BOOSTER_MSG,
+  BOOSTER_MIN,
+  BOOSTER_MAX,
+  RESPONDENT_COUNT_MIN,
+  RESPONDENT_COUNT_MAX,
+  SURVEY_STATUS_ENUM,
 } from "@inquestia/constants";
 import { QuestionsSchema } from "./question.schemas";
+import { IDSchema, TimestampSchema } from "./common.schemas";
+import { UserSchema } from "./user.schemas";
 
 export const TagSchema = z.enum(TAGS_ENUM);
 
 export const TitleSchema = z
   .string()
-  .min(TITLE_MIN, TITLE_MSG.min)
-  .max(TITLE_MAX, TITLE_MSG.max);
+  .min(TITLE_MIN, `Title must be at least ${TITLE_MIN} characters`)
+  .max(TITLE_MAX, `Title must be at most ${TITLE_MAX} characters`);
+
+export const RespondentCountSchema = z.coerce
+  .number()
+  .int()
+  .min(
+    RESPONDENT_COUNT_MIN,
+    `Respondent count must be at least ${RESPONDENT_COUNT_MIN}`
+  )
+  .max(
+    RESPONDENT_COUNT_MAX,
+    `Respondent count must be at most ${RESPONDENT_COUNT_MAX}`
+  );
 
 export const DescriptionSchema = z
   .string()
-  .min(DESCRIPTION_MIN, DESCRIPTION_MSG.min)
-  .max(DESCRIPTION_MAX, DESCRIPTION_MSG.max);
+  .min(
+    DESCRIPTION_MIN,
+    `Description must be at least ${DESCRIPTION_MIN} characters`
+  )
+  .max(
+    DESCRIPTION_MAX,
+    `Description must be at most ${DESCRIPTION_MAX} characters`
+  );
 
-export const TargetRespondentsSchema = z
-  .number()
-  .int()
-  .min(TARGET_RESPONDENTS_MIN, TARGET_RESPONDENTS_MSG.min)
-  .max(TARGET_RESPONDENTS_MAX, TARGET_RESPONDENTS_MSG.max);
-
-export const TotalRespondentsSchema = z
-  .number()
-  .int()
-  .max(TOTAL_RESPONDENTS_MAX, TOTAL_RESPONDENTS_MSG.max);
-  
 export const TagsSchema = z
   .array(TagSchema)
-  .min(TAGS_MIN, TAGS_MSG.range)
-  .max(TAGS_MAX, TAGS_MSG.range);
+  .min(TAGS_MIN, `You can only select ${TAGS_MIN}-${TAGS_MAX} tags`)
+  .max(TAGS_MAX, `You can only select ${TAGS_MIN}-${TAGS_MAX} tags`);
 
 export const AuthorizedViewersSchema = z
-  .array(z.string())
-  .max(AUTHORIZED_VIEWERS_MAX, AUTHORIZED_VIEWERS_MSG.max);
+  .array(UserSchema)
+  .max(
+    AUTHORIZED_VIEWERS_MAX,
+    `You can only authorize ${AUTHORIZED_VIEWERS_MAX} people`
+  );
 
-export const IsDraftSchema = z.preprocess((val) => val === 'true', z.boolean());
+export const IsDraftSchema = z.preprocess((val) => val === "true", z.boolean());
 
-export const AppliedBoostersSchema = z
+export const BoosterSchema = z.coerce
   .number()
   .int()
-  .min(APPLIED_BOOSTER_MIN, APPLIED_BOOSTER_MSG.range)
-  .max(APPLIED_BOOSTER_MAX, APPLIED_BOOSTER_MSG.range);
+  .min(BOOSTER_MIN, `Invalid booster point`)
+  .max(BOOSTER_MAX, `Invalid booster point`)
+  .catch(0);
 
-  export const SurveyFormSchema = z.object({
+export const SurveyStatusSchema = z.enum(
+  SURVEY_STATUS_ENUM,
+  `Invalid survey status`
+);
+export const SurveyFormSchema = z
+  .object({
     title: TitleSchema,
+    status: SurveyStatusSchema,
     description: DescriptionSchema,
-    targetRespondents: TargetRespondentsSchema,
-    booster: AppliedBoostersSchema,
+    targetRespondents: RespondentCountSchema,
+    booster: BoosterSchema,
     tags: TagsSchema,
     questions: QuestionsSchema,
     isDraft: z.boolean(),
-    _id: z.string().optional()
   })
+  .strip();
 
-  type x = z.infer<typeof SurveyFormSchema>
+export const SurveySchema = SurveyFormSchema.safeExtend({
+  createdAt: TimestampSchema,
+  isClosed: z.boolean().catch(true),
+  questions: QuestionsSchema,
+  _id: IDSchema,
+  totalRespondents: z.number().nonnegative().catch(0),
+  authorId: z.union([UserSchema, IDSchema]),
+  author: UserSchema.optional(),
+  authorizedViewers: AuthorizedViewersSchema.optional().catch(undefined),
+})
+  .strip()
+  .transform((v) =>
+    typeof v.authorId === "object" ? { ...v, author: v.authorId } : v
+  );
+
+export type Survey = z.infer<typeof SurveySchema>;
+export type SurveyForm = z.infer<typeof SurveyFormSchema>;

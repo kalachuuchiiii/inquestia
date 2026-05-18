@@ -1,14 +1,12 @@
-import type { UserModel, UserSchema, UserMethods } from "@/models";
 import type { ClientSession, HydratedDocument } from "mongoose";
 import { STREAK_MIN } from "@inquestia/constants";
+import type { IUser } from "@/models/index";
 
+//mutates the user object
 
-export const updateUserStreakIfNeeded = (
-  user: HydratedDocument<UserSchema, UserMethods>,
-  session?: ClientSession
-) => {
+export const updateUserStreakIfNeeded = (user: HydratedDocument<IUser>) => {
   if (!user.streak) {
-    return;
+    return user;
   }
 
   const now = new Date();
@@ -29,7 +27,7 @@ export const updateUserStreakIfNeeded = (
 
   // No action needed if same day
   if (daysDifference === 0) {
-    return;
+    return user;
   }
 
   // Increment streak if next day
@@ -48,13 +46,17 @@ export const updateUserStreakIfNeeded = (
   // Update last response time to now
   user.streak.lastResponseTime = now;
 
-  // Save and return the updated user document
-  const options: {
-    session?: ClientSession;
-  } = {};
-  
-  if (session) {
-    options.session = session;
+  return user;
+};
+
+export const givePointsAndUpdateStreakIfEligible = (
+  pointsToAdd: number,
+  user: HydratedDocument<IUser>
+) => {
+  if (user.core) {
+    user.core.current += pointsToAdd;
+    user.core.highest = Math.max(user.core.current, user.core.highest);
   }
-  return user.save(options);
+  const mutatedUser = updateUserStreakIfNeeded(user);
+  return mutatedUser;
 };

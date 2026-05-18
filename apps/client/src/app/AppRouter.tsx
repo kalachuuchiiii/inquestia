@@ -1,5 +1,7 @@
 import AppFooter from "@/components/ui/AppFooter";
-import AuthenticatedLayout from "@/layout/Authenticated";
+import { GuideLayout } from "@/components/ui/GuideLayout";
+import UpdateDraftPage from "@/features/app/survey/pages/UpdateDraftPage";
+import AuthenticatedLayout from "@/layout/AppLayout";
 import LandingPage from "@/pages/LandingPage";
 import { lazy } from "react";
 import { Outlet, useRoutes } from "react-router-dom";
@@ -10,8 +12,6 @@ const UpdatePasswordPage = lazy(
   () => import("@/features/auth/pages/UpdatePasswordPage")
 );
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
-const TechnologyStackPage = lazy(() => import("@/pages/TechnologyStackPage"));
-const AboutAppPage = lazy(() => import("@/pages/AboutAppPage"));
 
 const authRoutes = [
   {
@@ -43,22 +43,17 @@ const publicRoutes = [
         element: <LandingPage />,
       },
       {
-        path: "/documentation",
-        element: <DocumentationPage />,
+        element: <GuideLayout />,
+        children: [
+          {
+            path: "/documentation",
+            element: <DocumentationPage />,
+          },
+        ],
       },
-
       {
         path: "*",
         element: <NotFoundPage />,
-      },
-
-      {
-        path: "/technologies",
-        element: <TechnologyStackPage />,
-      },
-      {
-        path: "/about",
-        element: <AboutAppPage />,
       },
     ],
   },
@@ -72,9 +67,7 @@ const CreateSurveyPage = lazy(
   () => import("@/features/app/survey/pages/CreateSurveyPage")
 );
 
-const SearchPage = lazy(
-  () => import("@/features/app/search/pages/SearchPage")
-);
+const SearchPage = lazy(() => import("@/features/app/search/pages/SearchPage"));
 
 const MySurveyDrafts = lazy(
   () => import("@/features/app/answers/pages/MySurveyDrafts")
@@ -128,7 +121,7 @@ const privateRoutes = [
         path: "/feed",
         element: <MyFeedPage />,
       },
-        {
+      {
         path: "/search",
         element: <SearchPage />,
       },
@@ -177,8 +170,12 @@ const privateRoutes = [
         element: <BoostMarketPage />,
       },
       {
-        path: "/create/:id?",
+        path: "/create",
         element: <CreateSurveyPage />,
+      },
+      {
+        path: "/update/:surveyId",
+        element: <UpdateDraftPage />,
       },
       {
         path: "/leaderboard",
@@ -189,7 +186,7 @@ const privateRoutes = [
         element: <SurveysSharedToMePage />,
       },
       {
-        path: "/inko",
+        path: "/inka",
         element: <AssistantPage />,
       },
     ],

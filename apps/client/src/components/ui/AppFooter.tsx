@@ -19,7 +19,7 @@ const InquestiaIcon = () => {
 
 const AppFooter = () => {
   return (
-    <footer className="w-full h-[360px] bg-zinc-900 text-neutral-100">
+    <footer className="w-full h-[360px]  dark:text-neutral-100 text-zinc-900">
       <div className="max-w-7xl pl-[10px] lg:pl-[75px] pt-[56px] mx-auto">
         <main className="flex lg:flex-row flex-col gap-10 lg:gap-0  items-start justify-between">
           <div className="">
@@ -30,11 +30,8 @@ const AppFooter = () => {
             <div className="space-y-2">
               <h1 className="font-bold text-sm lg:text-xl">Inquestia</h1>
               <div className="font-light text-xs lg:text-base">
-                <h2 >
-                  <Link to={'/about'}>About the app</Link>
-                </h2>
                 <h2>
-                  <Link to={"/"}>Getting Started</Link>
+                  <Link to={"/"}>Get Started</Link>
                 </h2>
               </div>
             </div>
@@ -42,11 +39,16 @@ const AppFooter = () => {
             <div className="space-y-2">
               <h1 className="font-bold text-sm lg:text-xl">Resources</h1>
               <div className="font-light text-xs lg:text-base">
-                <h2><Link to={'/documentation'}>
-                  Documentation
-                </Link></h2>
                 <h2>
-                  <a target="_blank" href={'https://github.com/kalachuuchiiii/inquestia'}>Open Source (GitHub)</a>
+                  <Link to={"/documentation"}>Documentation</Link>
+                </h2>
+                <h2>
+                  <a
+                    target="_blank"
+                    href={"https://github.com/kalachuuchiiii/inquestia"}
+                  >
+                    Open Source (GitHub)
+                  </a>
                 </h2>
               </div>
             </div>

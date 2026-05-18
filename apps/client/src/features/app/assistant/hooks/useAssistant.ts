@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios.instance";
-import type {
-  ConversationMessage,
-  GetConversationResponse,
-  SendMessageResponse,
-} from "@inquestia/types";
+
 import { toast } from "sonner";
 
 const useAssistant = () => {
@@ -15,9 +11,7 @@ const useAssistant = () => {
 
   const { data: conversation, isPending: isFetchingConversation } = useQuery({
     queryFn: async () => {
-      const res = await api.get<GetConversationResponse>(
-        "/api/assistant/conversation"
-      );
+      const res = await api.get("/api/assistant/conversation");
 
       return res.data.conversation;
     },
@@ -42,31 +36,26 @@ const useAssistant = () => {
   const { mutate: sendMessage, isPending: isSendingMessage } = useMutation({
     mutationFn: async () => {
       setPrompt("");
-      const res = await api.post<SendMessageResponse>(
-        "/api/assistant/conversation",
-        {
-          prompt,
-        }
-      );
+      const res = await api.post("/api/assistant/conversation", {
+        prompt,
+      });
       return res;
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["conversation"] });
     },
     onMutate: async (prompt: string) => {
-      queryClient.setQueryData<ConversationMessage[]>(
-        ["conversation"],
-        (old = []) => [...old, { role: "user", content: prompt }]
-      );
+      queryClient.setQueryData(["conversation"], (old: any = []) => [
+        ...old,
+        { role: "user", content: prompt },
+      ]);
     },
   });
 
-  const handleOnKeyEnter = async (
-    e: React.KeyboardEvent<HTMLTextAreaElement>
-  ) => {
+  const handleOnKeyEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      await sendMessage(prompt);
+      sendMessage(prompt);
     }
   };
 

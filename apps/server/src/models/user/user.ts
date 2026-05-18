@@ -1,44 +1,27 @@
-
 import {
   BIO_MAX,
-  BIO_MSG,
-  BOOSTER_MAX,
-  BOOSTER_MIN,
-  BOOSTER_MSG,
   CORE_MIN,
   INTEREST_ENUM,
   INTERESTS_MAX,
   INTERESTS_MIN,
-  INTERESTS_MSG,
   LINK_MAX,
   LINK_MIN,
-  LINK_MSG,
   NICKNAME_MAX,
   NICKNAME_MIN,
-  NICKNAME_MSG,
   NICKNAME_REGEX,
   STREAK_MIN,
-  USER_BADGES,
+  USER_BOOSTER_MAX,
+  USER_BOOSTER_MIN,
   USERNAME_MAX,
   USERNAME_MIN,
-  USERNAME_MSG,
   USERNAME_REGEX,
 } from "@inquestia/constants";
-import { Interest, UserBadge, UserDTO } from "@inquestia/types";
 
 import { isValidUrl } from "@inquestia/utils";
-import mongoose, { Document, HydratedDocument, InferSchemaType, type Model } from "mongoose";
+import mongoose, { type InferSchemaType } from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    bannedAt: {
-      type: Date,
-      default: null,
-    },
-    banDuration: {
-      type: Number,
-      default: null,
-    },
     streak: {
       highest: {
         type: Number,
@@ -58,36 +41,45 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       unique: true,
-      minlength: [USERNAME_MIN, USERNAME_MSG.min],
-      maxlength: [USERNAME_MAX, USERNAME_MSG.max],
+      minlength: [
+        USERNAME_MIN,
+        `Username must contain at least ${USERNAME_MIN} characters`,
+      ],
+      maxlength: [
+        USERNAME_MAX,
+        `Username must contain at most ${USERNAME_MAX} characters`,
+      ],
       lowercase: true,
       validate: {
         validator: (val: string) => USERNAME_REGEX.test(val),
-        message: USERNAME_MSG.pattern,
+        message: `A username can only contain lowercase letters, numbers, and underscores. No spaces, no symbols, no uppercase.`,
       },
       index: true,
     },
-    avatar_public_id: {
-      type: String,
-      default: null,
-    },
+
     nickname: {
-      minlength: [NICKNAME_MIN, NICKNAME_MSG.min],
-      maxlength: [NICKNAME_MAX, NICKNAME_MSG.max],
+      minlength: [
+        NICKNAME_MIN,
+        `Nickname must be at least ${NICKNAME_MIN} characters`,
+      ],
+      maxlength: [
+        NICKNAME_MAX,
+        `Nickname must be at most ${NICKNAME_MAX} characters`,
+      ],
       type: String,
       validate: {
         validator: (val: string) => NICKNAME_REGEX.test(val),
-        message: NICKNAME_MSG.pattern,
+        message: `Nickname must contain only letters, numbers, spaces, underscores, dots, and hyphens are allowed`,
       },
       index: true,
-      default: null
+      default: null,
     },
     avatar: {
       type: String,
     },
     bio: {
       type: String,
-      maxlength: [BIO_MAX, BIO_MSG.max],
+      maxlength: [BIO_MAX, `Bio can only have at most ${BIO_MAX} characters`],
       default: null,
     },
     interests: {
@@ -95,9 +87,9 @@ const userSchema = new mongoose.Schema(
       enum: INTEREST_ENUM,
       default: ["personal"],
       validate: {
-        validator: (v: Interest[]) =>
+        validator: (v: string[]) =>
           v.length >= INTERESTS_MIN && v.length <= INTERESTS_MAX,
-        message: INTERESTS_MSG.range,
+        message: `You can only select ${INTERESTS_MIN}-${INTERESTS_MAX} interests`,
       },
     },
     lastUsernameUpdate: {
@@ -108,23 +100,24 @@ const userSchema = new mongoose.Schema(
       highest: {
         type: Number,
         default: CORE_MIN,
+
         index: true,
       },
       current: {
         type: Number,
         default: CORE_MIN,
         index: true,
-      }
+      },
     },
     socialLinks: [
       {
         type: String,
         validate: {
           validator: isValidUrl,
-          message: LINK_MSG.invalid,
+          message: `Invalid URL format`,
         },
-        minlength: [LINK_MIN, LINK_MSG.min],
-        maxlength: [LINK_MAX, LINK_MSG.max],
+        minlength: [LINK_MIN, `Invalid URL format`],
+        maxlength: [LINK_MAX, `Invalid URL format`],
       },
     ],
     isFinishedOnboarding: {
@@ -133,15 +126,21 @@ const userSchema = new mongoose.Schema(
     },
     boosterPoint: {
       type: Number,
-      default: BOOSTER_MIN,
-      min: [BOOSTER_MIN, BOOSTER_MSG.min],
-      max: [BOOSTER_MAX, BOOSTER_MSG.max],
+      default: USER_BOOSTER_MIN,
+      min: [
+        USER_BOOSTER_MIN,
+        `You can only have ${USER_BOOSTER_MIN}-${USER_BOOSTER_MAX} boosters`,
+      ],
+      max: [
+        USER_BOOSTER_MAX,
+        `You can only have ${USER_BOOSTER_MIN}-${USER_BOOSTER_MAX} boosters`,
+      ],
     },
   },
   {
     timestamps: true,
     toJSON: {
-      virtuals: true
+      virtuals: true,
     },
     toObject: {
       virtuals: true,
@@ -149,57 +148,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.virtual("banDetails").get(function () {
-  const data = { isBanned: false, remainingMS: 0 };
-  if (!this.bannedAt || !this.banDuration) return data;
-
-  const bannedFor = Date.now() - new Date(this.bannedAt).getTime();
-  data.isBanned = bannedFor < this.banDuration;
-  data.remainingMS = this.banDuration - bannedFor;
-
-  return data;
-});
-
-userSchema.virtual("badge").get(function () {
-  const badges = USER_BADGES.sort((a, b) => b.pointsRequired - a.pointsRequired);
-  const badge: UserBadge = badges.find((b) => (this.core?.current ?? 0) >= b.pointsRequired) as UserBadge;
-  return badge;
-});
-
-userSchema.virtual("displayName").get(function () {
-  const displayName = this.nickname ?? this.username;
-  return displayName;
-});
-
-userSchema.methods.getSafeDetails = function () {
-  const safeDetails = {
-    username: this.username,
-    nickname: this.nickname,
-    displayName: this.displayName,
-    badge: this.badge,
-    _id: this._id,
-    bio: this.bio,
-    core: this.core,
-    streak: { current: this.streak.current, highest: this.streak.highest },
-    avatar: this.avatar,
-    socialLinks: this.socialLinks,
-  } satisfies UserDTO;
-  return safeDetails;
-};
-
-export type UserSchema = InferSchemaType<typeof userSchema>;
-export type UserMethods = { 
-  banDetails: { isBanned: boolean; remainingMS: number },
-  badge: UserBadge;
-  displayName: string;
-  password?: string;
-  email?: string;
-  role?: 'admin' | 'user'
-  getSafeDetails: () => UserDTO;
-}
-
-export type UserModel = Model<UserSchema, {}, UserMethods>;
-
-const User = mongoose.model<UserSchema, UserModel>("User", userSchema);
+const User = mongoose.model("User", userSchema);
+export type IUser = InferSchemaType<typeof userSchema>;
 
 export default User;

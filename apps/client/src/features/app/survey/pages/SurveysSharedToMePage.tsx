@@ -3,24 +3,31 @@ import { useInView } from "react-intersection-observer";
 import SurveyCard from "@/features/app/survey/components/SurveyCard";
 import SurveyCardPlaceholder from "@/features/app/survey/components/ui/SurveyCardPlaceholder";
 import { useInfiniteQuery } from "@tanstack/react-query";
-
-import type { GetSurveysSharedToMeResponse } from "@inquestia/types";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import api from "@/lib/axios.instance";
+import { useAccount } from "../../account/hooks/useAccount";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { BoxSelect } from "lucide-react";
 
 const SurveysSharedToMePage = () => {
-  const { accessToken } = useAppSelector((state) => state.user);
+  const { data: user } = useAccount();
   const { data, hasNextPage, fetchNextPage, isLoading, isFetchingNextPage } =
     useInfiniteQuery({
       queryFn: async ({ pageParam }) => {
-        const res = await api.get<GetSurveysSharedToMeResponse>(
+        const res = await api.get(
           `/api/user/me/shared-to-me?page=${pageParam}&limit=${4}`
         );
         return res.data;
       },
       queryKey: ["shared-surveys"],
       initialPageParam: 1,
-      enabled: !!accessToken,
+      enabled: !!user,
       getNextPageParam: (res) => res.nextPage,
     });
   const { ref, inView } = useInView();
@@ -34,9 +41,9 @@ const SurveysSharedToMePage = () => {
   }, [inView]);
 
   return (
-    <div className="w-11/12 mx-auto md:w-full">
-      <div className="my-8">
-        <h1 className="text-2xl font-bold text-gradient text-zinc-800 dark:text-zinc-100">
+    <div className="w-full mx-auto md:w-full">
+      <div>
+        <h1 className="lg:text-3xl tracking-tighter font-bold text-gradient text-zinc-800 dark:text-zinc-100">
           Surveys Shared With You
         </h1>
         <p className="text-zinc-600 dark:text-zinc-400">
@@ -51,9 +58,15 @@ const SurveysSharedToMePage = () => {
       {isLoading || isFetchingNextPage ? (
         <SurveyCardPlaceholder number={3} />
       ) : !totalSharedSurveys ? (
-        <p className=" text-center my-30 opacity-50 w-full">
-          No surveys has been shared to you yet.
-        </p>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia>
+              <BoxSelect />
+            </EmptyMedia>
+            <EmptyTitle>No shared surveys yet</EmptyTitle>
+            <EmptyDescription>Collab with other researchers!</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       ) : (
         !hasNextPage && (
           <p className=" text-center my-30 h-20 opacity-50 w-full">

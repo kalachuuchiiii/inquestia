@@ -18,8 +18,8 @@ export const RestartConversationOption = () => {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild className="mr-4"> 
-        <Button variant={'outline'}>
+      <AlertDialogTrigger asChild className="mr-4">
+        <Button variant={"secondary"}>
           <RotateCcw />
         </Button>
       </AlertDialogTrigger>
@@ -36,7 +36,6 @@ export const RestartConversationOption = () => {
             <AlertDialogAction
               onClick={() => restartConversation()}
               disabled={isRestartingConversation}
-              
             >
               Restart
             </AlertDialogAction>

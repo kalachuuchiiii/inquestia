@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import UserCard from "@/features/app/account/components/ui/UserProfileCard.js";
 import { useEffect, useState } from "react";
@@ -11,12 +10,10 @@ import { GoReport } from "react-icons/go";
 import { Dialog } from "@/components/ui/dialog.js";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import API from "@/lib/axios.instance.js";
-import type {
-  GetUserByUsernameResponse,
-  GetUserSurveysReponse,
-} from "@inquestia/types";
+
 import { YouReachedTheEnd } from "@/components/YouReachedTheEnd.js";
 import { Item, ItemContent, ItemTitle } from "@/components/ui/item.js";
+import type { Survey, User } from "@inquestia/schemas";
 
 const UserAccountPage = () => {
   const { username } = useParams();
@@ -24,7 +21,7 @@ const UserAccountPage = () => {
   const { data: userProfile, isPending: isLoading } = useQuery({
     queryKey: ["user-profile", username],
     queryFn: async () => {
-      const res = await API.get<GetUserByUsernameResponse>(
+      const res = await API.get<{ user: User }>(
         `/api/user/username/${username}`
       );
       return res.data.user;
@@ -40,9 +37,11 @@ const UserAccountPage = () => {
     queryKey: ["user-surveys", username],
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await API.get<GetUserSurveysReponse>(
-        `/api/user/surveys/${userProfile?._id}?page=${pageParam}&limit=4`
-      );
+      const res = await API.get<{
+        nextPage: number | undefined;
+        totalSurveys: number;
+        surveys: Survey[];
+      }>(`/api/user/surveys/${userProfile?._id}?page=${pageParam}&limit=4`);
       return res.data;
     },
     getNextPageParam: (res) => res.nextPage,
@@ -69,7 +68,6 @@ const UserAccountPage = () => {
 
   return (
     <>
-    
       <div className="p-3 w-full">
         <div className="space-y-4 md:flex flex-col justify-between p-3 gap-2 items-start w-full">
           <div className="w-full">
@@ -79,13 +77,11 @@ const UserAccountPage = () => {
 
         <Item className="p-3 my-2 w-full text-left">
           <ItemContent>
-            <ItemTitle>
-              Surveys ({totalUserSurvey})
-            </ItemTitle>
+            <ItemTitle>Surveys ({totalUserSurvey})</ItemTitle>
           </ItemContent>
         </Item>
         <div>
-          {userSurveys.map((s) => {
+          {userSurveys?.map((s) => {
             return <SurveyCard key={s._id} survey={s} />;
           })}
         </div>

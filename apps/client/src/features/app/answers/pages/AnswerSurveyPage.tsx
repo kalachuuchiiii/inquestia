@@ -23,6 +23,7 @@ import {
   RectangleGoggles,
   RectangleGogglesIcon,
   Trash2,
+  Users,
 } from "lucide-react";
 import {
   Tooltip,
@@ -54,16 +55,25 @@ import { useAnswerActions } from "@/features/app/answers/hooks/useAnswerActions.
 import { Switch } from "@/components/ui/switch.js";
 import { _capitalize } from "chart.js/helpers";
 import SearchUserDialogContent from "../components/SearchUserDialogContent";
+import type { User } from "@inquestia/schemas";
+import { useAccount } from "../../account/hooks/useAccount";
 
 const AnswerSurveyPage = () => {
-  const { survey, isFetchingSurvey, answerFormControl, answerForm } =
-    useAnswerSurvey();
-  const { handleToggleAnonyminity } = answerFormControl;
-  const { submitAnswer, isSubmissionPending } = useAnswerActions();
-
-  const { user } = useAppSelector((state) => state.user);
-  const qrParent = useRef<HTMLDivElement>(null);
+  const {
+    survey,
+    isFetchingSurvey,
+    formController,
+    onAnswerSubmit,
+    answerActions,
+  } = useAnswerSurvey();
+  const { toggleAnonyminityAt } = formController;
+  const { isSubmissionPending } = answerActions;
   const { setApi, index } = useCarouselIndex();
+  const { data: user } = useAccount();
+  const responses = formController.answerForm.watch("responses");
+  const isAnonymous = formController.answerForm.watch("isAnonymous");
+
+  const qrParent = useRef<HTMLDivElement>(null);
 
   const downloadQr = () => {
     if (!qrParent.current) return;
@@ -76,73 +86,49 @@ const AnswerSurveyPage = () => {
     a.click();
   };
 
-  const isAnAuthorizedUser =
-    user._id === survey?.author._id ||
-    survey?.authorizedViewers.some((v) => String(v._id) === user._id);
-
-  if (isFetchingSurvey || !survey) {
+  if (isFetchingSurvey || !survey || !user) {
     return <LoadingDisplay />;
   }
+
   return (
-    <Card>
+    <div className=" px-1">
       <main className="min-h-screen ">
-        <CardHeader className="flex items-center justify-between">
+        <CardHeader className="flex items-start  justify-between">
           <div className="flex gap-3 items-center">
             <UserBadge
-              user={survey.author}
+              user={survey.author as User}
               className="flex items-center justify-between"
             >
-              <div className="flex items-center gap-4">
-                <UserBadge.Avatar className="size-10" />
-                <div className="flex flex-col ">
-                  <UserBadge.Nickname className="font-semibold lg:text-lg" />
-                  <UserBadge.Username className="lg:text-base" />
+              <div className="flex lg:flex-row flex-col items-start lg:items-center gap-4">
+                <div className="flex items-center gap-4">
+                  <UserBadge.Avatar className="size-10" />
+                  <div className="flex  flex-col ">
+                    <UserBadge.Nickname className="font-semibold lg:text-lg" />
+                    <UserBadge.Username className="lg:text-base" />
+                  </div>
                 </div>
                 <UserBadge.Badge />
               </div>
             </UserBadge>
           </div>
-          <div className="flex items-center gap-4">
-            {isAnAuthorizedUser && (
-              <Dialog>
-                <DialogTrigger>
-                  <Tooltip>
-                    <TooltipContent>Authorized Viewers</TooltipContent>
-                    <TooltipTrigger>
-                      <RectangleGoggles />
-                    </TooltipTrigger>
-                  </Tooltip>
-                </DialogTrigger>
-                <SearchUserDialogContent survey={survey} />
-              </Dialog>
-            )}
-         
-            {user._id === survey.author._id && <SurveyActions />}
-            {isAnAuthorizedUser && (
-              <Tooltip>
-                <TooltipContent>Answers</TooltipContent>
-                <TooltipTrigger>
-                  <Link to={`/survey-answers/${survey._id}`}>
-                    <Button className="inquestia-button">View answers</Button>
-                  </Link>
-                </TooltipTrigger>
-              </Tooltip>
-            )}
-          </div>
+
+          <SurveyActions user={user} survey={survey} />
         </CardHeader>
         <CardContent className="space-y-4 p-4">
           <div className="flex gap-2 justify-between w-full items-start">
-            <div className=" space-y-4 w-full">
-              <Card className="w-full ">
+            <div className=" space-y-4 my-6 w-full">
+              <div className="w-full  ">
                 <ScrollArea className=" p-0 w-full">
-                  <CardHeader className="w-full ">
-                    <CardTitle>{survey.title}</CardTitle>
-                    <CardDescription className="leading-relaxed my-3  opacity-80">
+                  <header className="w-full ">
+                    <h1 className="text-3xl tracking-tighter font-bold">
+                      {survey.title}
+                    </h1>
+                    <p className="text-lg tracking-tighter  opacity-80">
                       {survey.description}
-                    </CardDescription>
-                  </CardHeader>
+                    </p>
+                  </header>
                 </ScrollArea>
-              </Card>
+              </div>
               <CardDescription className="flex items-center gap-2">
                 <p>
                   {_capitalize(
@@ -155,42 +141,16 @@ const AnswerSurveyPage = () => {
               </CardDescription>
               <SurveyTagList tags={survey.tags} />
             </div>
-            <div
-              ref={qrParent}
-              className="flex rounded-xl outline outline-white/20 py-2 px-4 flex-col gap-2"
-            >
-              <QRCodeCanvas
-                value={window.location.href}
-                size={80}
-                bgColor={"#ffffff"}
-                fgColor={"#000000"}
-                level={"H"}
-                includeMargin={false}
-              />
-              <button
-                onClick={downloadQr}
-                className="text-xs gap-2 flex items-center"
-              >
-                {" "}
-                <BsDownload /> Download
-              </button>
-            </div>
           </div>
         </CardContent>
         <Carousel setApi={setApi} className="p-4 space-y-2">
           <CarouselContent>
-            {answerForm.responses.map((q, idx) => (
+            {responses.map((q, idx) => (
               <CarouselItem key={idx}>
-                <AnswerFormCard
-                  question={q}
-                  answerFormControl={answerFormControl}
-                  idx={idx}
-                />
+                <AnswerFormCard question={q} idx={idx} {...formController} />
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
         </Carousel>
 
         <div className="text-center w-full text-sm gap-2 flex items-center justify-center ">
@@ -221,8 +181,8 @@ const AnswerSurveyPage = () => {
               <div className="flex flex-col w-full items-start justify-start gap-1 ">
                 <div className="flex items-center justify-start w-full gap-2">
                   <Switch
-                    checked={answerForm.isAnonymous}
-                    onCheckedChange={handleToggleAnonyminity}
+                    checked={isAnonymous}
+                    onCheckedChange={toggleAnonyminityAt}
                   />
                   <p>Anonymous</p>
                 </div>
@@ -237,7 +197,7 @@ const AnswerSurveyPage = () => {
                 </DialogClose>
                 <Button
                   className="inquestia-button"
-                  onClick={() => submitAnswer(answerForm)}
+                  onClick={() => onAnswerSubmit()}
                   disabled={isSubmissionPending}
                 >
                   Submit
@@ -247,7 +207,7 @@ const AnswerSurveyPage = () => {
           </Dialog>
         </div>
       </main>
-    </Card>
+    </div>
   );
 };
 

@@ -1,19 +1,21 @@
-import {  useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type {
-  GetSurveyByIdResponse,
-} from "@inquestia/types";
+
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { useAnswerForm } from "@/features/app/answers/hooks/useAnswerForm";
+import { useAnswerFormController } from "@/features/app/answers/hooks/useAnswerForm";
 import { _int16Range } from "chart.js/helpers";
 import api from "@/lib/axios.instance";
+import type { AnswerForm, Survey } from "@inquestia/schemas";
+import { useAnswerActions } from "./useAnswerActions";
+import { useAccount } from "../../account/hooks/useAccount";
 
 const useAnswerSurvey = () => {
   const { surveyId = "" } = useParams();
-  const nav = useNavigate();
-  const { accessToken } = useAppSelector((state) => state.user);
-  const { answerForm, setAnswerForm, answerFormControl } = useAnswerForm();
+  const { data: user } = useAccount();
+  const formController = useAnswerFormController();
+  const answerActions = useAnswerActions();
+  const { submitAnswer, isSubmissionPending } = answerActions;
 
   const {
     data: survey,
@@ -22,27 +24,33 @@ const useAnswerSurvey = () => {
     isFetchedAfterMount,
   } = useQuery({
     queryFn: async () => {
-      const res = await api.get<GetSurveyByIdResponse>(
-        `/api/survey/${surveyId}`
-      );
+      const res = await api.get<{
+        responses: AnswerForm["responses"];
+        survey: Survey;
+      }>(`/api/survey/${surveyId}`);
       const { responses } = res.data;
 
-      setAnswerForm({
+      formController.answerForm.reset({
         responses,
         surveyId,
         isAnonymous: false,
       });
 
-      return res.data
+      return res.data;
     },
     queryKey: ["survey", surveyId],
-
-    enabled: !!accessToken,
+    enabled: !!user,
   });
+
+  const onAnswerSubmit = () => {
+    const formValues = formController.answerForm.getValues();
+    console.log(formValues);
+    submitAnswer(formValues);
+  };
 
   useEffect(() => {
     if (isFetchedAfterMount || !survey?.survey) return;
-    setAnswerForm({
+    formController.answerForm.reset({
       responses: survey.responses,
       surveyId,
       isAnonymous: false,
@@ -51,9 +59,10 @@ const useAnswerSurvey = () => {
 
   return {
     survey: survey?.survey,
-    answerForm,
-    answerFormControl,
+    formController,
     surveyError,
+    answerActions,
+    onAnswerSubmit,
     isFetchingSurvey,
   };
 };

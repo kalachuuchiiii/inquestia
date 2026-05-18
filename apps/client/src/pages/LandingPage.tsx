@@ -4,6 +4,8 @@ import { AppIcon } from "@/components/ui/AppIcon";
 import bot from "/bot.png";
 import dataChart from "/data-chart.png";
 import gameController from "/game-controller.png";
+import { DynamicBackground } from "@/components/ui/DynamicBackground";
+import { Separator } from "@/components/ui/separator";
 
 const FeatureHeader = () => {
   return (
@@ -16,12 +18,15 @@ const FeatureHeader = () => {
 
 const LandingPage = () => {
   return (
-    <div >
-      <nav className="fixed z-20  bg-zinc-950/50  top-0 inset-x-0 p-2">
-        <div className="max-w-7xl  w-full invert dark:invert-0 p-1 mx-auto flex items-center justify-between   ">
+    <div>
+      <DynamicBackground />
+      <nav className="fixed z-20    top-0 inset-x-0 p-2">
+        <div className="max-w-7xl  w-full  dark:invert-0 p-1 mx-auto flex items-center justify-between   ">
           <h1 className="flex items-center w-fit">
             <AppIcon className="size-20" />
-            <p className="font-bold text-2xl -translate-x-1 hidden lg:block">Inquestia</p>
+            <p className="font-bold text-2xl -translate-x-1 hidden lg:block">
+              Inquestia
+            </p>
           </h1>
           <div className="text-sm  lg:text-lg flex items-center lg:px-4 px-2  space-x-4 ">
             <NavLink className={"font-light"} to={"/documentation"}>
@@ -36,9 +41,7 @@ const LandingPage = () => {
           </div>
         </div>
       </nav>
-
       <div className="page-block flex items-center justify-start  relative">
-        <div className="absolute  h-full inset-0 lg:invert-none invert opacity-30  bg-pulsar bg-zinc-950 z-20" />
         <div className="max-w-7xl mx-auto ">
           <header className=" h-full w-full gap-8 flex flex-col  justify-center  ">
             <main className="space-y-2   ">
@@ -49,12 +52,14 @@ const LandingPage = () => {
                 An opportunity for simplified data collection
               </h3>
             </main>
-            <Link to={'/sign-up'}>
-             <Button className="w-46">Get Started</Button></Link>
+            <Link to={"/sign-up"}>
+              <Button className="w-46">Get Started</Button>
+            </Link>
           </header>
         </div>
       </div>
-      <div className="page-block bg-neutral-50 text-zinc-950">
+      <Separator />
+      <div className="page-block  ">
         <div className="mx-auto max-w-7xl">
           <FeatureHeader />
           <main className="flex  lg:flex-row flex-col items-center gap-10 lg:gap-20">
@@ -77,8 +82,8 @@ const LandingPage = () => {
           </main>
         </div>
       </div>
-
-      <div className="page-block bg-conic-gray bg-neutral-150 text-zinc-950">
+      <Separator />
+      <div className="page-block ">
         <div className="max-w-7xl mx-auto">
           <FeatureHeader />
           <main className="flex  lg:flex-row flex-col w-full lg:justify-end lg:flex-col flex-col-reverse items-center gap-10 lg:gap-20">
@@ -104,7 +109,8 @@ const LandingPage = () => {
           </main>
         </div>
       </div>
-      <div className="page-block pixelify-sans bg-neutral-100  text-zinc-950">
+      <Separator />
+      <div className="page-block pixelify-sans   ">
         <div className="max-w-7xl z-20 mx-auto">
           <FeatureHeader />
           <main className="flex  lg:flex-row flex-col items-center gap-10 lg:gap-20">
@@ -129,6 +135,7 @@ const LandingPage = () => {
           </main>
         </div>
       </div>
+      <Separator />
     </div>
   );
 };

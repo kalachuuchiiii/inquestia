@@ -1,40 +1,38 @@
-import { SURVEY_PROJECTION } from "@/constants";
-import { EntityHelper } from "@/helper";
-import { updateUserStreakIfNeeded } from "@/helper/user.helper";
-import Survey, { SurveyModel } from "@/models/survey/survey";
+import {
+  givePointsAndUpdateStreakIfEligible,
+  updateUserStreakIfNeeded,
+} from "@/helper/user.helper";
+import Survey from "@/models/survey/survey";
 import User from "@/models/user/user";
-import { ObjectIdSchema } from "@/schemas";
 import { seenSurveyStore } from "@/store/SeenSurveyStore";
 import {
   BadRequestError,
   ConflictError,
-  ForbiddenError,
   NotFoundError,
   UnauthorizedError,
 } from "@/utils/customErrorClass";
 import { getNextPage } from "@/utils/getNextPage";
 import { runWithSession } from "@/utils/runWithSession";
-import { type QueryParam } from "@inquestia/schemas";
+import { BOOST_COST } from "@inquestia/constants";
 import {
-  AnswerFormFields,
-  SelectTypeQuestionFormFields,
-  SurveyDTO,
-  SurveyForm,
-  TextTypeQuestionFormFields,
-} from "@inquestia/types";
-import type { ClientSession } from "mongoose";
+  type AnswerForm,
+  type CloseEndedAnswer,
+  type OpenEndedAnswer,
+  type QueryParam,
+  type Response,
+  type SurveyForm,
+  SurveySchema,
+} from "@inquestia/schemas";
+
 import mongoose from "mongoose";
 
-const surveyHelper = new EntityHelper<SurveyModel>(Survey);
 type SurveyAndAuthId = { surveyId: string; myId: string };
 
-type CreateSurveyProps = {
-  survey: SurveyForm;
-  myId: string;
-};
-
 export class SurveyService {
-  compareBoost = (userBooster: number, surveyBooster: number) => {
+  compareBoostAndThrowIfIneligible = (
+    userBooster: number,
+    surveyBooster: number
+  ) => {
     if (userBooster < surveyBooster) {
       throw new BadRequestError(
         "Insufficient booster points",
@@ -44,78 +42,61 @@ export class SurveyService {
     return;
   };
 
-  upsertSurveyDraft = async ({ survey, myId }: CreateSurveyProps) => {
-    const { error: isSurveyNonExistent, data: surveyId } =
-      ObjectIdSchema.safeParse(survey._id);
-
-      const { _id, ...surveyValues } = survey;
-
-      //defaults to booster: 0 if draft
-
-      //create new draft
-
-    if (isSurveyNonExistent) {
-      const createdDraft = await new Survey({
-        ...surveyValues,
-        booster: 0,
-        isDraft: true,
+  saveSurvey = async ({
+    form,
+    surveyId,
+    myId,
+  }: {
+    form: SurveyForm;
+    surveyId: string;
+    myId: string;
+  }) => {
+    const result = await runWithSession(async (session) => {
+      const survey = await Survey.findOne({
+        _id: surveyId,
         authorId: myId,
-      }).save();
-      return createdDraft;
-    }
-
-    //update existing draft
-    
-    const draft = await Survey.findOneAndUpdate(
-      { _id: surveyId, authorId: myId },
-      { ...surveyValues, booster: 0, isDraft: true, authorId: myId }
-    ).orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
-
-    return draft;
+      }).orFail(new NotFoundError("Survey not found", "SURVEY_NOT_FOUND"));
+      await survey.updateOne(form, { session });
+      if (form.status === "published" && form.booster > 0) {
+        const user = await User.findById(myId).orFail(
+          new NotFoundError("User not found", "USER_NOT_FOUND")
+        );
+        this.compareBoostAndThrowIfIneligible(
+          user.toObject().boosterPoint,
+          form.booster
+        );
+        user.boosterPoint -= form.booster;
+        const mutatedUser = givePointsAndUpdateStreakIfEligible(100, user);
+        await mutatedUser.save({ session });
+      }
+      return "OK";
+    });
+    return result;
   };
 
-  upsertSurvey = async ({ survey, myId }: CreateSurveyProps) => {
+  createSurvey = async ({ form, myId }: { form: SurveyForm; myId: string }) => {
     const user = await User.findById(myId).orFail(
-      new NotFoundError("User not found.", "USER_NOT_FOUND")
+      new NotFoundError("User not found", "USER_NOT_FOUND")
     );
-    this.compareBoost(user.toObject().boosterPoint, survey.booster);
-    const { _id, ...surveyValues } = survey;
-    const { error: isSurveyNonExistent, data: surveyId } = ObjectIdSchema.safeParse(_id);
-
-    const deductBoosterAndGiveCore = async(session: ClientSession) => {
-       user.boosterPoint -= surveyValues.booster;
-         if(user.core){
-           user.core.current += 100;
-          user.core.highest = Math.max(user.core.current, user.core.highest);
-         }
-         return await user.save({ session });
+    this.compareBoostAndThrowIfIneligible(
+      user.toObject().boosterPoint,
+      form.booster
+    );
+    const newSurvey = await new Survey({ ...form, authorId: myId });
+    if (form.status === "draft") {
+      return newSurvey.save();
     }
 
+    return await runWithSession(async (session) => {
+      const survey = await newSurvey.save({ session });
+      user.boosterPoint -= form.booster;
 
-    //publish new survey
-    if(isSurveyNonExistent){
-     return await runWithSession(async (session) => {
-        const newSurvey = await new Survey({ ...surveyValues, authorId: myId, isDraft: false }).save({
-          session,
-        });
-        await deductBoosterAndGiveCore(session);
-        await updateUserStreakIfNeeded(user, session);
-        return newSurvey;
-      });
-    }
-
-    //publish existing survey(a draft);
-
-    return await runWithSession(async(session) => {
-      const publishedSurvey = await Survey.findOneAndUpdate(
-      { _id: surveyId, authorId: myId, isDraft: true },
-      { ...surveyValues, isDraft: false },
-      { session }
-    ).orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
-     await deductBoosterAndGiveCore(session);
-      await updateUserStreakIfNeeded(user, session);
-     return publishedSurvey;
-    })
+      const mutatedUser = givePointsAndUpdateStreakIfEligible(100, user);
+      return {
+        survey,
+        user: await mutatedUser.save({ session }),
+      };
+    });
   };
 
   reOpenSurvey = async ({ surveyId, myId }: SurveyAndAuthId) => {
@@ -180,7 +161,7 @@ export class SurveyService {
 
     if (survey.authorizedViewers.every((v) => String(v) !== String(userId))) {
       throw new BadRequestError(
-        `${candidateUser.displayName} is not yet authorized.`,
+        `${candidateUser.username} is not yet authorized.`,
         "NOT_YET_AUTHORIZED_AS_VIEWER"
       );
     }
@@ -210,7 +191,7 @@ export class SurveyService {
     );
     if (survey.authorizedViewers.some((v) => String(v) === String(userId))) {
       throw new ConflictError(
-        `${candidateUser.displayName} is already authorized.`,
+        `${candidateUser.username} is already authorized.`,
         "ALREADY_AUTHORIZED_AS_VIEWER"
       );
     }
@@ -228,42 +209,35 @@ export class SurveyService {
         { path: "authorId", model: "User" },
         { path: "authorizedViewers", model: "User" },
       ])
-      .orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"));
+      .orFail(new NotFoundError("Survey not found.", "SURVEY_NOT_FOUND"))
+      .lean();
+    const safeSurvey = SurveySchema.parse(matchedSurvey);
 
-    const safeSurvey = {
-      ...matchedSurvey.getSafeDetails(),
-      authorizedViewers: matchedSurvey.authorizedViewers.map((v) =>
-        new User(v).getSafeDetails()
-      ),
-    };
-
-    const responses: AnswerFormFields["responses"] = safeSurvey.questions.map(
-      (q) => {
-        if (q.type === "text") {
-          const { _id, type, question, isRequired } = q;
-          const text: TextTypeQuestionFormFields = {
-            type,
-            question,
-            isRequired,
-            questionId: _id as string,
-            answer: "",
-          };
-          return text;
-        }
-
+    const responses: Response[] = safeSurvey.questions.map((q) => {
+      if (q.type === "open_ended") {
         const { _id, type, question, isRequired } = q;
-        const select: SelectTypeQuestionFormFields = {
+        const openEndedResponseForm: OpenEndedAnswer = {
           type,
           question,
           isRequired,
           questionId: _id as string,
-          numberOfAnswersAllowed: q.numberOfAnswersAllowed,
-          choices: q.choices,
-          answers: [] as string[],
+          answer: "",
         };
-        return select;
+        return openEndedResponseForm;
       }
-    );
+
+      const { _id, type, question, isRequired, choices } = q;
+      const closeEndedResponseForm: CloseEndedAnswer = {
+        type,
+        question,
+        isRequired,
+        numberOfAnswersAllowed: 2,
+        choices,
+        questionId: _id as string,
+        answers: [] as string[],
+      };
+      return closeEndedResponseForm;
+    });
 
     return {
       safeSurvey,
@@ -305,7 +279,7 @@ export class SurveyService {
 
     const totalSurveys = await Survey.countDocuments(filterQuery);
 
-    const matchedSurveys = await Survey.aggregate([
+    const surveys = await Survey.aggregate([
       {
         $match: {
           ...filterQuery,
@@ -354,12 +328,22 @@ export class SurveyService {
       {
         $unwind: "$author",
       },
+      {
+        $addFields: {
+          totalRespondents: {
+            $size: {
+              $ifNull: ["$respondents", []],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          respondents: 0,
+          __v: 0,
+        },
+      },
     ]);
-
-    const surveys: SurveyDTO[] = matchedSurveys.map((s) => ({
-      ...new Survey(s).getSafeDetails(),
-      author: new User(s.author).getSafeDetails(),
-    }));
 
     const nextPage = getNextPage({
       page,
@@ -382,6 +366,15 @@ export class SurveyService {
     };
   };
 
+  getDraft = async ({ surveyId, myId }: { surveyId: string; myId: string }) => {
+    const survey = await Survey.findOne({
+      _id: surveyId,
+      authorId: myId,
+      status: "draft",
+    }).orFail(new NotFoundError("Draft not found", "DRAFT_NOT_FOUND"));
+    return survey;
+  };
+
   purchaseBoost = async ({
     myId,
     quantity,
@@ -389,7 +382,6 @@ export class SurveyService {
     myId: string;
     quantity: number;
   }) => {
-    const BOOST_COST = 10000; // 1 boost = 10,000 points
     const totalCost = quantity * BOOST_COST;
 
     const user = await User.findById(myId).orFail(

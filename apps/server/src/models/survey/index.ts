@@ -1,5 +1,3 @@
-
-
-export * from './question';
-export * from './selectTypeQuestion';
-export * from './survey';
+export * from "./question";
+export * from "./closeEndedQuestion";
+export * from "./survey";

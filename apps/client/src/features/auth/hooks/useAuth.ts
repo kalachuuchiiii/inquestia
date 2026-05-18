@@ -1,16 +1,17 @@
-
-import { getSession, resetState } from "@/state/slice/user";
 import type { AppDispatch } from "@/state/store";
-import type { LoginForm, RegisterForm } from "@inquestia/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import api from "@/lib/axios.instance";
+import type { LoginForm } from "@inquestia/schemas";
+import { useAccount } from "@/features/app/account/hooks/useAccount";
 
 export const useAuth = () => {
   const nav = useNavigate();
+  const { data: user, refetch } = useAccount();
+  const queryClient = useQueryClient();
   const dispatch = useDispatch<AppDispatch>();
 
   const { mutate: login, isPending: isLoggingIn } = useMutation({
@@ -24,7 +25,7 @@ export const useAuth = () => {
       return await p;
     },
     onSuccess: () => {
-      dispatch(getSession());
+      refetch();
       nav("/feed");
     },
   });
@@ -40,8 +41,9 @@ export const useAuth = () => {
       return promise;
     },
     onSuccess: () => {
-      dispatch(resetState());
-      nav("/sign-in");
+      queryClient.cancelQueries();
+      queryClient.clear();
+      window.location.href = "/sign-in";
     },
   });
 
@@ -65,10 +67,9 @@ export const useAuth = () => {
       return await p;
     },
     onSuccess: () => {
-      nav('/login')
-    }
+      nav("/login");
+    },
   });
-
 
   return {
     login,

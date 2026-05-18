@@ -9,6 +9,7 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
+  InputGroupInput,
 } from "./ui/input-group";
 import { Button } from "./ui/button";
 const placeholders = [
@@ -35,9 +36,15 @@ const SearchBar = () => {
   const handleClearSearch = () => setQuery("");
 
   return (
-    <div className="w-full flex items-center gap-2 my-4 px-2 py-2 rounded-2xl shadow-md bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-zinc-800  mx-auto">
-      <InputGroup className="flex items-center w-full flex-grow gap-2">
-        <Input
+    <div className="w-full  flex items-start flex-col gap-6   mx-auto">
+      <header className="w-full">
+        <h1 className="text-2xl font-bold tracking-tighter">
+          Search users or surveys
+        </h1>
+        <p className="text-lg opacity-75">Type keywords, or tags/interests</p>
+      </header>
+      <InputGroup className="flex items-center w-full flex-grow my-2 gap-2">
+        <InputGroupInput
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholders[currIndex]}
@@ -48,21 +55,21 @@ const SearchBar = () => {
         {query.length > 0 && (
           <Button
             onClick={handleClearSearch}
-            variant={"secondary"}
+            variant={"ghost"}
             aria-label="Clear search"
           >
-            <IoIosClose size={22} />
+            <IoIosClose className="size-5" />
           </Button>
         )}
+        <InputGroupButton
+          variant={"ghost"}
+          type="button"
+          onClick={handleSearch}
+          aria-label="Search"
+        >
+          <CiSearch className="lg:size-5" />
+        </InputGroupButton>
       </InputGroup>
-      <Button
-        type="button"
-        onClick={handleSearch}
-        className="inquestia-button"
-        aria-label="Search"
-      >
-        <CiSearch size={22} />
-      </Button>
     </div>
   );
 };

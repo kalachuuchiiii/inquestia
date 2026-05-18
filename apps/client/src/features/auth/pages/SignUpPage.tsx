@@ -32,9 +32,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp.js";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group.js";
-import Hero from "../components/Hero";
-
+import inka from "/inka.gif";
 
 const Register = () => {
   const {
@@ -52,23 +50,13 @@ const Register = () => {
   } = useRegister();
 
   return (
-    <AuthLayout
-      hero={
-        <Hero
-          header="Getting Started"
-          subheader="Sign up before your pet does!"
-          text="Create your free account today and explore tools designed to make pet
-        care easier. Manage appointments, track health, and stay connected — all
-        in one place."
-        />
-      }
-    >
+    <AuthLayout>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           sendCode();
         }}
-        className="space-y-2"
+        className="space-y-3 p-3"
       >
         <Dialog open={isCodeSent}>
           <DialogContent>
@@ -116,11 +104,12 @@ const Register = () => {
             </footer>
           </DialogContent>
         </Dialog>
-        <header className="my-2">
-          <p className="text-xl">Register</p>
-          <p className="opacity-50">at Inquestia</p>
+        <header className="my-2 text-center flex flex-col items-center">
+          <img src={inka} className="size-8" />
+          <p className="text-2xl ">Register at</p>
+          <p className="text-5xl font-bold">Inquestia</p>
         </header>
-        <div className="flex w-full flex-col">
+        <div className="flex w-full  flex-col">
           <label className="text-sm">Username</label>
           <div className="p-1 rounded flex w-full justify-between text-base  sm:text-[14px] text- items-center">
             <InputGroup>
@@ -139,13 +128,9 @@ const Register = () => {
               />
             </InputGroup>
           </div>
-          <p className="text-xs opacity-50">
-            Username must be alphanumeric and has {USERNAME_MIN}-{USERNAME_MAX}{" "}
-            characters
-          </p>
         </div>
 
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col gap-1 w-full">
           <label className=" text-sm">Email</label>
           <div>
             <InputGroup>
@@ -163,7 +148,6 @@ const Register = () => {
               />
             </InputGroup>
           </div>
-          <p className="text-xs opacity-50">Email must be a valid email</p>
         </div>
 
         <div className="flex w-full flex-col">
@@ -185,9 +169,6 @@ const Register = () => {
               />
             </InputGroup>
           </div>
-          <p className="text-xs opacity-50">
-            Password must have {PASSWORD_MIN}-{PASSWORD_MAX} characters
-          </p>
         </div>
         <div>
           <Dialog>
@@ -237,14 +218,13 @@ const Register = () => {
           <Button
             disabled={isSendingCode || isCodeSent}
             type="submit"
-            className="inquestia-button w-fit"
+            className="btn w-fit"
           >
             Register
           </Button>
           <div className="text-xs  cursor-pointer ">
             <p className=" space-x-1">
-              Already have an account?
-              {" "}
+              Already have an account?{" "}
               <NavLink
                 to="/sign-in"
                 className={"text-blue-400 hover:underline"}
@@ -252,7 +232,6 @@ const Register = () => {
                 Sign In
               </NavLink>
             </p>
-
           </div>
         </footer>
       </form>

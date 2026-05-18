@@ -1,5 +1,3 @@
-import { UserDTO } from "@inquestia/types";
-
 export const SURVEY_PROJECTION = {
   title: 1,
   description: 1,
@@ -14,5 +12,3 @@ export const SURVEY_PROJECTION = {
   isDraft: 1,
   isTakendown: 1,
 };
-
-

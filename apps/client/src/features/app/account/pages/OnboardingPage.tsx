@@ -1,23 +1,24 @@
-
-
 import React, { useState } from "react";
-import {  useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { Button } from "@/components/ui/button";
-import { updateUser } from "@/state/slice/user.js";
+
 import InterestTagList from "@/features/app/survey/components/InterestTagList.js";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/hooks/useAppSelector.js";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { Interest, UpdateInterestResponse } from "@inquestia/types";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 import { fromBottom } from "@/lib/variants.js";
 import api from "@/lib/axios.instance";
+import type { Interest } from "@inquestia/constants";
+import { useAccount } from "../hooks/useAccount";
 
 const Onboarding = () => {
-  const { user } = useAppSelector((state) => state.user);
-  const [selectedInterests, setSelectedInterests] = useState<Interest[]>(user.interests as Interest[]);
+  const { data: user, refetch } = useAccount();
+  const [selectedInterests, setSelectedInterests] = useState<Interest[]>(
+    (user?.interests as Interest[]) ?? []
+  );
   const nav = useNavigate();
 
   //int
@@ -25,20 +26,21 @@ const Onboarding = () => {
 
   const { mutate: saveInterests, isPending: isLoading } = useMutation({
     mutationFn: async () => {
-      const p = api.patch<UpdateInterestResponse>("/api/user/interests", {
-        interests: selectedInterests,
-      });
-      await toast.promise(p, {
+      const p = api.patch<{ interests: Interest[]; message: string }>(
+        "/api/user/interests",
+        {
+          interests: selectedInterests,
+        }
+      );
+      toast.promise(p, {
         loading: "Updating your interests...",
         success: (res) => res.data.message,
         error: (err) => err.response.data.message,
       });
       return await p;
     },
-    onSuccess: (res) => {
-      dispatch(
-        updateUser({ user: { ...user, interests: res.data.interests } })
-      );
+    onSuccess: () => {
+      refetch();
       nav("/home");
     },
   });
@@ -58,9 +60,9 @@ const Onboarding = () => {
 
   return (
     <motion.div
-     variants={fromBottom}
-     initial = 'hidden'
-     animate = 'visible'
+      variants={fromBottom}
+      initial="hidden"
+      animate="visible"
       className="w-full sm:w-11/12 mx-auto min-h-screen flex flex-col items-center py-10 px-4 space-y-6"
     >
       <div className="max-w-2xl text-center space-y-3">

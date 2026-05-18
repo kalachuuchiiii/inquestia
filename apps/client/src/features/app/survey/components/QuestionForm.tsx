@@ -7,7 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { useSurveyForm } from "../hooks/useSurveyForm";
+import {
+  useSurveyForm,
+  type UseSurveyFormReturn,
+} from "../hooks/useSurveyForm";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -23,25 +26,27 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { SelectTypeQuestionDTO, TextTypeQuestionDTO } from "@inquestia/types";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
 import { Input } from "@/components/ui/input";
+import type {
+  CloseEndedQuestion,
+  OpenEndedQuestion,
+  Question,
+} from "@inquestia/schemas";
 
-interface QuestionFormProps {
-  question: TextTypeQuestionDTO | SelectTypeQuestionDTO;
-  questionControl: ReturnType<typeof useSurveyForm>["questionControl"];
+type QuestionFormProps = UseSurveyFormReturn & {
+  question: Question;
   idx: number;
-}
+};
 
-const QuestionBaseUI = ({
+const QuestionFormBaseUI = ({
   question,
-  questionControl,
+  surveyForm,
   idx,
+  toggleIsRequired,
+  removeQuestion,
 }: QuestionFormProps) => {
-  const { handleChangeQuestion, handleToggleIsRequired, handleRemoveQuestion } =
-    questionControl;
-
   const number = idx + 1;
+  const { register } = surveyForm;
 
   return (
     <>
@@ -50,7 +55,7 @@ const QuestionBaseUI = ({
           <div className="space-y-1">
             <CardTitle>Survey Question {number}</CardTitle>
             <CardDescription>
-              {question.type === "select"
+              {question.type === "close_ended"
                 ? "Choice-based question"
                 : "Open-ended question"}
             </CardDescription>
@@ -68,13 +73,13 @@ const QuestionBaseUI = ({
 
               <Switch
                 checked={question.isRequired}
-                onCheckedChange={() => handleToggleIsRequired(idx)}
+                onCheckedChange={() => toggleIsRequired(idx)}
               />
             </div>
             <Tooltip>
               <TooltipTrigger>
                 <Button
-                  onClick={() => handleRemoveQuestion(idx)}
+                  onClick={() => removeQuestion(idx)}
                   variant={"outline"}
                   className="text-red-400"
                 >
@@ -89,41 +94,35 @@ const QuestionBaseUI = ({
       <CardContent>
         <Textarea
           placeholder="Your question here..."
-          value={question.question}
-          onChange={handleChangeQuestion(idx)}
+          {...register(`questions.${idx}.question`)}
         />
       </CardContent>
     </>
   );
 };
 
-const SelectTypeQuestionForm = ({
-  questionControl,
-  idx,
-  question,
-}: QuestionFormProps) => {
+const CloseEndedForm = ({ ...props }: QuestionFormProps) => {
   const [choice, setChoice] = useState("");
-  const { handleChangeNumberOfAnswersAllowed, handleAddChoice, handleRemoveChoice } =
-    questionControl;
+  const { surveyForm, idx, question, removeChoice, addChoice } = props;
+  const { register, watch } = surveyForm;
+  const type = watch(`questions.${idx}.type`);
 
-  return question.type === "select" ? (
-    <Card >
-      <QuestionBaseUI
-        question={question}
-        questionControl={questionControl}
-        idx={idx}
-      />
-    
+  return question.type === "close_ended" && type === "close_ended" ? (
+    <Card className="bg-zinc-925">
+      <QuestionFormBaseUI {...props} />
       <CardFooter>
         <div className="flex flex-col gap-2 w-full">
           <div className="w-full gap-2 flex items-center justify-start">
-       
-         <Input className="w-16" value={question.numberOfAnswersAllowed} onChange={handleChangeNumberOfAnswersAllowed(idx)} type = 'number' min = {1} max = {question.choices.length} />
-              <p className="opacity-50 text-sm">  Number of answers allowed (it must be less than or equal of choice count )</p>
-         
-    
-            
-         
+            <Input
+              className="w-16"
+              {...register(`questions.${idx}.numberOfAnswersAllowed`)}
+              type="number"
+            />
+            <p className="opacity-50 text-sm">
+              {" "}
+              Number of answers allowed (it must be less than or equal of choice
+              count )
+            </p>
           </div>
           <InputGroup>
             <InputGroupInput
@@ -131,7 +130,7 @@ const SelectTypeQuestionForm = ({
               onChange={(e) => setChoice(e.target.value)}
               placeholder="Create a new choice"
             />
-            <InputGroupButton onClick={() => handleAddChoice(idx, choice)}>
+            <InputGroupButton onClick={() => addChoice(idx, choice)}>
               <Plus />
             </InputGroupButton>
           </InputGroup>
@@ -140,7 +139,7 @@ const SelectTypeQuestionForm = ({
               <div className="flex items-center hover:opacity-50 transition-all duration-200 justify-between">
                 <p>{c}</p>
                 <Button
-                  onClick={() => handleRemoveChoice(idx, c)}
+                  onClick={() => removeChoice(idx, c)}
                   variant={"outline"}
                 >
                   {" "}
@@ -157,21 +156,14 @@ const SelectTypeQuestionForm = ({
   );
 };
 
-export const QuestionForm = ({
-  question,
-  questionControl,
-  idx,
-}: QuestionFormProps) => {
-  const UIProps = {
-    question,
-    questionControl,
-    idx,
-  };
-  return question.type === "text" ? (
-    <Card>
-      <QuestionBaseUI {...UIProps} />
+export const QuestionForm = ({ ...props }: QuestionFormProps) => {
+  const { type } = props.question;
+
+  return type === "open_ended" ? (
+    <Card className="bg-zinc-925">
+      <QuestionFormBaseUI {...props} />
     </Card>
   ) : (
-    <SelectTypeQuestionForm {...UIProps} />
+    <CloseEndedForm {...props} />
   );
 };

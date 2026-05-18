@@ -10,7 +10,6 @@ export const useAnswerActions = () => {
   const { mutate: submitAnswer, isPending: isSubmissionPending } = useMutation({
     mutationFn: async (answerForm: AnswerForm) => {
       if (!surveyId) return;
-      console.log(answerForm, "form");
       const p = api.post(`/api/survey/${surveyId}/answers`, {
         answerForm,
       });

@@ -31,7 +31,6 @@ const UpdateDraftPage = () => {
         `/api/survey/${surveyId}/draft`
       );
       surveyForm.surveyForm.reset(res.data.survey);
-      console.log(res.data.survey);
       return res.data.survey;
     },
     queryKey: ["draft", surveyId],

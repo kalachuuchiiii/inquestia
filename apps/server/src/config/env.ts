@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config({ quiet: true });
-import ms from 'ms';
+import ms from "ms";
 import logger from "./logger";
 
 const getEnvVar = (key: string) => {
@@ -21,14 +21,13 @@ const requiredVars = [
   "GROQ_API_KEY",
   "WEB_ORIGIN",
   "MONGODB_KEY",
-  "MONGODB_DEV_KEY",
   "REFRESH_TOKEN_TTL",
   "NODE_ENV",
   "SALT_ROUNDS",
   "ACCESS_TOKEN_TTL",
   "OAUTH_CLIENT_ID",
   "OAUTH_CLIENT_SECRET",
-  "OAUTH_REFRESH_TOKEN"
+  "OAUTH_REFRESH_TOKEN",
 ] as const;
 
 requiredVars.forEach(getEnvVar);
@@ -42,7 +41,6 @@ export const ENV_CONFIG = {
   GROQ_API_KEY: getEnvVar("GROQ_API_KEY"),
   WEB_ORIGIN: getEnvVar("WEB_ORIGIN"),
   MONGODB_KEY: getEnvVar("MONGODB_KEY"),
-  MONGODB_DEV_KEY: getEnvVar("MONGODB_DEV_KEY"),
   REFRESH_TOKEN_TTL: getEnvVar("REFRESH_TOKEN_TTL") as ms.StringValue,
   NODE_ENV: getEnvVar("NODE_ENV"),
   SALT_ROUNDS: Number(getEnvVar("SALT_ROUNDS")),

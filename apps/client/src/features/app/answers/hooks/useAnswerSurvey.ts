@@ -44,7 +44,6 @@ const useAnswerSurvey = () => {
 
   const onAnswerSubmit = () => {
     const formValues = formController.answerForm.getValues();
-    console.log(formValues);
     submitAnswer(formValues);
   };
 

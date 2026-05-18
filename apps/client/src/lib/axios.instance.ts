@@ -23,7 +23,7 @@ api.interceptors.response.use(
       const hasRefreshed = originalResponse.url?.includes("/auth/refresh");
       const isUnauthorized = response?.status === 401;
 
-      if (hasRetried || (hasRefreshed && !isUnauthorized)) {
+      if (hasRetried || (hasRefreshed && isUnauthorized)) {
         return Promise.reject(error);
       }
 

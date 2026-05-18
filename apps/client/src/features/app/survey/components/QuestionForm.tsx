@@ -7,10 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  useSurveyForm,
-  type UseSurveyFormReturn,
-} from "../hooks/useSurveyForm";
+import { type UseSurveyFormReturn } from "../hooks/useSurveyForm";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -27,11 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
-import type {
-  CloseEndedQuestion,
-  OpenEndedQuestion,
-  Question,
-} from "@inquestia/schemas";
+import type { Question } from "@inquestia/schemas";
 
 type QuestionFormProps = UseSurveyFormReturn & {
   question: Question;
@@ -134,7 +127,7 @@ const CloseEndedForm = ({ ...props }: QuestionFormProps) => {
               <Plus />
             </InputGroupButton>
           </InputGroup>
-          <div className=" divide-y-1">
+          <div className=" divide-y-1 grid grid-cols-2 gap-2">
             {question.choices.map((c) => (
               <div className="flex items-center hover:opacity-50 transition-all duration-200 justify-between">
                 <p>{c}</p>

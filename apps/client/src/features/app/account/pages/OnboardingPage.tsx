@@ -57,12 +57,7 @@ const Onboarding = () => {
   };
 
   return (
-    <motion.div
-      variants={fromBottom}
-      initial="hidden"
-      animate="visible"
-      className="w-full sm:w-11/12 mx-auto min-h-screen flex flex-col items-center py-10 px-4 space-y-6"
-    >
+    <div className="w-full sm:w-11/12 mx-auto min-h-screen flex flex-col items-center py-10 px-4 space-y-6">
       <div className="max-w-2xl text-left space-y-3">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter text-gray-900 dark:text-gray-100">
           Tell us about your interests
@@ -86,7 +81,7 @@ const Onboarding = () => {
           </Button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

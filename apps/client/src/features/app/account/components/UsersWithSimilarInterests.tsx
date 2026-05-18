@@ -23,7 +23,7 @@ const UsersWithSimilarInterests = () => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["similar-", user?._id],
     queryFn: () => api.get<{ users: User[] }>("/api/user/me/similar-interests"),
-    enabled: !!user && !hideWidget && !isMobile,
+    enabled: !!user,
   });
 
   const users = data?.data.users ?? [];

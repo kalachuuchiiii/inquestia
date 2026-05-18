@@ -6,6 +6,7 @@ import {
   Image,
   MailCheckIcon,
   Pencil,
+  Plus,
   Waypoints,
 } from "lucide-react";
 import {
@@ -25,6 +26,7 @@ import { UpdateSocialLinksDialogContent } from "@/features/app/account/component
 import { UpdatePasswordOTPForm } from "@/features/auth/components/UpdatePasswordOTPForm.js";
 import { useUpdatePassword } from "@/features/auth/hooks/useUpdatePassword.js";
 import { useAccount } from "../hooks/useAccount";
+import { Link } from "react-router-dom";
 
 const MyProfileManagerPage = () => {
   const { data: user } = useAccount();
@@ -96,6 +98,19 @@ const MyProfileManagerPage = () => {
               </DialogTrigger>
               <UpdateBioDialogContent />
             </Dialog>
+          </ItemActions>
+        </Item>
+        <Item>
+          <ItemContent>
+            <ItemTitle>Interests</ItemTitle>
+            <ItemDescription>Update your interests</ItemDescription>
+          </ItemContent>
+          <ItemActions>
+            <Link to={`/interests`}>
+              <Button variant={"outline"}>
+                <Plus />
+              </Button>
+            </Link>
           </ItemActions>
         </Item>
         <Separator orientation="horizontal" className="my-4" />

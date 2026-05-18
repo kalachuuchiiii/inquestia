@@ -1,4 +1,6 @@
 import api from "@/lib/axios.instance";
+import { getErrMsg } from "@/utils/getErrMsg";
+import { getSuccessMsg } from "@/utils/getSuccessMsg";
 import type { AnswerForm } from "@inquestia/schemas";
 import { useMutation } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -15,8 +17,8 @@ export const useAnswerActions = () => {
       });
       toast.promise(p, {
         loading: "Submitting...",
-        error: (err) => err.response.data.message,
-        success: (res) => res.data.message,
+        error: getErrMsg,
+        success: getSuccessMsg,
       });
       return await p;
     },

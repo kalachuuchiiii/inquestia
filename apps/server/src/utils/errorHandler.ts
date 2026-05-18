@@ -2,13 +2,10 @@ import { ErrorRequestHandler } from "express";
 import { CustomError } from "./customErrorClass";
 import z from "zod";
 import jwt from "jsonwebtoken";
-import logger from "@/config/logger";
 
 export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
-  logger.error(error);
-
   if (error instanceof jwt.TokenExpiredError) {
-    return res.status(400).json({
+    return res.status(401).json({
       success: false,
       message: "Session expired",
       details: { ...error },

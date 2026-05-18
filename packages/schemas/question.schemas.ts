@@ -11,15 +11,7 @@ import {
   TITLE_MIN,
 } from "@inquestia/constants";
 import z from "zod";
-import { IDSchema } from "./common.schemas";
-
-export const NumberOfAnswersAllowedSchema = z.coerce
-  .number()
-  .min(1, `${1}-${QUESTION_CHOICELIST_MAX} number of answers allowed`)
-  .max(
-    QUESTION_CHOICELIST_MAX,
-    `${1}-${QUESTION_CHOICELIST_MAX} number of answers allowed`
-  );
+import { IDSchema, NumberOfAnswersAllowedSchema } from "./common.schemas";
 
 export const QuestionTitleSchema = z
   .string()
@@ -77,9 +69,9 @@ const CloseEndedQuestionSchema = z
     numberOfAnswersAllowed: NumberOfAnswersAllowedSchema,
     type: z.literal("close_ended"),
   })
-  .refine((val) => val.numberOfAnswersAllowed <= val.choices.length, {
+  .refine((val) => val.numberOfAnswersAllowed < val.choices.length, {
     message:
-      "numberOfAnswersAllowed must be less than or equal to the number of choices",
+      "numberOfAnswersAllowed must be less than to the number of choices",
   });
 
 export const QuestionSchema = z.discriminatedUnion("type", [

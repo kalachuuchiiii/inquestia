@@ -12,7 +12,11 @@ import {
   QuestionChoiceSchema,
   QuestionTitleSchema,
 } from "./question.schemas";
-import { IDSchema, TimestampSchema } from "./common.schemas";
+import {
+  IDSchema,
+  NumberOfAnswersAllowedSchema,
+  TimestampSchema,
+} from "./common.schemas";
 import { UserSchema, type User } from "./user.schemas";
 import { SurveySchema, type Survey } from "./survey.schemas";
 
@@ -29,31 +33,33 @@ export const OpenEndedAnswer = z
     `An open ended answer must be at most ${TEXT_ANSWER_MAX} characters`
   );
 
-const OpenEndedResponseSchema = z.object({
-  questionId: IDSchema,
-  question: z.string().optional(),
-  type: z.literal("open_ended"),
-  answer: OpenEndedAnswer,
-  isRequired: z.boolean().catch(false),
-});
-
-export const NumberOfAnswersAllowedSchema = z
-  .number()
-  .min(1, `You can only submit ${1}-${QUESTION_CHOICELIST_MAX} answers`)
-  .max(
-    QUESTION_CHOICELIST_MAX,
-    `You can only submit ${QUESTION_CHOICELIST_MIN}-${QUESTION_CHOICELIST_MAX} answers`
+const OpenEndedResponseSchema = z
+  .object({
+    questionId: IDSchema,
+    question: z.string().optional(),
+    type: z.literal("open_ended"),
+    answer: OpenEndedAnswer,
+    isRequired: z.boolean().catch(false),
+  })
+  .refine(
+    (oe) => (!oe.isRequired ? true : oe.answer.trim()),
+    "You missed a required question"
   );
 
-const CloseEndedResponseSchema = z.object({
-  questionId: IDSchema,
-  type: z.literal("close_ended"),
-  question: z.string().optional(),
-  isRequired: z.boolean().catch(false),
-  numberOfAnswersAllowed: NumberOfAnswersAllowedSchema,
-  answers: z.array(QuestionChoiceSchema).min(0).max(QUESTION_CHOICELIST_MAX),
-  choices: QuestionChoiceListSchema.catch([]),
-});
+const CloseEndedResponseSchema = z
+  .object({
+    questionId: IDSchema,
+    type: z.literal("close_ended"),
+    question: z.string().optional(),
+    isRequired: z.boolean().catch(false),
+    numberOfAnswersAllowed: NumberOfAnswersAllowedSchema,
+    answers: z.array(QuestionChoiceSchema).min(0).max(QUESTION_CHOICELIST_MAX),
+    choices: QuestionChoiceListSchema.catch([]),
+  })
+  .refine(
+    (ce) => (!ce.isRequired ? true : ce.answers.length > 0),
+    "You missed a required question"
+  );
 
 //===ANSWER SCHEMA FILTERSS====
 

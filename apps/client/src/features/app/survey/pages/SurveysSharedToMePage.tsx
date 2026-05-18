@@ -14,6 +14,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { BoxSelect } from "lucide-react";
+import LoadingDisplay from "@/components/ui/LoadingDisplay";
 
 const SurveysSharedToMePage = () => {
   const { data: user } = useAccount();
@@ -56,7 +57,7 @@ const SurveysSharedToMePage = () => {
           sharedSurveys.map((survey) => <SurveyCard survey={survey} />)}
       </div>
       {isLoading || isFetchingNextPage ? (
-        <SurveyCardPlaceholder number={3} />
+        <LoadingDisplay />
       ) : !totalSharedSurveys ? (
         <Empty>
           <EmptyHeader>

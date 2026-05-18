@@ -15,7 +15,11 @@ import {
   SURVEY_STATUS_ENUM,
 } from "@inquestia/constants";
 import { QuestionsSchema } from "./question.schemas";
-import { IDSchema, TimestampSchema } from "./common.schemas";
+import {
+  IDSchema,
+  NumberOfAnswersAllowedSchema,
+  TimestampSchema,
+} from "./common.schemas";
 import { UserSchema } from "./user.schemas";
 
 export const TagSchema = z.enum(TAGS_ENUM);

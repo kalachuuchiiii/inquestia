@@ -124,6 +124,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    avatarPublicId: {
+      type: String,
+      default: undefined,
+      required: false,
+    },
     boosterPoint: {
       type: Number,
       default: USER_BOOSTER_MIN,

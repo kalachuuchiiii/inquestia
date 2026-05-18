@@ -173,9 +173,9 @@ const AnswerSurveyPage = () => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Publish survey?</DialogTitle>
+                <DialogTitle>Submit answer?</DialogTitle>
                 <DialogDescription>
-                  You can't longer delete nor edit this later on
+                  You can no longer delete nor edit this later on
                 </DialogDescription>
               </DialogHeader>
               <div className="flex flex-col w-full items-start justify-start gap-1 ">
@@ -187,8 +187,8 @@ const AnswerSurveyPage = () => {
                   <p>Anonymous</p>
                 </div>
                 <DialogDescription>
-                  You won't be able to see this answer of yours, However, This
-                  will allow you to answer surveys with complete anonyminity
+                  This will allow you to answer surveys with complete
+                  anonyminity
                 </DialogDescription>
               </div>
               <DialogFooter>
@@ -196,7 +196,6 @@ const AnswerSurveyPage = () => {
                   <Button variant={"outline"}>Cancel</Button>
                 </DialogClose>
                 <Button
-                  className="inquestia-button"
                   onClick={() => onAnswerSubmit()}
                   disabled={isSubmissionPending}
                 >

@@ -67,12 +67,7 @@ const MyResponsesPage = () => {
         </div>
       )}
 
-      {/* Loading state */}
-      {isFetchingNextPage && (
-        <div className="mt-8">
-          <LoadingDisplay>Loading more responses...</LoadingDisplay>
-        </div>
-      )}
+      {isFetchingNextPage && <LoadingDisplay />}
 
       {/* Empty state */}
       {!isFetchingNextPage && answers?.length === 0 && (
@@ -84,7 +79,7 @@ const MyResponsesPage = () => {
             Start your journey by sharing your thoughts in surveys. Your
             opinions shape better results for everyone ✨
           </p>
-          <Link to="/home">
+          <Link to="/feed">
             <Button variant={"outline"}>
               <p> Start Answering</p>
               <ChevronRight />

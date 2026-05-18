@@ -13,6 +13,8 @@ import { fromBottom } from "@/lib/variants.js";
 import api from "@/lib/axios.instance";
 import type { Interest } from "@inquestia/constants";
 import { useAccount } from "../hooks/useAccount";
+import { getErrMsg } from "@/utils/getErrMsg";
+import { getSuccessMsg } from "@/utils/getSuccessMsg";
 
 const Onboarding = () => {
   const { data: user, refetch } = useAccount();
@@ -21,27 +23,23 @@ const Onboarding = () => {
   );
   const nav = useNavigate();
 
-  //int
-  const dispatch = useDispatch();
-
   const { mutate: saveInterests, isPending: isLoading } = useMutation({
     mutationFn: async () => {
       const p = api.patch<{ interests: Interest[]; message: string }>(
-        "/api/user/interests",
+        "/api/user/me/interests",
         {
           interests: selectedInterests,
         }
       );
       toast.promise(p, {
         loading: "Updating your interests...",
-        success: (res) => res.data.message,
-        error: (err) => err.response.data.message,
+        success: getSuccessMsg,
+        error: getErrMsg,
       });
       return await p;
     },
     onSuccess: () => {
-      refetch();
-      nav("/home");
+      nav("/feed");
     },
   });
 
@@ -65,9 +63,9 @@ const Onboarding = () => {
       animate="visible"
       className="w-full sm:w-11/12 mx-auto min-h-screen flex flex-col items-center py-10 px-4 space-y-6"
     >
-      <div className="max-w-2xl text-center space-y-3">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
-          Tell us about your interests ✨
+      <div className="max-w-2xl text-left space-y-3">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter text-gray-900 dark:text-gray-100">
+          Tell us about your interests
         </h1>
         <p className="text-base text-gray-600 dark:text-gray-400">
           Choosing your interests helps us suggest the right questions for you,

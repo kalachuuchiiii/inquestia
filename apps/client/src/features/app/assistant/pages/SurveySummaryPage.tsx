@@ -26,7 +26,7 @@ const SurveySummaryPage = () => {
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="bg-white dark:bg-zinc-950 rounded-xl  p-6 space-y-6">
         {isLoading ? (
-          <LoadingDisplay />
+          <LoadingDisplay>Summarizing...</LoadingDisplay>
         ) : summary ? (
           <>
             <div className="flex flex-col justify-center items-center gap-1 pb-4 border-b border-zinc-200 dark:border-zinc-900">

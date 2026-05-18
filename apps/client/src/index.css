@@ -173,7 +173,7 @@ input[type=number] {
 }
 
 .bar {
-  @apply  bg-[linear-gradient(0deg,_#ffffff_0%,_#e5e7eb_100%)] shadow-[0px_0px_48px_4px_rgba(255,_255,_255,_0.3)] rounded;
+  @apply  bg-[linear-gradient(0deg,_#6366f1_0%,_#e146ec_100%)] shadow-[0px_0px_48px_4px_rgba(171,_108,_249,_0.5)] rounded;
 }
 
 .pixelify-sans {

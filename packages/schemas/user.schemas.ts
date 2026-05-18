@@ -124,6 +124,7 @@ export const UserSchema = z
       current: 1,
       lastResponseTime: new Date(),
     }),
+    isFinishedOnboarding: z.boolean().catch(false),
     boosterPoint: BoosterPointSchema.optional().catch(0),
     interests: InterestListSchema,
     badge: z

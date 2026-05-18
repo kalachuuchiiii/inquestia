@@ -1,4 +1,4 @@
-import { EMAIL_REGEX } from "@inquestia/constants";
+import { EMAIL_REGEX, QUESTION_CHOICELIST_MAX } from "@inquestia/constants";
 import z from "zod";
 
 export const TimestampSchema = z.coerce
@@ -19,3 +19,11 @@ export const ImplicitEmailSchema = z
   .string()
   .regex(EMAIL_REGEX, "Invalid Credentials")
   .trim();
+
+export const NumberOfAnswersAllowedSchema = z.coerce
+  .number()
+  .min(1, `${1}-${QUESTION_CHOICELIST_MAX} number of answers allowed`)
+  .max(
+    QUESTION_CHOICELIST_MAX,
+    `${1}-${QUESTION_CHOICELIST_MAX} number of answers allowed`
+  );

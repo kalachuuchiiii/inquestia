@@ -82,9 +82,9 @@ export class SurveyService {
       user.toObject().boosterPoint,
       form.booster
     );
-    const newSurvey = await new Survey({ ...form, authorId: myId });
+    const newSurvey = new Survey({ ...form, authorId: myId });
     if (form.status === "draft") {
-      return newSurvey.save();
+      return await newSurvey.save();
     }
 
     return await runWithSession(async (session) => {
@@ -226,12 +226,19 @@ export class SurveyService {
         return openEndedResponseForm;
       }
 
-      const { _id, type, question, isRequired, choices } = q;
+      const {
+        _id,
+        type,
+        question,
+        numberOfAnswersAllowed,
+        isRequired,
+        choices,
+      } = q;
       const closeEndedResponseForm: CloseEndedAnswer = {
         type,
         question,
         isRequired,
-        numberOfAnswersAllowed: 2,
+        numberOfAnswersAllowed,
         choices,
         questionId: _id as string,
         answers: [] as string[],

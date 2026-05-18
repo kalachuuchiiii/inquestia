@@ -1,5 +1,4 @@
 import { ENV_CONFIG } from "@/config/env";
-import logger from "@/config/logger";
 import { SessionTokenPayload } from "@/types";
 import { UnauthorizedError } from "@/utils/customErrorClass";
 import { RequestHandler } from "express";
@@ -13,10 +12,10 @@ export class AuthMiddlewares {
     }
 
     const token = authHeader.split(" ")[1] ?? "";
-    const payload = (await jwt.verify(
+    const payload = jwt.verify(
       token,
       ENV_CONFIG.JWT_SECRET
-    )) as SessionTokenPayload;
+    ) as SessionTokenPayload;
     req.myId = payload.myId;
     req.accessToken = token;
     next();

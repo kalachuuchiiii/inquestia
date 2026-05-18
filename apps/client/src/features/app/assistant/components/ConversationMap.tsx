@@ -34,10 +34,10 @@ const SystemCard = ({ message }: { message: ConversationMessage }) => {
   return (
     <div className="flex  w-full overflow-x-auto  justify-start">
       <div className="space-y-1">
-        <p className="chat-name">Inko</p>
+        <p className="chat-name">Inka</p>
         <div
           className=" outline rounded-xl m-2  overflow-x-auto px-4 py-2 rounded-2xl text-sm lg:text-base shadow-sm 
-            bg-zinc-200  dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100"
+            bg-zinc-900  text-neutral-100 dark:bg-zinc-950  dark:text-zinc-100"
         >
           <ReactMarkdown
             rehypePlugins={[rehypeRaw, rehypeHighlight]}

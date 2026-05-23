@@ -3,15 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "engines": {
-    "node": "22"
-  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "start": "vite preview --port $PORT --host",
+    "start": "vite preview --host",
     "preview": "vite preview"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": "22"
   },
   "dependencies": {
     "@inquestia/constants": "workspace:*",

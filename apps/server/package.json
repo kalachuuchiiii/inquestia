@@ -9,6 +9,7 @@
     "start": "node dist/server.js",
     "build": "tsup"
   },
+  "packageManager": "pnpm@9.0.0",
   "keywords": [],
   "author": "",
   "engines": {

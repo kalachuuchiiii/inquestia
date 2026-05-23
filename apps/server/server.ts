@@ -1,5 +1,5 @@
 import { ENV_CONFIG } from "@/config/env";
-import express, { type Application } from "express";
+import express, { type Application, type Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDatabase } from "@/config/connectDatabase";
@@ -16,7 +16,7 @@ declare global {
   }
 }
 
-const app: Application = express();
+const app: Express = express();
 
 app.use(cookieParser());
 app.use(express.json());
@@ -37,11 +37,11 @@ app.get("/", (_, res) => {
   res.send("Server is running");
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT || "5000") || 5000;
 
 connectDatabase();
 
-app.listen(PORT, async () => {
+app.listen(PORT, "0.0.0.0", async () => {
   try {
     logger.info(`Server running on port ${PORT}`);
   } catch (err) {

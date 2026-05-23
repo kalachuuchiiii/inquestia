@@ -9,8 +9,12 @@
     "start": "node dist/server.js",
     "build": "tsup"
   },
+  "packageManager": "pnpm@9.0.0",
   "keywords": [],
   "author": "",
+  "engines": {
+    "node": "22"
+  },
   "license": "ISC",
   "type": "module",
   "devDependencies": {

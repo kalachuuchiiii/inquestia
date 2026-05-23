@@ -1,4 +1,3 @@
-
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
@@ -15,9 +14,9 @@
     "moduleDetection": "force",
     "noEmit": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
-    "baseUrl": ".",
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": false,

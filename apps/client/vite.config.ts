@@ -7,7 +7,7 @@ import path from "path";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   preview: {
-    allowedHosts: ["inquestia.up.railway.app"],
+    allowedHosts: ["inquestia-ask.up.railway.app"],
   },
   server: {
     hmr: {
